@@ -75,7 +75,6 @@ This repository is a **showcase snapshot** published for the **Meta Global AI De
 - **Binary assets omitted** (icons, images, fonts) and `package-lock.json` files are not included; the source is complete.
 - Deployment scripts and infrastructure configuration are not part of the snapshot.
 
-It isn't intended as a clone-and-run distribution and isn't accepting contributions — but issues and questions are welcome.
 
 ## License
 
