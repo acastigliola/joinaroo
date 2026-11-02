@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Builds
+.next/
+dist/
+.expo/
+*.tsbuildinfo
+
+# Environment & secrets — never commit these
+.env
+.env.*
+!.env.example
+prod.env
+*.pem
+*.key
+
+# Data
+*.db
+*.sqlite
+uploads/
+
+# OS / editor
+.DS_Store
+*.log

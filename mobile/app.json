@@ -1,0 +1,51 @@
+{
+  "expo": {
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0B1D3A",
+        "foregroundImage": "./assets/adaptive-icon.png"
+      },
+      "package": "com.smevents.app",
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ],
+      "versionCode": 1
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "extra": {
+      "apiUrl": "https://joinaroo.com"
+    },
+    "icon": "./assets/icon.png",
+    "ios": {
+      "supportsTablet": true
+    },
+    "name": "Joinaroo",
+    "newArchEnabled": true,
+    "orientation": "portrait",
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Joinaroo to use your location to show nearby events."
+        }
+      ],
+      "expo-status-bar",
+      "expo-web-browser"
+    ],
+    "scheme": "smevents",
+    "slug": "joinaroo",
+    "splash": {
+      "backgroundColor": "#0B1D3A",
+      "image": "./assets/splash.png",
+      "resizeMode": "contain"
+    },
+    "userInterfaceStyle": "automatic",
+    "version": "1.0.0",
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}

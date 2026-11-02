@@ -1,0 +1,889 @@
+/* Mobile-app replica styles for the public site (phone user-agents only).
+   Scoped under .m-app so the desktop layout is untouched. */
+
+.m-app {
+  background: #f4f5f7;
+  min-height: 100dvh;
+  padding-bottom: 84px;
+  color: #17202b;
+  -webkit-text-size-adjust: 100%;
+}
+
+.m-app a {
+  color: inherit;
+}
+.m-app a:hover {
+  text-decoration: none;
+}
+
+/* Location bar */
+.m-locbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-bottom: 1px solid #e5e5e5;
+  padding: calc(env(safe-area-inset-top, 0px) + 10px) 12px 10px;
+}
+.m-loclabel {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0b1d3a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+a.m-locbtn,
+button.m-locbtn {
+  display: inline-block;
+  background: #0b1d3a;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-left: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.m-locbtn:disabled {
+  opacity: 0.6;
+}
+
+/* Category chips */
+.m-chips {
+  display: flex;
+  overflow-x: auto;
+  align-items: center;
+  background: #fff;
+  height: 60px;
+  padding: 0 8px;
+  scrollbar-width: none;
+}
+.m-chips::-webkit-scrollbar {
+  display: none;
+}
+a.m-chip {
+  flex-shrink: 0;
+  background: #eff2f7;
+  color: #333;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 8px 14px;
+  margin: 0 4px;
+  white-space: nowrap;
+}
+a.m-chip-active {
+  background: #0b1d3a;
+  color: #fff;
+}
+
+/* Section titles */
+.m-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0b1d3a;
+  margin: 12px 12px 4px;
+}
+.m-listhead {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 12px 8px;
+}
+.m-listhead .m-section-title {
+  margin: 0 8px 0 0;
+  flex-shrink: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.m-listhead .m-section-head { margin: 0; flex: 1; min-width: 0; }
+.m-listhead .m-radius {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 6px;
+  flex-shrink: 0;
+  overflow: visible;
+  padding-bottom: 0;
+}
+.m-listhead .m-radius a.m-rchip { margin-left: 0; }
+.m-radius {
+  display: flex;
+  flex-shrink: 0;
+}
+a.m-rchip {
+  background: #eff2f7;
+  color: #333;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 6px 10px;
+  margin-left: 4px;
+  white-space: nowrap;
+}
+a.m-rchip-active {
+  background: #0b1d3a;
+  color: #fff;
+}
+
+/* Horizontal carousels (Spotlight / Today / This Weekend) */
+.m-carousel {
+  display: flex;
+  align-items: flex-start;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 4px 0 8px;
+  scrollbar-width: none;
+}
+.m-carousel::-webkit-scrollbar {
+  display: none;
+}
+.m-spotcard {
+  flex: 0 0 300px;
+  scroll-snap-align: start;
+}
+/* Featured Events carousel only (Angelo, Oct 29): at 300px the text
+   column squeezed the chips row — the distance wrapped under the
+   category/Featured chips and the Community Pick chip crowded the
+   title. min(96vw, 440px) gives the header one line in portrait and
+   caps at the width he confirmed renders right in landscape. Today
+   and This Weekend keep the 300px card above. */
+.m-spotcard--featured {
+  flex-basis: min(96vw, 440px);
+}
+.m-spotcard .card {
+  margin: 6px 0 6px 12px;
+  height: 100%;
+}
+.m-spotcard:last-child .card {
+  margin-right: 12px;
+}
+
+/* Vertical event list */
+.m-list {
+  padding: 0 0 8px;
+}
+.m-list .card {
+  margin: 6px 12px;
+}
+
+.m-empty {
+  color: #777;
+  text-align: center;
+  padding: 24px;
+}
+
+/* Bottom tab bar */
+.m-tabs {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  display: flex;
+  background: #fff;
+  border-top: 1px solid #e5e5e5;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.m-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 0 10px;
+  color: #777;
+  font-size: 11px;
+  font-weight: 600;
+}
+.m-tab svg {
+  width: 22px;
+  height: 22px;
+  margin-bottom: 2px;
+}
+.m-tab-active {
+  color: #0b6bcb;
+}
+
+/* Search / settings / towns pages */
+.m-searchbox {
+  background: #fff;
+  padding: 12px;
+  border-bottom: 1px solid #e5e5e5;
+}
+.m-input {
+  width: 100%;
+  background: #f4f5f7;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+.m-input:last-child {
+  margin-bottom: 0;
+}
+.m-btn {
+  display: inline-block;
+  background: #0b1d3a;
+  color: #fff;
+  font-weight: 600;
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 15px;
+  cursor: pointer;
+}
+.m-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+.m-card h2 {
+  margin: 0 0 8px;
+  font-size: 17px;
+  color: #0b1d3a;
+}
+.m-card p {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: #444;
+}
+.m-card p:last-child {
+  margin-bottom: 0;
+}
+.m-townrow {
+  display: block;
+  background: #fff;
+  border-radius: 10px;
+  padding: 14px;
+  margin: 8px 12px 0;
+  font-size: 15px;
+  color: #111;
+}
+.m-pagetitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0b1d3a;
+  margin: 16px 12px 4px;
+}
+.m-day-header {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0b1d3a;
+  margin: 14px 12px 2px;
+}
+.m-month-header {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1b3a6b;
+  margin: 18px 12px 2px;
+}
+.m-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0b1d3a;
+  margin: 16px 12px;
+}
+.card {
+  position: relative;
+}
+.save-star {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #9aa3b2;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+}
+.save-star-saved {
+  color: #ffb300;
+}
+
+/* ---- Auth (TikTok-style) ---- */
+.auth-page { display: flex; justify-content: center; padding: 48px 20px; }
+.auth-card {
+  background: #161616; color: #fff; border-radius: 16px;
+  padding: 36px 28px; width: 100%; max-width: 420px;
+}
+.auth-card h1 { text-align: center; margin: 0 0 28px; font-size: 28px; }
+.auth-method {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  background: #2e2e2e; color: #fff; border: none; border-radius: 28px;
+  padding: 14px 24px; margin-bottom: 12px; font-size: 15px; font-weight: 600;
+  cursor: pointer;
+}
+.auth-method:hover { background: #3a3a3a; }
+.auth-method-icon { width: 28px; text-align: center; font-weight: 700; }
+.auth-label { display: block; font-weight: 700; margin-bottom: 10px; }
+.auth-sub { color: #aaa; font-size: 13px; margin: 0 0 10px; }
+.auth-input {
+  width: 100%; background: #2e2e2e; border: none; border-radius: 10px;
+  padding: 13px 16px; color: #fff; font-size: 15px; margin-bottom: 12px;
+  box-sizing: border-box;
+}
+.auth-hint { color: #888; font-size: 12px; line-height: 1.5; margin: 0 0 12px; }
+.auth-error { color: #ff6b6b; font-size: 13px; margin: 0 0 12px; }
+.auth-primary {
+  background: #0B1D3A; color: #fff; border: none; border-radius: 28px;
+  padding: 14px 28px; font-size: 15px; font-weight: 700; cursor: pointer;
+  width: 100%; margin-top: 8px;
+}
+.auth-primary:disabled { opacity: 0.4; cursor: default; }
+.auth-secondary {
+  background: #fff; color: #0B1D3A; border: 1px solid #0B1D3A; border-radius: 28px;
+  padding: 14px 28px; font-size: 15px; font-weight: 700; cursor: pointer;
+  width: 100%; margin-top: 8px;
+}
+.auth-back { background: none; border: none; color: #aaa; margin-top: 14px; cursor: pointer; font-size: 14px; }
+.auth-forgot { color: #FE2C55; font-weight: 600; }
+.auth-switch { text-align: center; margin-top: 24px; font-size: 14px; }
+.auth-switch button { background: none; border: none; color: #FE2C55; font-weight: 700; cursor: pointer; font-size: 14px; }
+.auth-cancel { text-align: center; margin-top: 12px; font-size: 13px; }
+.auth-cancel a { color: #aaa; }
+.auth-msg { margin-top: 10px; font-size: 13px; color: #333; }
+
+/* ---- Profile settings ---- */
+.profile-row { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+.avatar-btn {
+  border: none; background: none; padding: 0; cursor: pointer; position: relative;
+  width: 72px; height: 72px; border-radius: 50%; overflow: hidden; flex-shrink: 0;
+}
+.avatar-img { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; }
+.avatar-default {
+  display: flex; align-items: center; justify-content: center;
+  width: 72px; height: 72px; border-radius: 50%; background: #C9CDD3; font-size: 36px;
+}
+.avatar-busy {
+  position: absolute; inset: 0; background: rgba(0,0,0,0.4); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+}
+.profile-username { font-weight: 700; font-size: 16px; margin: 0; }
+.profile-meta { color: #777; font-size: 12px; margin: 2px 0 4px; }
+.link-btn { background: none; border: none; color: #0B1D3A; font-weight: 600; cursor: pointer; padding: 0; font-size: 13px; }
+.field-label { display: block; font-size: 13px; font-weight: 600; color: #0B1D3A; margin: 10px 0 6px; }
+.switch-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 14px 0 4px; font-size: 14px; }
+.switch-row small { color: #777; }
+.btn-row { display: flex; gap: 10px; margin-top: 12px; }
+.btn-row .auth-primary, .btn-row .auth-secondary { width: auto; flex: 1; }
+
+/* Light-card overrides for profile settings inputs */
+.m-card .auth-input { background: #F4F5F7; color: #111; border: 1px solid #DDD; }
+.m-card .auth-primary { width: auto; }
+.m-card .auth-msg { color: #2E7D32; font-weight: 600; }
+
+/* ---- Auth overlay (TikTok-style modal) ---- */
+.auth-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.55);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+/* Joinaroo branded auth modal (matches mockup) */
+.auth-modal-card {
+  position: relative;
+  background: #0B1D3A; color: #fff; border-radius: 20px;
+  padding: 28px 24px 24px; width: 100%; max-width: 400px;
+  max-height: 90vh; overflow-y: auto;
+  overflow: hidden;
+}
+.auth-modal-card::before {
+  content: '';
+  position: absolute; top: -20px; right: -30px;
+  width: 210px; height: 190px;
+  background: url('/icons/auth-tickets-bg.png') no-repeat center / contain;
+  opacity: 0.22; pointer-events: none;
+}
+.auth-brand-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px; position: relative; z-index: 1;
+}
+.auth-brand-logo { height: 52px; width: auto; }
+.auth-modal-close {
+  background: none; border: none; color: #fff; font-size: 22px;
+  cursor: pointer; padding: 8px; line-height: 1;
+}
+.auth-modal-card h1 {
+  text-align: left; margin: 0 0 8px; font-size: 28px; font-weight: 800;
+  position: relative; z-index: 1;
+}
+.auth-tagline {
+  color: #9AA3B2; font-size: 14px; line-height: 1.45; margin: 0 0 18px;
+  position: relative; z-index: 1;
+}
+.auth-provider {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; padding: 12px 16px; margin-bottom: 10px;
+  border: none; border-radius: 999px; cursor: pointer;
+  font-size: 15px; font-weight: 700;
+  background: rgba(255,255,255,0.08); color: #fff;
+  position: relative; z-index: 1;
+  transition: background 0.15s;
+}
+.auth-provider:hover { background: rgba(255,255,255,0.14); }
+.auth-provider-primary {
+  background: #fff; color: #0B1D3A;
+}
+.auth-provider-primary:hover { background: #E8EEF7; }
+.auth-provider-icon {
+  width: 32px; height: 32px; flex-shrink: 0;
+  object-fit: contain; display: block;
+  margin: 0; padding: 0; border: none;
+  max-width: none; max-height: none;
+}
+.auth-provider-label { flex: 1; text-align: left; }
+.auth-provider-chevron { color: inherit; opacity: 0.6; font-size: 18px; }
+.auth-divider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 20px 0 16px; color: #9AA3B2; font-size: 13px;
+  position: relative; z-index: 1;
+}
+.auth-divider::before, .auth-divider::after {
+  content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.15);
+}
+.auth-switch {
+  text-align: center; margin: 0 0 16px; font-size: 14px; color: #9AA3B2;
+  position: relative; z-index: 1;
+}
+.auth-switch button {
+  background: none; border: none; color: #42A5F5; font-weight: 700;
+  cursor: pointer; font-size: 14px; margin-left: 4px;
+}
+.auth-terms {
+  text-align: center; font-size: 12px; color: #9AA3B2; line-height: 1.6;
+  margin: 0; position: relative; z-index: 1;
+}
+.auth-terms a { color: #42A5F5; text-decoration: none; }
+/* Inner steps (identifier, verify, password) in dark theme */
+.auth-modal-card .auth-label { display: block; font-weight: 700; margin-bottom: 10px; color: #fff; }
+.auth-modal-card .auth-sub { color: #9AA3B2; font-size: 13px; margin: 0 0 10px; }
+.auth-modal-card .auth-input {
+  width: 100%; padding: 14px 16px; border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08);
+  color: #fff; font-size: 15px; margin-bottom: 12px; box-sizing: border-box;
+}
+.auth-modal-card .auth-input::placeholder { color: #6B7280; }
+.auth-modal-card .auth-primary {
+  width: 100%; padding: 14px; border: none; border-radius: 999px;
+  background: #fff; color: #0B1D3A; font-size: 15px; font-weight: 700;
+  cursor: pointer; margin-bottom: 8px;
+}
+.auth-modal-card .auth-primary:disabled { opacity: 0.4; cursor: default; }
+.auth-modal-card .auth-back {
+  background: none; border: none; color: #9AA3B2; cursor: pointer;
+  font-size: 14px; display: block; margin: 8px auto 0;
+}
+.auth-modal-card .auth-error { color: #FF8A8A; font-size: 13px; margin: 0 0 12px; }
+.auth-modal-card .pw-checks { margin-bottom: 12px; }
+.auth-modal-card .pw-check { color: #9AA3B2; font-size: 13px; }
+.auth-modal-card .pw-check-ok { color: #4ADE80; }
+
+/* 6-digit verification code input */
+.auth-code { text-align: center; font-size: 24px; letter-spacing: 8px; font-weight: 700; }
+
+/* Password field with show/hide toggle + live requirement checks */
+.pw-row { position: relative; margin-bottom: 4px; }
+.pw-input { padding-right: 44px; }
+.pw-eye {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; font-size: 18px; cursor: pointer; padding: 8px;
+}
+.pw-checks { margin: 8px 0 12px; }
+.pw-check { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #888; margin-bottom: 4px; }
+.pw-box {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 4px; border: 1px solid #666;
+  font-size: 12px; color: #fff; flex-shrink: 0;
+}
+.pw-check-ok { color: #4CAF50; }
+.pw-check-ok .pw-box { background: #2E7D32; border-color: #2E7D32; }
+
+/* "Sign In Required" prompt shown when an unauthenticated user taps a card star */
+.signin-prompt-backdrop {
+  position: fixed; inset: 0; z-index: 60;
+  background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center; padding: 32px;
+}
+.signin-prompt-card {
+  background: #fff; border-radius: 6px; padding: 28px; max-width: 420px; width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+}
+.signin-prompt-card h2 { margin: 0 0 16px; font-size: 26px; font-weight: 400; color: #111; }
+.signin-prompt-card p { margin: 0 0 32px; font-size: 19px; line-height: 1.4; color: #111; }
+.signin-prompt-btns { display: flex; justify-content: flex-end; }
+.signin-prompt-cancel, .signin-prompt-signin {
+  background: none; border: none; font-size: 16px; font-weight: 500;
+  color: #4A90D9; cursor: pointer; padding: 8px;
+}
+.signin-prompt-cancel { margin-right: 16px; }
+
+/* Public profile page */
+.profile-page { padding: 20px; max-width: 640px; margin: 0 auto; }
+.profile-header { display: flex; gap: 16px; align-items: center; margin-bottom: 24px; }
+.profile-avatar { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; }
+.profile-avatar-default {
+  display: flex; align-items: center; justify-content: center;
+  background: #C9CDD3; font-size: 36px; color: #fff;
+}
+.profile-display { margin: 0; font-size: 22px; color: #0B1D3A; }
+.profile-username { margin: 4px 0 0; font-size: 16px; color: #555; }
+.profile-username-link {
+  margin: 4px 0 0; font-size: 16px; font-weight: 700; color: #0B1D3A;
+  text-decoration: underline; display: inline-block;
+}
+.profile-meta { margin: 4px 0 0; font-size: 13px; color: #888; }
+.profile-section-title { font-size: 17px; color: #0B1D3A; margin: 0 0 12px; }
+.profile-private { font-size: 14px; color: #888; font-style: italic; }
+.profile-empty { font-size: 14px; color: #888; }
+.card-link { text-decoration: none; color: inherit; display: block; }
+
+/* Header avatar (mobile site, shown when signed in) */
+.header-avatar {
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #1c3d66; color: #fff;
+  font-weight: 700; font-size: 16px;
+  overflow: hidden; flex-shrink: 0;
+}
+.header-avatar:hover { text-decoration: none; }
+.header-avatar-img { width: 100%; height: 100%; object-fit: cover; }
+.header-avatar-initial { line-height: 1; }
+
+/* Generic mobile page wrapper (e.g. My Saves): clear the fixed tab bar */
+.m-page { padding-bottom: 84px; }
+
+/* Toggle switch (mirrors the native app's Switch) */
+.switch {
+  position: relative; flex-shrink: 0;
+  width: 48px; height: 28px; border-radius: 999px;
+  background: #c9d2de; border: none; cursor: pointer;
+  transition: background 0.2s; padding: 0;
+}
+.switch-on { background: #0b1d3a; }
+.switch-knob {
+  position: absolute; top: 2px; left: 2px;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  transition: left 0.2s;
+}
+.switch-on .switch-knob { left: 22px; }
+
+/* Header actions (mobile): search icon + avatar */
+.header-actions { display: flex; align-items: center; gap: 16px; }
+.header-search { display: flex; align-items: center; }
+.header-search img { width: 24px; height: auto; display: block; }
+
+/* Location bar icons */
+a.m-loclabel {
+  display: flex; align-items: center; gap: 6px;
+  text-decoration: none;
+}
+.m-locicon { width: 22px; height: auto; flex-shrink: 0; }
+.m-loctext { overflow: hidden; text-overflow: ellipsis; }
+.m-locchev { color: #0b1d3a; font-size: 12px; }
+a.m-locbtn,
+button.m-locbtn {
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.m-locbtn-icon { width: 16px; height: auto; flex-shrink: 0; }
+
+/* Section headers: icon + title + subtitle */
+.m-section-head {
+  display: flex; align-items: center; gap: 10px;
+  margin: 16px 12px 8px;
+}
+.m-section-icon { width: 30px; height: auto; flex-shrink: 0; }
+.m-section-text { min-width: 0; }
+.m-section-title2 {
+  font-size: 19px; font-weight: 800; color: #111;
+  margin: 0; line-height: 1.2;
+}
+.m-section-sub {
+  font-size: 13px; color: #777; margin: 2px 0 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Icon-only button (wraps a section icon) */
+.m-iconbtn {
+  background: none; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  padding: 12px;
+  margin: -12px; /* bigger tap target, icon stays put */
+  -webkit-tap-highlight-color: transparent;
+}
+.m-iconbtn:disabled { cursor: default; }
+
+.auth-sms-consent {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 12px;
+  color: #666;
+  margin: 12px 0;
+  cursor: pointer;
+  line-height: 1.4;
+}
+.auth-sms-consent input[type="checkbox"] {
+  margin-top: 2px;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+.auth-sms-consent a {
+  color: #2c5aa0;
+  text-decoration: underline;
+}
+
+/* Photo-left cards (Angelo, Oct 28 trial from his mockup): white card,
+   hero photo inset at the left, content column at right, cost pinned to
+   the bottom of the column. Mobile site only — scoped under .m-app and
+   the opt-in .card--photo class; live cards keep their frozen variant. */
+.m-app .card--photo {
+  background: #fff;
+  border: 1px solid #e4e9f0;
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(16, 24, 40, 0.07);
+}
+.m-app .card--photo .card-link {
+  padding: 12px;
+}
+.card-photo-row {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  position: relative;
+}
+.card-photo-img {
+  flex: 0 0 104px;
+  width: 104px;
+  min-height: 104px;
+  align-self: stretch;
+  object-fit: cover;
+  border-radius: 12px;
+}
+.card-photo-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+/* Scored photo cards: the strip overlays the bottom of the hero
+   photo so the card keeps the standard photo-card height (Angelo,
+   Oct 28). The cost line un-pins so it is not hidden under the strip,
+   and the strip stops short of the save star's corner. */
+.m-app .card--scored .card-score-strip {
+  position: absolute;
+  left: 10px;
+  right: 44px;
+  bottom: 6px;
+  margin: 0;
+  box-shadow: 0 2px 10px rgba(16, 24, 40, 0.14);
+}
+.m-app .card--scored .card-cost {
+  margin-top: 0.5rem;
+}
+.m-app .card-score-strip {
+  display: flex;
+  align-items: flex-start;
+  background: #f6f7f9;
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-top: 12px;
+}
+.m-app .card-score-side {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.m-app .card-score-logo {
+  width: 52px;
+  height: 44px;
+  object-fit: contain;
+}
+.m-app .card-score-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: center;
+  line-height: 1.2;
+}
+.m-app .card-score-mid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: 0 6px;
+}
+.m-app .card-score-pill {
+  background: #14232e;
+  color: #fff;
+  border-radius: 6px;
+  padding: 3px 14px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.m-app .card-score-pill--live {
+  background: #c81e1e;
+}
+.m-app .card-score-nums {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--ink);
+}
+.m-app .card-score-div {
+  width: 1px;
+  height: 32px;
+  background: #d5dce4;
+}
+.m-app .card--photo .card-tags {
+  margin-bottom: 0.35rem;
+}
+.m-app .card--photo .card-title {
+  font-size: 1.02rem;
+  line-height: 1.28;
+  margin-bottom: 0.3rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.m-app .card-live-body .card-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.m-app .card--photo .card-cost {
+  margin-top: auto;
+  padding-top: 0.35rem;
+  /* Reserve the save star's corner so the cost pill never slides
+     under it (Oct 29). */
+  padding-right: 2.4rem;
+}
+.cost-price {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #2c3c63;
+  background: #edf1f6;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  /* Long price info wraps inside the pill (2, 3, 4 lines as needed)
+     instead of forcing the card wider (Angelo, Oct 29). */
+  max-width: 100%;
+  white-space: normal;
+}
+/* Long pricing: no chip background at all (Angelo, Oct 29) — a
+   multi-line pill is an oval blob. Same text, plain. */
+.cost-price--plain {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* Carousel sections (Featured / Today / This Weekend): one fixed photo
+   box on every card — 248px tall, the height of the Central Fire &
+   Police Station Tour card Angelo picked as the ideal (Oct 28,
+   measured from his screenshot: a ~2.4:1 portrait box at the 104px
+   card width). Nearby list cards keep the stretch. */
+.m-app .m-spotcard .card-photo-img {
+  height: 248px;
+  min-height: 248px;
+  align-self: flex-start;
+}
+
+/* Top-photo variant (Angelo, Oct 28): events with card_layout='top'
+   render the photo as a full-width banner above the card body instead
+   of the left inset — for wide key art whose main image is cropped out
+   as the card image and should show whole. */
+.card-photo-topwrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  position: relative;
+}
+.card-photo-top-img {
+  width: 100%;
+  aspect-ratio: 13 / 5;
+  object-fit: fill;
+  border-radius: 12px;
+  display: block;
+}
+.m-app .card--photo-top .card-photo-body {
+  flex: 1 1 auto;
+}
+
+/* Card height discipline (Angelo, Oct 29): every card should sit at
+   the standard inset-card height — the Thursday Family Fun Play
+   card was his picked example.
+   1) Top banners are capped at a fixed height SITE-WIDE — 100px
+      first (lists, then carousels on his word), lowered to 76px
+      later that morning when logo banners still read too tall;
+      object-fit: fill keeps the whole lockup visible, squashed (his
+      pick over cropping). A definite height wins over the inline
+      aspect-ratio style, so card_top_ratio no longer sets height.
+   2) List-only: the inset photo leaves the flow and stretches to
+      exactly the body height, so a tall stretch derivative can no
+      longer push the card taller than its text (the SWEAT 2
+      white-gap case). Carousels keep their 248px photo box. */
+.m-app .card-photo-top-img {
+  height: 76px;
+}
+.m-app .card-soldout-ribbonwrap--top {
+  /* ribbon keeps the banner's corner: 76px tall at its 612/420 art */
+  width: 111px;
+}
+.m-app .m-list .card-photo-row:has(.card-photo-img) .card-photo-body {
+  margin-left: 116px; /* 104px photo + 12px gap, photo is out of flow */
+}
+.m-app .m-list .card-photo-img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  min-height: 0;
+}
+
+/* (The no-stretch fix lives on .m-carousel above: align-items:
+   flex-start, so a taller card never inflates its neighbours. An
+   earlier attempt targeted .m-spotcard.card--photo, but the card
+   classes sit on the article inside the .m-spotcard wrapper, so it
+   never matched — Angelo's screenshot caught it, Oct 28.) */
+
+/* Community Pick chip: one fixed size on every mobile card surface.
+   The card body is a flex column, so pin the chip out of the stretch
+   and lock its width (Angelo, Oct 29). */
+.m-app .card-photo-body img.card-community-pick,
+.m-app img.card-community-pick {
+  width: 156px;
+  max-width: 156px;
+  height: auto;
+  flex: none;
+  align-self: flex-start;
+}

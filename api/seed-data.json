@@ -1,0 +1,1742 @@
+{
+  "categories": [
+    {
+      "icon": "moon",
+      "name": "After Dark",
+      "slug": "after-dark",
+      "tagline": "Live music, DJs, bars & clubs"
+    },
+    {
+      "icon": "brain",
+      "name": "Bar & Brain",
+      "slug": "bar-brain",
+      "tagline": "Trivia nights & bar games"
+    },
+    {
+      "icon": "masks",
+      "name": "On Stage",
+      "slug": "on-stage",
+      "tagline": "Theater, comedy & dance"
+    },
+    {
+      "icon": "code",
+      "name": "Hack & Build",
+      "slug": "hack-build",
+      "tagline": "Tech meetups & hackathons"
+    },
+    {
+      "icon": "gamepad",
+      "name": "Game On",
+      "slug": "game-on",
+      "tagline": "Video games, board games & esports"
+    },
+    {
+      "icon": "utensils",
+      "name": "Taste of Maine",
+      "slug": "taste-maine",
+      "tagline": "Food, drink & markets"
+    },
+    {
+      "icon": "users",
+      "name": "Town Square",
+      "slug": "town-square",
+      "tagline": "Community & civic events"
+    },
+    {
+      "icon": "smile",
+      "name": "Family Fun",
+      "slug": "family-fun",
+      "tagline": "Kid-friendly events"
+    },
+    {
+      "icon": "trophy",
+      "name": "Game Day",
+      "slug": "game-day",
+      "tagline": "Sports"
+    },
+    {
+      "icon": "leaf",
+      "name": "Seasonal",
+      "slug": "seasonal",
+      "tagline": "Holidays & seasonal fun"
+    },
+    {
+      "icon": "book",
+      "name": "Learn Something",
+      "slug": "learn",
+      "tagline": "Lectures, classes & workshops"
+    },
+    {
+      "icon": "palette",
+      "name": "Gallery & Craft",
+      "slug": "gallery",
+      "tagline": "Art shows & handmade markets"
+    }
+  ],
+  "events": [
+    {
+      "category": "game-day",
+      "cost_free": false,
+      "cost_text": "$5 at the gate (typical)",
+      "description": "OOB (6-0, #1 in 8-Man Small South) hosts Maranacook (3-2) at home. Daytime kickoff.",
+      "featured": true,
+      "source": "events-watch",
+      "starts_at": "2026-10-17T13:00:00-04:00",
+      "title": "OOB Seagulls vs Maranacook",
+      "venue": "oobhs"
+    },
+    {
+      "category": "game-day",
+      "cost_free": false,
+      "cost_text": "$5 at the gate (typical)",
+      "description": "Seagulls travel to Topsham to face Mt. Ararat (0-6).",
+      "source": "events-watch",
+      "starts_at": "2026-10-23T19:00:00-04:00",
+      "title": "OOB Seagulls @ Mt. Ararat",
+      "venue": "mtararat"
+    },
+    {
+      "category": "game-day",
+      "cost_free": false,
+      "cost_text": "$5 at the gate (typical)",
+      "description": "Thornton Academy (6-0) hosts Sanford under the lights.",
+      "source": "events-watch",
+      "starts_at": "2026-10-16T19:00:00-04:00",
+      "title": "Thornton Academy vs Sanford",
+      "venue": "thornton"
+    },
+    {
+      "category": "game-day",
+      "cost_free": false,
+      "cost_text": "$5 at the gate (typical)",
+      "description": "Biddeford (4-2) travels to South Berwick to face Marshwood.",
+      "source": "events-watch",
+      "starts_at": "2026-10-16T18:00:00-04:00",
+      "title": "Biddeford vs Marshwood",
+      "venue": "marshwood"
+    },
+    {
+      "category": "game-day",
+      "cost_free": false,
+      "cost_text": "$29 early / $34 / $39 race-day",
+      "description": "Winter 4-mile run from Jimmy the Greek's in OOB. Benefits Send a Kid to Camp. Early rate $29 through Oct 13.",
+      "source": "events-watch",
+      "starts_at": "2027-01-17T10:00:00-05:00",
+      "title": "Frozen 4-Miler",
+      "url": "https://www.jimmythegreeks.com",
+      "venue": "jimmys"
+    },
+    {
+      "category": "hack-build",
+      "cost_free": true,
+      "description": "Civic-hacker meetup, no agenda: AI/ML, programming, VR, hardware/robotics, game dev, open source. Entry via Meetup or #lemmein on Slack.",
+      "featured": true,
+      "source": "events-watch",
+      "starts_at": "2026-10-13T19:00:00-04:00",
+      "title": "Hack Portland Weekly Hack Night",
+      "url": "https://www.meetup.com/hack-portland/",
+      "venue": "bigroom"
+    },
+    {
+      "category": "hack-build",
+      "cost_free": true,
+      "description": "Civic-hacker meetup, no agenda: AI/ML, programming, VR, hardware/robotics, game dev, open source.",
+      "source": "events-watch",
+      "starts_at": "2026-10-20T19:00:00-04:00",
+      "title": "Hack Portland Weekly Hack Night",
+      "url": "https://www.meetup.com/hack-portland/",
+      "venue": "bigroom"
+    },
+    {
+      "category": "hack-build",
+      "cost_free": true,
+      "description": "Monthly Maine JavaScript social at Novare Res Bier Cafe.",
+      "source": "events-watch",
+      "starts_at": "2026-10-13T18:00:00-04:00",
+      "title": "Maine JS October Social",
+      "venue": "novare"
+    },
+    {
+      "category": "hack-build",
+      "cost_free": true,
+      "description": "Casual UX/design happy hour.",
+      "source": "events-watch",
+      "starts_at": "2026-10-14T18:00:00-04:00",
+      "title": "UX Maine Happy Hour",
+      "venue": "eastender"
+    },
+    {
+      "category": "hack-build",
+      "cost_free": true,
+      "description": "Secure coding competition. $1K/$250/$100 VISA prizes. Two locations: IDEXX Westbrook + Bangor Savings Bank Bangor.",
+      "featured": true,
+      "source": "events-watch",
+      "starts_at": "2026-10-22T17:30:00-04:00",
+      "title": "OWASP Maine Secure Coding Tournament",
+      "venue": "idexx"
+    },
+    {
+      "category": "hack-build",
+      "cost_free": false,
+      "cost_text": "MTW ticket",
+      "description": "Maine Tech Week 90-minute AI sprint: build and demo a working app. Bring a laptop, seats capped.",
+      "source": "events-watch",
+      "starts_at": "2026-10-22T14:30:00-04:00",
+      "title": "\"Ship It, again\" AI Sprint",
+      "url": "https://mainetechweek.com/schedule",
+      "venue": "mechhall"
+    },
+    {
+      "category": "hack-build",
+      "cost_free": true,
+      "description": "Informal Maine AI Coalition gathering at Arcadia. Open to curious newcomers and skeptics.",
+      "source": "events-watch",
+      "starts_at": "2026-10-19T17:00:00-04:00",
+      "title": "Maine AI @ Maine Tech Week",
+      "venue": "arcadia"
+    },
+    {
+      "category": "town-square",
+      "cost_free": true,
+      "description": "Maine Tech Week networking at Orange Bike Brewing. First drink free.",
+      "source": "events-watch",
+      "starts_at": "2026-10-19T18:30:00-04:00",
+      "title": "NEXUS Maine Networking",
+      "venue": "orangebike"
+    },
+    {
+      "category": "learn",
+      "cost_free": false,
+      "cost_text": "MTW ticket",
+      "description": "Maine Tech Week: three Maine solo builders on tools, costs, and where AI helps.",
+      "source": "events-watch",
+      "starts_at": "2026-10-22T10:30:00-04:00",
+      "title": "\"Built by One\"",
+      "url": "https://mainetechweek.com/schedule",
+      "venue": "mechhall"
+    },
+    {
+      "category": "learn",
+      "cost_free": false,
+      "cost_text": "MTW ticket",
+      "description": "Maine Tech Week: open source, AI, and software risk. LiveKit Head of Developer Success + Fleet AI security researcher.",
+      "source": "events-watch",
+      "starts_at": "2026-10-22T14:30:00-04:00",
+      "title": "\"Who Owns the Code?\"",
+      "url": "https://mainetechweek.com/schedule",
+      "venue": "mechhall"
+    },
+    {
+      "category": "learn",
+      "cost_free": false,
+      "cost_text": "MTW ticket",
+      "description": "Maine Tech Week panel.",
+      "source": "events-watch",
+      "starts_at": "2026-10-22T11:45:00-04:00",
+      "title": "\"Did AI kill Agile?\"",
+      "url": "https://mainetechweek.com/schedule",
+      "venue": "mechhall"
+    },
+    {
+      "category": "after-dark",
+      "cost_free": false,
+      "cost_text": "MTW ticket",
+      "description": "Closing party for Maine Tech Week 2026 at AURA.",
+      "source": "events-watch",
+      "starts_at": "2026-10-22T18:00:00-04:00",
+      "title": "Maine Tech Week Closing Party",
+      "url": "https://mainetechweek.com/schedule",
+      "venue": "aura"
+    },
+    {
+      "category": "hack-build",
+      "cost_free": true,
+      "description": "Founders + investors at the Roux Institute.",
+      "source": "events-watch",
+      "starts_at": "2026-10-21T17:00:00-04:00",
+      "title": "Maine Table: Founder Exchange",
+      "venue": "roux"
+    },
+    {
+      "category": "on-stage",
+      "cost_free": false,
+      "description": "British a cappella octet at Hannaford Hall, USM.",
+      "source": "events-watch",
+      "starts_at": "2026-10-13T19:30:00-04:00",
+      "title": "VOCES8",
+      "venue": "hannaford"
+    },
+    {
+      "category": "after-dark",
+      "cost_free": false,
+      "description": "Thundercat live at the State Theatre.",
+      "source": "events-watch",
+      "starts_at": "2026-10-19T20:00:00-04:00",
+      "title": "Thundercat",
+      "venue": "state"
+    },
+    {
+      "category": "after-dark",
+      "cost_free": false,
+      "description": "Cannons live at the State Theatre.",
+      "source": "events-watch",
+      "starts_at": "2026-10-20T20:00:00-04:00",
+      "title": "Cannons",
+      "venue": "state"
+    },
+    {
+      "category": "seasonal",
+      "cost_free": false,
+      "description": "Maine-made horror short film festival at the State Theatre.",
+      "source": "events-watch",
+      "starts_at": "2026-10-23T19:00:00-04:00",
+      "title": "Damnationland Horror Film Fest",
+      "venue": "state"
+    },
+    {
+      "category": "after-dark",
+      "cost_free": false,
+      "description": "Suzanne Vega at Vinegar Hill Music Theatre, Arundel.",
+      "source": "events-watch",
+      "starts_at": "2026-10-24T20:00:00-04:00",
+      "title": "Suzanne Vega",
+      "venue": "vinegar"
+    },
+    {
+      "category": "on-stage",
+      "cost_free": false,
+      "description": "Jay Leno stand-up at Merrill Auditorium.",
+      "source": "events-watch",
+      "starts_at": "2026-11-07T20:00:00-05:00",
+      "title": "Jay Leno",
+      "venue": "merrill"
+    },
+    {
+      "category": "on-stage",
+      "cost_free": false,
+      "description": "Bert Kreischer stand-up at Merrill Auditorium.",
+      "source": "events-watch",
+      "starts_at": "2026-11-15T20:00:00-05:00",
+      "title": "Bert Kreischer",
+      "venue": "merrill"
+    },
+    {
+      "category": "after-dark",
+      "cost_free": false,
+      "description": "Portland Jazz Orchestra at One Longfellow Square.",
+      "source": "events-watch",
+      "starts_at": "2026-10-15T19:30:00-04:00",
+      "title": "Portland Jazz Orchestra",
+      "venue": "ols"
+    },
+    {
+      "category": "after-dark",
+      "cost_free": false,
+      "description": "Jake Blount Band at One Longfellow Square.",
+      "source": "events-watch",
+      "starts_at": "2026-10-18T19:00:00-04:00",
+      "title": "Jake Blount Band",
+      "venue": "ols"
+    },
+    {
+      "category": "seasonal",
+      "cost_free": false,
+      "cost_text": "$25 ($10 under 10), cash only at gate",
+      "description": "Haunted trail. No-Scare Nights Oct 19 & 26, 6:30-9pm.",
+      "featured": true,
+      "source": "events-watch",
+      "starts_at": "2026-10-24T19:00:00-04:00",
+      "title": "Trail of Terror at Aquaboggan",
+      "venue": "aquaboggan"
+    },
+    {
+      "category": "learn",
+      "cost_free": false,
+      "cost_text": "$7/$10",
+      "description": "Publishing panel at Mechanics' Hall.",
+      "source": "events-watch",
+      "starts_at": "2026-10-13T19:00:00-04:00",
+      "title": "\"Booked: From Idea to Bookshelf\"",
+      "venue": "mechhall"
+    },
+    {
+      "category": "family-fun",
+      "cost_free": true,
+      "description": "Halloween storytime and parade at Dyer Library, Saco.",
+      "source": "events-watch",
+      "starts_at": "2026-10-31T10:30:00-04:00",
+      "title": "Dyer Halloween Storytime & Parade",
+      "venue": "dyer"
+    },
+    {
+      "category": "seasonal",
+      "cost_free": true,
+      "description": "Downtown Biddeford Halloween crawl, 3-5pm.",
+      "source": "events-watch",
+      "starts_at": "2026-10-31T15:00:00-04:00",
+      "title": "I Heart Biddeford Creepy Crawl",
+      "venue": "citytheater"
+    },
+    {
+      "category": "family-fun",
+      "cost_free": false,
+      "description": "Biddeford 5K with a kids' candy run.",
+      "source": "events-watch",
+      "starts_at": "2026-10-25T09:00:00-04:00",
+      "title": "STEM 5K & Candy-K",
+      "venue": "citytheater"
+    },
+    {
+      "category": "learn",
+      "cost_free": true,
+      "description": "USM open house, Gorham campus.",
+      "source": "events-watch",
+      "starts_at": "2026-10-24T09:00:00-04:00",
+      "title": "USM Open House",
+      "venue": "usmgorham"
+    },
+    {
+      "category": "town-square",
+      "cost_free": true,
+      "description": "Homecoming BBQ + ballgames at Southern Maine Community College.",
+      "source": "events-watch",
+      "starts_at": "2026-10-17T11:00:00-04:00",
+      "title": "SMCC Homecoming BBQ",
+      "venue": "smcc"
+    },
+    {
+      "category": "after-dark",
+      "cost_free": true,
+      "description": "Weekly karaoke at The East Ender.",
+      "source": "events-watch",
+      "starts_at": "2026-10-16T20:00:00-04:00",
+      "title": "Karaoke Night",
+      "venue": "eastender"
+    },
+    {
+      "category": "seasonal",
+      "cost_free": false,
+      "description": "\"Merry and Bright\" \u2014 preview gala Nov 21, opens Nov 27, closes Dec 30.",
+      "source": "events-watch",
+      "starts_at": "2026-11-27T10:00:00-05:00",
+      "title": "Saco Museum Festival of Trees",
+      "venue": "sacomuseum"
+    },
+    {
+      "category": "gallery",
+      "cost_free": true,
+      "description": "Final art walk of the season, downtown Biddeford, 5-8pm.",
+      "source": "events-watch",
+      "starts_at": "2026-10-16T17:00:00-04:00",
+      "title": "Biddeford Art Walk",
+      "venue": "citytheater"
+    },
+    {
+      "category": "taste-maine",
+      "cost_free": false,
+      "description": "Drag brunch at The Velvet Dog.",
+      "source": "events-watch",
+      "starts_at": "2026-10-18T11:00:00-04:00",
+      "title": "Sunday Seconds Drag Brunch",
+      "venue": "velvetdog"
+    },
+    {
+      "title": "Small Town: A John Mellencamp Musical (World Premiere)",
+      "description": "World premiere musical built around John Mellencamp's songbook, following Jack & Diane. Limited run October 1 through November 1 at Ogunquit Playhouse; showtimes vary, representative Saturday evening performance listed.",
+      "category": "on-stage",
+      "venue": "ogunquit-playhouse",
+      "starts_at": "2026-10-17T19:30:00-04:00",
+      "ends_at": "2026-10-17T22:00:00-04:00",
+      "cost_free": false,
+      "cost_text": "Tickets from ogunquitplayhouse.org",
+      "url": "https://www.ogunquitplayhouse.org/",
+      "source": "Ogunquit Playhouse / BroadwayWorld"
+    },
+    {
+      "title": "41st Annual Harvestfest & Kidsfest",
+      "description": "York Beach's beloved fall festival with juried craft market, live music, local food vendors, and Kidsfest activities including crafts, face painting, and a STEM bristlebot activity. Free admission.",
+      "category": "seasonal",
+      "venue": "york-beach-short-sands",
+      "starts_at": "2026-10-17T09:00:00-04:00",
+      "ends_at": "2026-10-17T16:00:00-04:00",
+      "cost_free": true,
+      "cost_text": null,
+      "url": "https://www.gatewaytomaine.org/york-harvestfest/",
+      "source": "York Region Chamber / mainefaves.com"
+    },
+    {
+      "title": "OgunquitFest",
+      "description": "23rd annual fall festival: classic car show at Main Beach, 60+ vendor artisan craft fair, children's trick-or-treating, Dogtoberfest costume parade, and the High Heel Dash benefit in Perkins Cove.",
+      "category": "seasonal",
+      "venue": "ogunquitfest-downtown",
+      "starts_at": "2026-10-23T08:00:00-04:00",
+      "ends_at": "2026-10-25T22:00:00-04:00",
+      "cost_free": true,
+      "cost_text": null,
+      "url": "https://www.ogunquit.org/ogunquitfest/",
+      "source": "Ogunquit Chamber of Commerce"
+    },
+    {
+      "title": "Mid-Week Music: Initials JR",
+      "description": "Live mid-week music performance at the Town House School in Kennebunkport.",
+      "category": "after-dark",
+      "venue": "town-house-school-kpt",
+      "starts_at": "2026-10-14T19:00:00-04:00",
+      "ends_at": null,
+      "cost_free": false,
+      "cost_text": "Check ticket price on Eventbrite",
+      "url": "https://www.eventbrite.com.au/d/me--kennebunkport/events/",
+      "source": "Eventbrite"
+    },
+    {
+      "title": "Finding Our Voices: Let's Talk About It Tour",
+      "description": "Panel of domestic abuse survivors shares stories followed by a community conversation on emotional abuse and its impact on children, with short films. Part of the fall library tour.",
+      "category": "town-square",
+      "venue": "york-public-library",
+      "starts_at": "2026-10-17T18:30:00-04:00",
+      "ends_at": "2026-10-17T20:30:00-04:00",
+      "cost_free": true,
+      "cost_text": null,
+      "url": "https://yorkpl.librarycalendar.com/event/finding-our-voices-survivors-breaking-silence-domestic-abuse-5086",
+      "source": "York Public Library"
+    },
+    {
+      "title": "Happy Trolleyween!",
+      "description": "Halloween-themed trolley event at the Seashore Trolley Museum. Ride the rails in costume.",
+      "category": "family-fun",
+      "venue": "seashore-trolley-museum",
+      "starts_at": "2026-10-23T10:00:00-04:00",
+      "ends_at": null,
+      "cost_free": false,
+      "cost_text": "Check ticket price on Eventbrite",
+      "url": "https://www.eventbrite.com/d/me--kennebunk/kennebunkport/?page=2",
+      "source": "Eventbrite"
+    },
+    {
+      "title": "Kennebunk Halloween Party",
+      "description": "Halloween party at Batson River's Fish Camp in Kennebunk. Costumes encouraged.",
+      "category": "seasonal",
+      "venue": "batson-river-fish-camp",
+      "starts_at": "2026-10-24T19:00:00-04:00",
+      "ends_at": null,
+      "cost_free": false,
+      "cost_text": "Check ticket price on Eventbrite",
+      "url": "https://www.eventbrite.com.au/d/me--kennebunkport/events/",
+      "source": "Eventbrite"
+    },
+    {
+      "title": "Arts Learning Exchange @ OMAA",
+      "description": "Regional gathering for Maine arts educators to brainstorm collaboration and expand student access to the arts. Hosted at the Ogunquit Museum of American Art.",
+      "category": "learn",
+      "venue": "ogunquit-museum-american-art",
+      "starts_at": "2026-10-28T13:00:00-04:00",
+      "ends_at": "2026-10-28T17:00:00-04:00",
+      "cost_free": true,
+      "cost_text": null,
+      "url": "https://ogunquitmuseum.org/events/?tribe_redirected=1",
+      "source": "Ogunquit Museum of American Art"
+    },
+    {
+      "title": "Trick or Trail 5K - Wells",
+      "description": "Halloween-themed 5K trail run at Drakes Island Beach. Costumes welcome.",
+      "category": "game-day",
+      "venue": "drakes-island-beach",
+      "starts_at": "2026-10-31T09:00:00-04:00",
+      "ends_at": null,
+      "cost_free": false,
+      "cost_text": "Registration required",
+      "url": "https://running.life/trail-running-calendar/united-states/maine/kennebunk",
+      "source": "running.life trail calendar"
+    },
+    {
+      "title": "Holistic Hustle",
+      "description": "5K and 10K trail run in Kennebunkport on Halloween morning.",
+      "category": "game-day",
+      "venue": "kennebunkport-trail-hustle",
+      "starts_at": "2026-10-31T09:00:00-04:00",
+      "ends_at": null,
+      "cost_free": false,
+      "cost_text": "Registration required",
+      "url": "https://running.life/trail-running-calendar/united-states/maine/kennebunk",
+      "source": "running.life trail calendar"
+    },
+    {
+      "title": "Kennebunk Farmers Halloween Market",
+      "description": "Special Halloween edition of the Saturday farmers market with seasonal produce, baked goods, and local vendors.",
+      "category": "taste-maine",
+      "venue": "kennebunk-farmers-market",
+      "starts_at": "2026-10-31T08:00:00-04:00",
+      "ends_at": "2026-10-31T12:30:00-04:00",
+      "cost_free": true,
+      "cost_text": null,
+      "url": "https://allevents.in/kennebunk/november",
+      "source": "AllEvents.in"
+    },
+    {
+      "title": "Neo-Classics Mixology at Ocean",
+      "description": "Cocktail class at Ocean Restaurant, Cape Arundel Inn & Resort. Learn to mix neo-classic cocktails.",
+      "category": "taste-maine",
+      "venue": "ocean-restaurant-cape-arundel",
+      "starts_at": "2026-11-04T14:00:00-05:00",
+      "ends_at": null,
+      "cost_free": false,
+      "cost_text": "Check ticket price on Eventbrite",
+      "url": "https://www.eventbrite.co.uk/d/me--kennebunk/kennebunkport-maine/",
+      "source": "Eventbrite"
+    },
+    {
+      "title": "Autumn Sips & Spirits: A Cozy Fall Cocktail Class",
+      "description": "Fall cocktail class at The Burleigh in Kennebunkport's Coopers Corner.",
+      "category": "taste-maine",
+      "venue": "the-burleigh-kpt",
+      "starts_at": "2026-11-05T13:00:00-05:00",
+      "ends_at": null,
+      "cost_free": false,
+      "cost_text": "Check ticket price on Eventbrite",
+      "url": "https://www.eventbrite.co.uk/d/me--kennebunk/kennebunkport-maine/",
+      "source": "Eventbrite"
+    },
+    {
+      "title": "Wines for Your Thanksgiving Table",
+      "description": "Wine tasting class at Earth at Hidden Pond focused on Thanksgiving pairings.",
+      "category": "taste-maine",
+      "venue": "earth-at-hidden-pond",
+      "starts_at": "2026-11-12T14:00:00-05:00",
+      "ends_at": null,
+      "cost_free": false,
+      "cost_text": "Check ticket price on Eventbrite",
+      "url": "https://www.eventbrite.co.uk/d/me--kennebunk/kennebunkport-maine/",
+      "source": "Eventbrite"
+    },
+    {
+      "title": "Martini Mixology at The Burleigh",
+      "description": "Hands-on martini mixology class at The Burleigh in Dock Square.",
+      "category": "taste-maine",
+      "venue": "the-burleigh-kpt",
+      "starts_at": "2026-11-14T14:00:00-05:00",
+      "ends_at": null,
+      "cost_free": false,
+      "cost_text": "Check ticket price on Eventbrite",
+      "url": "https://www.eventbrite.com.au/d/me--kennebunkport/events/",
+      "source": "Eventbrite"
+    },
+    {
+      "title": "Holiday Cocktail Class at The Burleigh",
+      "description": "Holiday-themed cocktail class at The Burleigh in Kennebunkport.",
+      "category": "taste-maine",
+      "venue": "the-burleigh-kpt",
+      "starts_at": "2026-11-21T13:00:00-05:00",
+      "ends_at": null,
+      "cost_free": false,
+      "cost_text": "Check ticket price on Eventbrite",
+      "url": "https://www.eventbrite.co.uk/d/me--kennebunk/kennebunkport-maine/",
+      "source": "Eventbrite"
+    },
+    {
+      "title": "Fireside Reds Wine Tasting",
+      "description": "Cozy late-afternoon tasting of bold red wines (Cabernet Franc, Syrah, Malbec, Zinfandel) paired with seasonal canapes during Kennebunkport's Christmas Prelude season. 21+.",
+      "category": "taste-maine",
+      "venue": "earth-at-hidden-pond",
+      "starts_at": "2026-11-28T14:00:00-05:00",
+      "ends_at": "2026-11-28T15:30:00-05:00",
+      "cost_free": false,
+      "cost_text": "$85 per person",
+      "url": "https://www.decormaine.com/explore/the-latest-happenings-in-maine-fall-2026/",
+      "source": "Decor Maine"
+    },
+    {
+      "title": "$700 Halloween Party",
+      "description": "Halloween costume party at Jimmy The Greek's with $700 in prizes. Costumes encouraged for a shot at the cash.",
+      "category": "seasonal",
+      "venue": "jimmy-the-greeks",
+      "starts_at": "2026-10-31T19:00:00-04:00",
+      "ends_at": null,
+      "cost_free": false,
+      "cost_text": null,
+      "url": null,
+      "source": "Eventbrite"
+    },
+    {
+      "title": "Country Night is On at Jimmy The Greeks",
+      "description": "Country Roads lights up Jimmy The Greek's with an evening of new country hit songs.",
+      "category": "after-dark",
+      "venue": "jimmy-the-greeks",
+      "starts_at": "2026-10-24T19:00:00-04:00",
+      "ends_at": null,
+      "cost_free": false,
+      "cost_text": null,
+      "url": "https://allevents.in/old-orchard-beach/country-night-is-on-at-jimmy-the-greeks/200030585167401",
+      "source": "allevents.in"
+    },
+    {
+      "title": "10-Talks",
+      "description": "Biddeford-Saco Chamber of Commerce annual event: ten five-minute talks from local leaders and business owners, plus networking, silent auction, food and cash bar. Free for chamber members.",
+      "category": "town-square",
+      "venue": "river-winds-farm",
+      "starts_at": "2026-10-14T17:00:00-04:00",
+      "ends_at": "2026-10-14T20:00:00-04:00",
+      "cost_free": false,
+      "cost_text": "Free for chamber members",
+      "url": "https://biddeford-gazette.com/2026/09/20/business-chamber-will-again-host-10-talks-event/",
+      "source": "biddeford-gazette.com"
+    },
+    {
+      "title": "Cookbook Club: The Simple Art of Rice",
+      "description": "Dyer Library's cookbook club meets to share dishes and discussion around The Simple Art of Rice.",
+      "category": "learn",
+      "venue": "dyer-library",
+      "starts_at": "2026-10-17T11:30:00-04:00",
+      "ends_at": "2026-10-17T13:00:00-04:00",
+      "cost_free": true,
+      "cost_text": null,
+      "url": null,
+      "source": "dyersaco.librarycalendar.com"
+    },
+    {
+      "title": "Oil Pastel Demo with Bob Dunn",
+      "description": "Artist Bob Dunn demonstrates oil pastel techniques at the Saco Museum.",
+      "category": "gallery",
+      "venue": "saco-museum",
+      "starts_at": "2026-10-22T18:00:00-04:00",
+      "ends_at": "2026-10-22T19:00:00-04:00",
+      "cost_free": true,
+      "cost_text": null,
+      "url": null,
+      "source": "dyersaco.librarycalendar.com"
+    },
+    {
+      "title": "A Mystery at Deering Mansion",
+      "description": "An evening mystery event at Dyer Library \u2014 solve the case at Deering Mansion.",
+      "category": "on-stage",
+      "venue": "dyer-library",
+      "starts_at": "2026-10-23T18:00:00-04:00",
+      "ends_at": "2026-10-23T20:30:00-04:00",
+      "cost_free": true,
+      "cost_text": null,
+      "url": null,
+      "source": "dyersaco.librarycalendar.com"
+    },
+    {
+      "title": "Saco Pumpkin Harvest Festival",
+      "description": "Saco Main Street's fall tradition returns with a pumpkin patch, live music, food, 80+ vendors, pony rides, pie-eating contest and trunk-or-treating. Rain date Oct 25.",
+      "category": "seasonal",
+      "venue": "dyer-library",
+      "starts_at": "2026-10-24T11:00:00-04:00",
+      "ends_at": "2026-10-24T15:00:00-04:00",
+      "cost_free": true,
+      "cost_text": null,
+      "url": "https://mainstreetmaine.org/october-2026-events-and-fall-weekends-in-maines-downtowns/",
+      "source": "mainstreetmaine.org"
+    },
+    {
+      "title": "Thornton Academy vs Bonny Eagle",
+      "description": "Undefeated showdown: #1 Thornton Academy (6-0) hosts #2 Bonny Eagle (6-0) in a battle of Maine's top Class A teams.",
+      "category": "game-day",
+      "venue": "thornton-academy",
+      "starts_at": "2026-10-24T13:00:00-04:00",
+      "ends_at": null,
+      "cost_free": false,
+      "cost_text": "$5 at the gate (typical)",
+      "url": "https://www.maxpreps.com/me/saco/thornton-academy-trojans/football/schedule/",
+      "source": "maxpreps"
+    },
+    {
+      "title": "Open Space Public Listening Session",
+      "description": "City of Saco public listening session on open space planning. Residents invited to share input.",
+      "category": "town-square",
+      "venue": "dyer-library",
+      "starts_at": "2026-10-27T17:30:00-04:00",
+      "ends_at": "2026-10-27T19:00:00-04:00",
+      "cost_free": true,
+      "cost_text": null,
+      "url": null,
+      "source": "City of Saco"
+    },
+    {
+      "title": "The Comedy Mill Open Mic",
+      "description": "Weekly stand-up open mic at Biddeford's Hakuna Matata Sports Bar. List out at 7pm, show starts 7:30pm. Try material or just watch.",
+      "category": "on-stage",
+      "venue": "hakuna-matata",
+      "starts_at": "2026-10-14T19:30:00-04:00",
+      "ends_at": null,
+      "cost_free": true,
+      "cost_text": null,
+      "url": "https://allevents.in/biddeford/the-comedy-mill-open-mic-at-hakuna-matata-biddeford-me/100002000664765169",
+      "source": "allevents.in"
+    },
+    {
+      "title": "Next Stop Comedy at Sacred Profane",
+      "description": "Next Stop Comedy brings touring stand-up to Sacred Profane Brewery and Tankpub in Biddeford.",
+      "category": "on-stage",
+      "venue": "sacred-profane",
+      "starts_at": "2026-10-16T20:00:00-04:00",
+      "ends_at": null,
+      "cost_free": false,
+      "cost_text": "From $27.86",
+      "url": null,
+      "source": "Eventbrite"
+    },
+    {
+      "title": "808 live at The Dunn Bar",
+      "description": "Live music from 808 at The Dunn Bar Irish Pub in Biddeford.",
+      "category": "after-dark",
+      "venue": "dunn-bar",
+      "starts_at": "2026-10-16T18:00:00-04:00",
+      "ends_at": null,
+      "cost_free": false,
+      "cost_text": null,
+      "url": null,
+      "source": "allevents.in"
+    },
+    {
+      "title": "Indigo Tunez Live",
+      "description": "Indigo Tunez performs live at 40 Laconia St in Biddeford. $10 cover.",
+      "category": "after-dark",
+      "venue": "40-laconia-st",
+      "starts_at": "2026-10-17T18:00:00-04:00",
+      "ends_at": null,
+      "cost_free": false,
+      "cost_text": "$10",
+      "url": null,
+      "source": "stayhappening.com"
+    },
+    {
+      "title": "The Arrival \u2014 SFPLC Magazine Issue 11 Launch",
+      "description": "Safe Place Magazine celebrates Issue 11: The Arrival with art, live music from Alain, and sounds by DJ Afrellie. An evening of art, music and connection.",
+      "category": "gallery",
+      "venue": "193-main-st-108",
+      "starts_at": "2026-10-17T19:00:00-04:00",
+      "ends_at": null,
+      "cost_free": true,
+      "cost_text": null,
+      "url": "https://happeningnext.com/event/the-arrival-~-sfplc-magazine-issue-11-launch-eid27pun4m2077",
+      "source": "happeningnext.com"
+    },
+    {
+      "title": "Biddeford vs Cheverus",
+      "description": "Biddeford Tigers host the Cheverus Stags under the lights on Friday night.",
+      "category": "game-day",
+      "venue": "biddeford-hs",
+      "starts_at": "2026-10-23T18:00:00-04:00",
+      "ends_at": null,
+      "cost_free": false,
+      "cost_text": "$5 at the gate (typical)",
+      "url": "https://www.varsitymaine.com/game/biddeford-at-cheverus-30",
+      "source": "varsitymaine"
+    },
+    {
+      "title": "Psychic Night at Ap\u00e9ro",
+      "description": "An evening with psychic medium Kim Allen at Ap\u00e9ro wine bar. Group readings, wine and charcuterie; a glass of wine or bubbles included with each ticket.",
+      "category": "after-dark",
+      "venue": "apero",
+      "starts_at": "2026-10-27T18:00:00-04:00",
+      "ends_at": "2026-10-27T21:00:00-04:00",
+      "cost_free": false,
+      "cost_text": "Ticketed (see Eventbrite)",
+      "url": "https://www.eventbrite.com/e/psychic-night-at-apero-tickets-2002179033386",
+      "source": "Eventbrite"
+    },
+    {
+      "title": "Thoreau's Sense of Time with Kristen Case",
+      "description": "UNE Center for Global Humanities lecture: scholar Kristen Case (featured in the Ken Burns Thoreau documentary) explores Thoreau's engagement with time as environmental, personal and political experience.",
+      "category": "learn",
+      "venue": "une-alfond-forum",
+      "starts_at": "2026-10-28T13:00:00-04:00",
+      "ends_at": "2026-10-28T14:30:00-04:00",
+      "cost_free": true,
+      "cost_text": null,
+      "url": "https://www.une.edu/news/2026/fall-cgh-season-explores-intersection-humanities-and-sciences",
+      "source": "une.edu"
+    },
+    {
+      "title": "Lincoln's Masquerade Ball",
+      "description": "Enchanting masquerade ball at The Lincoln Hotel with the Zoot Jumpers keeping the dance floor moving. Ticket includes light bites and a custom Lincoln masquerade mask; 18+. Complimentary valet.",
+      "category": "seasonal",
+      "venue": "lincoln-hotel",
+      "starts_at": "2026-10-30T19:00:00-04:00",
+      "ends_at": "2026-10-30T22:00:00-04:00",
+      "cost_free": false,
+      "cost_text": "From $39.19",
+      "url": "https://www.eventbrite.com/e/lincolns-masquerade-ball-tickets-1985464764558",
+      "source": "Eventbrite"
+    },
+    {
+      "title": "Portland Ballet: Dracula",
+      "description": "Portland Ballet brings Bram Stoker's Dracula to life through ballet set to a Rachmaninoff score, choreographed by Nell Shipman. Recommended ages 11+ for mature themes. Tickets $21\u2013$52.",
+      "category": "on-stage",
+      "venue": "wpac",
+      "starts_at": "2026-10-23T19:00:00-04:00",
+      "ends_at": null,
+      "cost_free": false,
+      "cost_text": "$21\u2013$52",
+      "url": "https://www.axs.com/nz/venues/133968/westbrook-performing-arts-center-westbrook-tickets",
+      "source": "AXS"
+    },
+    {
+      "title": "Rock Row Halloween",
+      "description": "Free all-ages Halloween event at Rock Row's Quarryside: treats and seasonal fun, costumes encouraged. Parking and entry subject to capacity \u2014 arrive early.",
+      "category": "seasonal",
+      "venue": "rock-row",
+      "starts_at": "2026-10-24T11:30:00-04:00",
+      "ends_at": "2026-10-24T14:30:00-04:00",
+      "cost_free": true,
+      "cost_text": null,
+      "url": null,
+      "source": "mainstreetmaine.org"
+    },
+    {
+      "title": "Trick-or-Treat in the Barnyard",
+      "description": "Combine trick-or-treating with a barnyard visit at Smiling Hill Farm. Costume admission: $2.50 kids, $5 adults; animal-feed tokens 50\u00a2; pick-a-pumpkin wagon rides $7/$13.",
+      "category": "family-fun",
+      "venue": "smiling-hill-farm",
+      "starts_at": "2026-10-24T10:30:00-04:00",
+      "ends_at": "2026-10-24T13:00:00-04:00",
+      "cost_free": false,
+      "cost_text": "$2.50 kids / $5 adults in costume",
+      "url": "https://lakeregionkidscalendar.com/2026/10/09/halloween-events/",
+      "source": "lakeregionkidscalendar.com"
+    },
+    {
+      "title": "Monsters Run the River 5K",
+      "description": "Discover Downtown Westbrook's annual Halloween road race: traditional 5K, Canine 5K and kids' 1K Fun Run along the Presumpscot River. Costumes encouraged; proceeds support downtown revitalization.",
+      "category": "game-day",
+      "venue": "riverbank-park",
+      "starts_at": "2026-10-25T08:00:00-04:00",
+      "ends_at": "2026-10-25T11:00:00-04:00",
+      "cost_free": false,
+      "cost_text": "Registration required",
+      "url": "https://mainstreetmaine.org/halloween-on-main-street-maine/",
+      "source": "mainstreetmaine.org"
+    },
+    {
+      "title": "Halloween Laughs and Drafts",
+      "description": "Halloween comedy night at Mast Landing Brewing with headliner Dan Boulger, Matt McArthur and host Julia Calasanti. Costume contest with prizes. 21+. $20 advance, $25 door.",
+      "category": "on-stage",
+      "venue": "mast-landing-westbrook",
+      "starts_at": "2026-10-31T19:00:00-04:00",
+      "ends_at": "2026-10-31T21:00:00-04:00",
+      "cost_free": false,
+      "cost_text": "$20 advance / $25 door",
+      "url": "https://www.eventbrite.com/e/halloween-laughs-and-drafts-at-mast-landing-brewing-co-westbrook-tickets-1989331207192",
+      "source": "Eventbrite"
+    },
+    {
+      "title": "Elements Election Day Fun Run/Walk to the Polls",
+      "description": "Elements' Election Day tradition returns: meet at the bookstore at 7:00am for a casual 0.8-mile walk/run up Main Street to Biddeford High School to vote. Free, all paces welcome.",
+      "category": "game-day",
+      "venue": "elements-books",
+      "starts_at": "2026-11-03T07:00:00-05:00",
+      "ends_at": null,
+      "cost_free": true,
+      "cost_text": null,
+      "url": null,
+      "source": "Elements: Books Coffee Beer (venue announcement via foodyas.com)",
+      "featured": false
+    }
+  ],
+  "note": "POC seed \u2014 real southern Maine events collected Oct 2026 by the events watch. Coordinates are approximate. Verify before production use.",
+  "towns": [
+    {
+      "label": "Portland, ME",
+      "lat": 43.6615,
+      "lng": -70.2553
+    },
+    {
+      "label": "South Portland, ME",
+      "lat": 43.6202,
+      "lng": -70.3566
+    },
+    {
+      "label": "Westbrook, ME",
+      "lat": 43.677,
+      "lng": -70.3712
+    },
+    {
+      "label": "Biddeford, ME",
+      "lat": 43.4923,
+      "lng": -70.4536
+    },
+    {
+      "label": "Saco, ME",
+      "lat": 43.5007,
+      "lng": -70.4428
+    },
+    {
+      "label": "Old Orchard Beach, ME",
+      "lat": 43.5065,
+      "lng": -70.3811
+    },
+    {
+      "label": "Scarborough, ME",
+      "lat": 43.5781,
+      "lng": -70.322
+    },
+    {
+      "label": "Gorham, ME",
+      "lat": 43.6797,
+      "lng": -70.4447
+    },
+    {
+      "label": "Topsham, ME",
+      "lat": 43.93,
+      "lng": -69.96
+    },
+    {
+      "label": "Brunswick, ME",
+      "lat": 43.9145,
+      "lng": -69.9653
+    },
+    {
+      "label": "Kennebunk, ME",
+      "lat": 43.3844,
+      "lng": -70.5394
+    },
+    {
+      "label": "Kennebunkport, ME",
+      "lat": 43.3615,
+      "lng": -70.4761
+    },
+    {
+      "label": "York, ME",
+      "lat": 43.1612,
+      "lng": -70.6489
+    },
+    {
+      "label": "Wells, ME",
+      "lat": 43.3207,
+      "lng": -70.5803
+    },
+    {
+      "label": "Sanford, ME",
+      "lat": 43.4395,
+      "lng": -70.7743
+    },
+    {
+      "label": "Lewiston, ME",
+      "lat": 44.1003,
+      "lng": -70.2148
+    },
+    {
+      "label": "Auburn, ME",
+      "lat": 44.0978,
+      "lng": -70.2312
+    },
+    {
+      "label": "Augusta, ME",
+      "lat": 44.3106,
+      "lng": -69.7795
+    },
+    {
+      "label": "Bangor, ME",
+      "lat": 44.8016,
+      "lng": -68.7712
+    },
+    {
+      "label": "Arundel, ME",
+      "lat": 43.5501,
+      "lng": -70.479
+    },
+    {
+      "label": "Ogunquit, ME",
+      "lat": 43.2483,
+      "lng": -70.6007
+    },
+    {
+      "label": "Orono, ME",
+      "lat": 44.89498,
+      "lng": -68.6687
+    },
+    {
+      "label": "Bar Harbor, ME",
+      "lat": 44.38773,
+      "lng": -68.20533
+    },
+    {
+      "label": "Bath, ME",
+      "lat": 43.9106,
+      "lng": -69.82
+    },
+    {
+      "label": "Belfast, ME",
+      "lat": 44.4259,
+      "lng": -69.00666
+    },
+    {
+      "label": "Boothbay, ME",
+      "lat": 43.89615,
+      "lng": -69.62505
+    },
+    {
+      "label": "Boothbay Harbor, ME",
+      "lat": 43.8541,
+      "lng": -69.62868
+    },
+    {
+      "label": "Brewer, ME",
+      "lat": 44.7945,
+      "lng": -68.75
+    },
+    {
+      "label": "Bucksport, ME",
+      "lat": 44.5742,
+      "lng": -68.7956
+    },
+    {
+      "label": "Camden, ME",
+      "lat": 44.2103,
+      "lng": -69.06485
+    },
+    {
+      "label": "Cumberland, ME",
+      "lat": 43.8,
+      "lng": -70.25
+    },
+    {
+      "label": "East Boothbay, ME",
+      "lat": 43.85995,
+      "lng": -69.58025
+    },
+    {
+      "label": "Eastport, ME",
+      "lat": 44.9031,
+      "lng": -67.0096
+    },
+    {
+      "label": "Eliot, ME",
+      "lat": 43.1505,
+      "lng": -70.8
+    },
+    {
+      "label": "Ellsworth, ME",
+      "lat": 44.53989,
+      "lng": -68.41941
+    },
+    {
+      "label": "Freeport, ME",
+      "lat": 43.85093,
+      "lng": -70.10967
+    },
+    {
+      "label": "Gardiner, ME",
+      "lat": 44.2312,
+      "lng": -69.7739
+    },
+    {
+      "label": "Hallowell, ME",
+      "lat": 44.285,
+      "lng": -69.7902
+    },
+    {
+      "label": "Kittery, ME",
+      "lat": 43.08837,
+      "lng": -70.7385
+    },
+    {
+      "label": "Millinocket, ME",
+      "lat": 45.73843,
+      "lng": -68.8063
+    },
+    {
+      "label": "North Berwick, ME",
+      "lat": 43.33133,
+      "lng": -70.747
+    },
+    {
+      "label": "Oakland, ME",
+      "lat": 44.55949,
+      "lng": -69.76811
+    },
+    {
+      "label": "Old Town, ME",
+      "lat": 44.94143,
+      "lng": -68.64303
+    },
+    {
+      "label": "Patten, ME",
+      "lat": 45.997,
+      "lng": -68.443
+    },
+    {
+      "label": "Rockland, ME",
+      "lat": 44.10483,
+      "lng": -69.10843
+    },
+    {
+      "label": "Searsport, ME",
+      "lat": 44.4515,
+      "lng": -68.9245
+    },
+    {
+      "label": "Sidney, ME",
+      "lat": 44.4407,
+      "lng": -69.7884
+    },
+    {
+      "label": "Skowhegan, ME",
+      "lat": 44.7651,
+      "lng": -69.7195
+    },
+    {
+      "label": "South Berwick, ME",
+      "lat": 43.235,
+      "lng": -70.809
+    },
+    {
+      "label": "Southport, ME",
+      "lat": 43.807,
+      "lng": -69.658
+    },
+    {
+      "label": "Springvale, ME",
+      "lat": 43.44834,
+      "lng": -70.78281
+    },
+    {
+      "label": "Union, ME",
+      "lat": 44.2461,
+      "lng": -69.272
+    },
+    {
+      "label": "Unity, ME",
+      "lat": 44.6126,
+      "lng": -69.3415
+    },
+    {
+      "label": "Waterboro, ME",
+      "lat": 43.53674,
+      "lng": -70.72443
+    },
+    {
+      "label": "Waterville, ME",
+      "lat": 44.55299,
+      "lng": -69.63599
+    },
+    {
+      "label": "Wiscasset, ME",
+      "lat": 44.00353,
+      "lng": -69.6724
+    }
+  ],
+  "venues": [
+    {
+      "address": "609 Congress St",
+      "city": "Portland",
+      "key": "state",
+      "lat": 43.653,
+      "lng": -70.261,
+      "name": "State Theatre"
+    },
+    {
+      "address": "20 Myrtle St",
+      "city": "Portland",
+      "key": "merrill",
+      "lat": 43.665,
+      "lng": -70.255,
+      "name": "Merrill Auditorium"
+    },
+    {
+      "address": "121 Center St",
+      "city": "Portland",
+      "key": "aura",
+      "lat": 43.657,
+      "lng": -70.258,
+      "name": "AURA"
+    },
+    {
+      "address": "30 Danforth St #105",
+      "city": "Portland",
+      "key": "bigroom",
+      "lat": 43.648,
+      "lng": -70.256,
+      "name": "Big Room Studios"
+    },
+    {
+      "address": "47 Middle St",
+      "city": "Portland",
+      "key": "eastender",
+      "lat": 43.6575,
+      "lng": -70.252,
+      "name": "The East Ender"
+    },
+    {
+      "address": "538 Congress St",
+      "city": "Portland",
+      "key": "space",
+      "lat": 43.6535,
+      "lng": -70.262,
+      "name": "SPACE"
+    },
+    {
+      "address": "181 State St",
+      "city": "Portland",
+      "key": "ols",
+      "lat": 43.654,
+      "lng": -70.266,
+      "name": "One Longfellow Square"
+    },
+    {
+      "address": "519 Congress St",
+      "city": "Portland",
+      "key": "mechhall",
+      "lat": 43.6545,
+      "lng": -70.263,
+      "name": "Mechanics' Hall"
+    },
+    {
+      "address": "504 Congress St",
+      "city": "Portland",
+      "key": "arcadia",
+      "lat": 43.654,
+      "lng": -70.264,
+      "name": "Arcadia"
+    },
+    {
+      "address": "31 Diamond St",
+      "city": "Portland",
+      "key": "orangebike",
+      "lat": 43.66,
+      "lng": -70.25,
+      "name": "Orange Bike Brewing Co"
+    },
+    {
+      "address": "4 Canal Plaza",
+      "city": "Portland",
+      "key": "novare",
+      "lat": 43.657,
+      "lng": -70.251,
+      "name": "Novare Res Bier Cafe"
+    },
+    {
+      "address": "88 Bedford St",
+      "city": "Portland",
+      "key": "hannaford",
+      "lat": 43.666,
+      "lng": -70.278,
+      "name": "Hannaford Hall, USM"
+    },
+    {
+      "address": "100 Fore St",
+      "city": "Portland",
+      "key": "roux",
+      "lat": 43.652,
+      "lng": -70.285,
+      "name": "Roux Institute"
+    },
+    {
+      "address": "58 Alder St",
+      "city": "Portland",
+      "key": "bayside",
+      "lat": 43.665,
+      "lng": -70.258,
+      "name": "Bayside Bowl"
+    },
+    {
+      "address": "625 Congress St",
+      "city": "Portland",
+      "key": "genos",
+      "lat": 43.6525,
+      "lng": -70.26,
+      "name": "Geno's Rock Club"
+    },
+    {
+      "address": "30 Newbury St",
+      "city": "Portland",
+      "key": "velvetdog",
+      "lat": 43.656,
+      "lng": -70.253,
+      "name": "The Velvet Dog"
+    },
+    {
+      "address": "34 Preble St",
+      "city": "Portland",
+      "key": "thesquare",
+      "lat": 43.657,
+      "lng": -70.257,
+      "name": "THE SQUARE"
+    },
+    {
+      "address": "40 E Emerson Cummings Blvd",
+      "city": "Old Orchard Beach",
+      "key": "oobhs",
+      "lat": 43.518,
+      "lng": -70.377,
+      "name": "OOB High School"
+    },
+    {
+      "address": "215 Saco Ave",
+      "city": "Old Orchard Beach",
+      "key": "jimmys",
+      "lat": 43.5185,
+      "lng": -70.379,
+      "name": "Jimmy the Greek's"
+    },
+    {
+      "address": "53 Old Post Rd",
+      "city": "Arundel",
+      "key": "vinegar",
+      "lat": 43.5501,
+      "lng": -70.479,
+      "name": "Vinegar Hill Music Theatre"
+    },
+    {
+      "address": "1 IDEXX Dr",
+      "city": "Westbrook",
+      "key": "idexx",
+      "lat": 43.677,
+      "lng": -70.3712,
+      "name": "IDEXX Laboratories"
+    },
+    {
+      "address": "371 Main St",
+      "city": "Saco",
+      "key": "dyer",
+      "lat": 43.5007,
+      "lng": -70.4428,
+      "name": "Dyer Library"
+    },
+    {
+      "address": "205 Main St",
+      "city": "Biddeford",
+      "key": "citytheater",
+      "lat": 43.4923,
+      "lng": -70.4536,
+      "name": "City Theater"
+    },
+    {
+      "address": "37 College Ave",
+      "city": "Gorham",
+      "key": "usmgorham",
+      "lat": 43.6797,
+      "lng": -70.4447,
+      "name": "USM Gorham Campus"
+    },
+    {
+      "address": "2 Fort Rd",
+      "city": "South Portland",
+      "key": "smcc",
+      "lat": 43.62,
+      "lng": -70.3566,
+      "name": "SMCC"
+    },
+    {
+      "address": "980 Portland Rd",
+      "city": "Saco",
+      "key": "aquaboggan",
+      "lat": 43.51,
+      "lng": -70.45,
+      "name": "Aquaboggan Water Park"
+    },
+    {
+      "address": "438 Main St",
+      "city": "Saco",
+      "key": "thornton",
+      "lat": 43.5,
+      "lng": -70.445,
+      "name": "Thornton Academy"
+    },
+    {
+      "address": "68 Eagles Way",
+      "city": "Topsham",
+      "key": "mtararat",
+      "lat": 43.93,
+      "lng": -69.96,
+      "name": "Mt. Ararat High School"
+    },
+    {
+      "address": "260 Route 236",
+      "city": "South Berwick",
+      "key": "marshwood",
+      "lat": 43.235,
+      "lng": -70.809,
+      "name": "Marshwood High School"
+    },
+    {
+      "address": "371 Main St",
+      "city": "Saco",
+      "key": "sacomuseum",
+      "lat": 43.501,
+      "lng": -70.443,
+      "name": "Saco Museum"
+    },
+    {
+      "key": "ogunquit-playhouse",
+      "name": "Ogunquit Playhouse",
+      "address": "10 Main St, Ogunquit, ME 03907",
+      "city": "Ogunquit",
+      "lat": 43.2475,
+      "lng": -70.5995
+    },
+    {
+      "key": "york-beach-short-sands",
+      "name": "Short Sands Beach / York Beach Ballpark",
+      "address": "21 Railroad Avenue, York, ME 03909",
+      "city": "York",
+      "lat": 43.179,
+      "lng": -70.612
+    },
+    {
+      "key": "ogunquitfest-downtown",
+      "name": "Downtown Ogunquit & Main Beach",
+      "address": "Main Beach, Ogunquit, ME 03907",
+      "city": "Ogunquit",
+      "lat": 43.2485,
+      "lng": -70.5997
+    },
+    {
+      "key": "town-house-school-kpt",
+      "name": "The Town House School",
+      "address": "135 North Street, Kennebunkport, ME 04046",
+      "city": "Kennebunkport",
+      "lat": 43.3675,
+      "lng": -70.4815
+    },
+    {
+      "key": "york-public-library",
+      "name": "York Public Library",
+      "address": "15 Long Sands Rd, York, ME 03909",
+      "city": "York",
+      "lat": 43.168,
+      "lng": -70.648
+    },
+    {
+      "key": "kennebunk-free-library",
+      "name": "Kennebunk Free Library",
+      "address": "112 Main St, Kennebunk, ME 04043",
+      "city": "Kennebunk",
+      "lat": 43.385,
+      "lng": -70.54
+    },
+    {
+      "key": "seashore-trolley-museum",
+      "name": "Seashore Trolley Museum",
+      "address": "195 Log Cabin Rd, Kennebunkport, ME 04046",
+      "city": "Kennebunkport",
+      "lat": 43.394,
+      "lng": -70.493
+    },
+    {
+      "key": "batson-river-fish-camp",
+      "name": "Batson River Fish Camp",
+      "address": "12 Western Avenue, Kennebunk, ME 04043",
+      "city": "Kennebunk",
+      "lat": 43.386,
+      "lng": -70.537
+    },
+    {
+      "key": "ogunquit-museum-american-art",
+      "name": "Ogunquit Museum of American Art",
+      "address": "543 Shore Road, Ogunquit, ME 03907",
+      "city": "Ogunquit",
+      "lat": 43.2368,
+      "lng": -70.5935
+    },
+    {
+      "key": "drakes-island-beach",
+      "name": "Drakes Island Beach",
+      "address": "Drakes Island Rd, Wells, ME 04090",
+      "city": "Wells",
+      "lat": 43.334,
+      "lng": -70.559
+    },
+    {
+      "key": "kennebunkport-trail-hustle",
+      "name": "Kennebunkport Trails",
+      "address": null,
+      "city": "Kennebunkport",
+      "lat": 43.3617,
+      "lng": -70.4767
+    },
+    {
+      "key": "kennebunk-farmers-market",
+      "name": "Kennebunk Farmers Market",
+      "address": null,
+      "city": "Kennebunk",
+      "lat": 43.384,
+      "lng": -70.543
+    },
+    {
+      "key": "ocean-restaurant-cape-arundel",
+      "name": "Ocean Restaurant, Cape Arundel Inn & Resort",
+      "address": "208 Ocean Ave, Kennebunkport, ME 04046",
+      "city": "Kennebunkport",
+      "lat": 43.3515,
+      "lng": -70.4675
+    },
+    {
+      "key": "the-burleigh-kpt",
+      "name": "The Burleigh",
+      "address": "1 Dock Square, Kennebunkport, ME 04046",
+      "city": "Kennebunkport",
+      "lat": 43.3618,
+      "lng": -70.4768
+    },
+    {
+      "key": "earth-at-hidden-pond",
+      "name": "Earth at Hidden Pond",
+      "address": "354 Goose Rocks Rd, Kennebunkport, ME 04046",
+      "city": "Kennebunkport",
+      "lat": 43.386,
+      "lng": -70.454
+    },
+    {
+      "key": "jimmy-the-greeks",
+      "name": "Jimmy The Greek's",
+      "address": "215 Saco Ave",
+      "city": "Old Orchard Beach",
+      "lat": 43.5105,
+      "lng": -70.383
+    },
+    {
+      "key": "river-winds-farm",
+      "name": "River Winds Farm & Estate",
+      "address": "121 Louden Road",
+      "city": "Saco",
+      "lat": 43.518,
+      "lng": -70.465
+    },
+    {
+      "key": "dyer-library",
+      "name": "Dyer Library",
+      "address": "371 Main St",
+      "city": "Saco",
+      "lat": 43.5005,
+      "lng": -70.443
+    },
+    {
+      "key": "saco-museum",
+      "name": "Saco Museum",
+      "address": "371 Main St",
+      "city": "Saco",
+      "lat": 43.5005,
+      "lng": -70.443
+    },
+    {
+      "key": "thornton-academy",
+      "name": "Thornton Academy",
+      "address": "438 Main St",
+      "city": "Saco",
+      "lat": 43.496,
+      "lng": -70.448
+    },
+    {
+      "key": "hakuna-matata",
+      "name": "Hakuna Matata Sports Bar",
+      "address": "193 Main St",
+      "city": "Biddeford",
+      "lat": 43.492,
+      "lng": -70.453
+    },
+    {
+      "key": "sacred-profane",
+      "name": "Sacred Profane Brewery and Tankpub",
+      "address": "50 Washington St",
+      "city": "Biddeford",
+      "lat": 43.494,
+      "lng": -70.452
+    },
+    {
+      "key": "dunn-bar",
+      "name": "The Dunn Bar Irish Pub",
+      "address": null,
+      "city": "Biddeford",
+      "lat": 43.4925,
+      "lng": -70.4532
+    },
+    {
+      "key": "40-laconia-st",
+      "name": "40 Laconia St",
+      "address": "40 Laconia St",
+      "city": "Biddeford",
+      "lat": 43.49,
+      "lng": -70.455
+    },
+    {
+      "key": "193-main-st-108",
+      "name": "193 Main St, Suite 108",
+      "address": "193 Main St, Suite 108",
+      "city": "Biddeford",
+      "lat": 43.492,
+      "lng": -70.453
+    },
+    {
+      "key": "biddeford-hs",
+      "name": "Biddeford High School",
+      "address": null,
+      "city": "Biddeford",
+      "lat": 43.493,
+      "lng": -70.445
+    },
+    {
+      "key": "apero",
+      "name": "Ap\u00e9ro",
+      "address": "20 Alfred St",
+      "city": "Biddeford",
+      "lat": 43.4915,
+      "lng": -70.4525
+    },
+    {
+      "key": "une-alfond-forum",
+      "name": "UNE Harold Alfond Forum",
+      "address": "630 Pool St",
+      "city": "Biddeford",
+      "lat": 43.471,
+      "lng": -70.447
+    },
+    {
+      "key": "lincoln-hotel",
+      "name": "The Lincoln Hotel",
+      "address": "17 Lincoln St",
+      "city": "Biddeford",
+      "lat": 43.492,
+      "lng": -70.454
+    },
+    {
+      "key": "wpac",
+      "name": "Westbrook Performing Arts Center",
+      "address": "471 Stroudwater St",
+      "city": "Westbrook",
+      "lat": 43.669,
+      "lng": -70.357
+    },
+    {
+      "key": "rock-row",
+      "name": "Rock Row (Quarryside)",
+      "address": "87 Rock Row",
+      "city": "Westbrook",
+      "lat": 43.648,
+      "lng": -70.355
+    },
+    {
+      "key": "smiling-hill-farm",
+      "name": "Smiling Hill Farm",
+      "address": "781 County Rd",
+      "city": "Westbrook",
+      "lat": 43.649,
+      "lng": -70.3812
+    },
+    {
+      "key": "riverbank-park",
+      "name": "Riverbank Park",
+      "address": "671 Main St",
+      "city": "Westbrook",
+      "lat": 43.677,
+      "lng": -70.365
+    },
+    {
+      "key": "mast-landing-westbrook",
+      "name": "Mast Landing Brewing Company \u2014 Westbrook Taproom",
+      "address": "920 Main St",
+      "city": "Westbrook",
+      "lat": 43.676,
+      "lng": -70.38
+    },
+    {
+      "key": "elements-books",
+      "name": "Elements: Books Coffee Beer",
+      "address": "265 Main St",
+      "city": "Biddeford",
+      "lat": 43.494,
+      "lng": -70.458
+    }
+  ]
+}
