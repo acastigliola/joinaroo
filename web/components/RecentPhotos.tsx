@@ -1,21 +1,14 @@
-import Link from 'next/link';
-import { API_BASE_URL, type RecentPhotos as RecentPhotosData } from '../lib/api';
+import { type RecentPhotos as RecentPhotosData } from '../lib/api';
 import CheckInButton from './CheckInButton';
 import RecentPhotosActions from './RecentPhotosActions';
+import RecentPhotosStrip from './RecentPhotosStrip';
 
 /** "Recent game-day photos" + fans panel (Angelo's mockup, Oct 27) for an
  * "event listing with photos": an upcoming listing with no photos of its
  * own shows the pooled photos from the same home team's last games at
  * this venue (API: recent_photos). Server component; the client islands
- * are the actions row (add photo / gallery) and the check-in button. */
-
-function dateBadge(iso: string): string {
-  return new Intl.DateTimeFormat('en-US', {
-    timeZone: 'America/New_York',
-    month: 'short',
-    day: 'numeric',
-  }).format(new Date(iso));
-}
+ * are the photo strip (gallery lightbox), the actions row (add photo /
+ * gallery) and the check-in button. */
 
 function initialsOf(name: string): string {
   return name
@@ -55,30 +48,7 @@ export default function RecentPhotos({
           <span className="recent-pill">RECENT HOME GAMES</span>
         </div>
         <p className="recent-sub">{sub}</p>
-        <div className="recent-strip">
-          {photos.map((p, i) => (
-            <Link
-              key={i}
-              href={`/events/${p.event_slug}#photos`}
-              className="recent-thumb"
-            >
-              <img
-                src={`${API_BASE_URL}${p.url}`}
-                alt=""
-                loading="lazy"
-                className="recent-photo"
-              />
-              <span className="recent-badge">
-                <img
-                  src="/icons/icon-camera.png"
-                  alt=""
-                  className="recent-badge-icon"
-                />
-                {dateBadge(p.event_starts_at)}
-              </span>
-            </Link>
-          ))}
-        </div>
+        <RecentPhotosStrip photos={photos} />
         <div className="recent-meta">
           <span className="recent-meta-text">
             <img src="/icons/icon-image.png" alt="" className="recent-meta-icon" />

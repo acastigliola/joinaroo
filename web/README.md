@@ -1,33 +1,42 @@
-# Joinaroo Web
+# SME Web — public frontend
 
-The public site — [joinaroo.com](https://joinaroo.com) — built with
-Next.js (App Router, TypeScript) and server-rendered event pages.
+Next.js 14+ (App Router, TypeScript) public website for Southern Maine Events.
+Public **read-only** surface: browse/search events, per-event SEO pages, category
+index. Talks to the shared SME web-service backend.
 
-## Highlights
+## Run
 
-- **Home sections** — Featured, Today, This Weekend, Nearby, with the
-  frozen card system: category chips, distance bands, live cards with
-  avatar stacks and "people here now."
-- **Live surfaces** — the Live Events strip, the **Peephole** (your city's
-  night through real crowd photos), and **Room Proof** (a previous night at
-  the same venue, credited, on photo-less listings).
-- **Event pages** — facts, credited photo galleries with a shared
-  lightbox, the Live now! / ended people panels, game summaries with team
-  records and mascot lockups for sports finals, Community Pick blocks.
-- **SEO** — per-event pages, sitemap (~2,100 URLs), structured data.
-- **Auth** — the shared sign-up/login modal (email, phone, Google,
-  Facebook) talking to the API.
-
-## Layout
-
-```
-app/          routes: home, event detail, categories, towns, search,
-              saves, settings, auth, per-user pages, sitemap/robots
-components/   cards, live strip, Peephole, Room Proof, LivePanel,
-              galleries, community blocks, headers, mobile home
-lib/          API client and shared helpers (incl. the live-window rules)
-public/       static assets (icons/images omitted from this snapshot)
+```bash
+npm install
+npm run dev      # http://localhost:3000
 ```
 
-Talks to the Joinaroo API (`../api`). No secrets in the tree — public
-configuration only.
+The API backend must be running (default `http://localhost:4000`). Override with:
+
+```bash
+NEXT_PUBLIC_API_URL=https://api.example.com npm run dev
+```
+
+## Pages
+
+- `/` — hero, location controls (browser geolocation or Maine town picker,
+  default Portland, ME), category chips, text search, event cards, featured
+  spotlight. All server-rendered from the API at request time.
+- `/events/[slug]` — SSR per-event page with `<title>`/meta description and
+  JSON-LD `Event` schema for SEO.
+- `/categories` — category grid linking to filtered home.
+
+## Deploy
+
+`next.config.js` sets `output: 'standalone'` — `npm run build` produces a
+self-contained `.next/standalone` server for portable Docker deploys.
+
+```dockerfile
+FROM node:20-alpine
+WORKDIR /app
+COPY .next/standalone ./
+COPY .next/static ./.next/static
+COPY public ./public
+ENV PORT=3000 NEXT_PUBLIC_API_URL=https://api.example.com
+CMD ["node", "server.js"]
+```

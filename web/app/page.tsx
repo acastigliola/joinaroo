@@ -2,6 +2,7 @@ import { Suspense, type ReactNode } from 'react';
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import EventCard from '../components/EventCard';
+import SearchBar from '../components/SearchBar';
 import LocationControls from '../components/LocationControls';
 import DesktopHomeHeader from '../components/DesktopHomeHeader';
 import MobileHome from '../components/mobile/MobileHome';
@@ -57,6 +58,34 @@ function chipHref(
   }
   const s = p.toString();
   return s ? `/?${s}` : '/';
+}
+
+/** Neon homepage category tiles (Angelo's mockup, Nov 4): icon tiles
+ *  shown only at desktop widths (CSS-gated; the chips below stay the
+ *  narrow-width control). Each tile selects exactly one existing
+ *  category through the same chipHref machinery — Music and Comedy
+ *  both land on on-stage, the closest existing category. */
+const NEON_TILES: { label: string; icon: string; slug: string | null }[] = [
+  { label: 'All Events', icon: '/neon/icon-all-events.png', slug: null },
+  { label: 'After Dark', icon: '/neon/icon-after-dark.png', slug: 'after-dark' },
+  { label: 'On Stage', icon: '/neon/icon-music.png', slug: 'on-stage' },
+  { label: 'Bar & Brain', icon: '/neon/icon-bar-brain.png', slug: 'bar-brain' },
+  { label: 'Game Day', icon: '/neon/icon-sports.png', slug: 'game-day' },
+  { label: 'Seasonal', icon: '/neon/icon-festivals.png', slug: 'seasonal' },
+  { label: 'Taste of Maine', icon: '/neon/icon-food-drink.png', slug: 'taste-maine' },
+  { label: 'Gallery & Craft', icon: '/neon/icon-arts-culture.png', slug: 'gallery' },
+  { label: 'Family Fun', icon: '/neon/icon-family-fun.png', slug: 'family-fun' },
+  { label: 'Town Square', icon: '/neon/icon-outdoors.png', slug: 'town-square' },
+];
+
+function initialsOf(name: string): string {
+  return name
+    .split(/\s+/)
+    .map((w) => w[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
 }
 
 /** Section header matching the mobile design: icon + bold title + gray
@@ -347,15 +376,62 @@ export default async function Home({
     flush('g-end');
   }
 
+  // "Happening Now" sidebar panel (Angelo's mockup, Nov 4): the first
+  // event that is live right now — credited attendee photos inside the
+  // LIVE-pill window — from the already-fetched featured pool (which
+  // merges live events statewide). No live event, no panel: the site
+  // never renders an empty module.
+  const liveNow = featured.find(
+    (e) =>
+      (e.live_people?.length ?? 0) > 0 && livePillExpiresMs(e) > Date.now(),
+  );
+
   return (
     <div className="d-home">
       <DesktopHomeHeader label={label} searchInitial={q || ''} />
       <section className="d-hero">
         <div className="d-wrap">
-          <h1>What&rsquo;s happening near you in Maine</h1>
-          <p className="d-hero-sub">
-            Discover concerts, comedy, sports, festivals and more.
-          </p>
+          <div className="d-hero-legacy">
+            <h1>What&rsquo;s happening near you in Maine</h1>
+            <p className="d-hero-sub">
+              Discover concerts, comedy, sports, festivals and more.
+            </p>
+          </div>
+          {/* Neon hero (Angelo's mockup, Nov 4): CSS shows this only at
+              desktop widths; the legacy lighthouse hero above keeps
+              every narrower rendering unchanged. Art cut from his
+              supplied sheets (public/neon/). */}
+          <div className="d-hero-neon">
+            <div className="d-hero-top">
+              <img
+                className="d-hero-maine"
+                src="/neon/maine-outline.png"
+                alt=""
+              />
+              <div className="d-hero-copy">
+                <h1 className="d-hero-h1">
+                  Discover
+                  <br />
+                  Live Events
+                  <br />
+                  in <span className="d-hero-grad">Maine</span>
+                </h1>
+                <p className="d-hero-genres">
+                  Concerts <i aria-hidden="true">•</i> Comedy{' '}
+                  <i aria-hidden="true">•</i> Sports <i aria-hidden="true">•</i>{' '}
+                  Festivals <i aria-hidden="true">•</i> Community
+                </p>
+              </div>
+              <img className="d-hero-singer" src="/neon/singer-real2.webp" alt="" />
+            </div>
+            <Suspense>
+              <SearchBar
+                initial={q || ''}
+                variant="hero"
+                locationLabel={label}
+              />
+            </Suspense>
+          </div>
         </div>
       </section>
 
@@ -364,6 +440,44 @@ export default async function Home({
           <Suspense>
             <LocationControls currentLabel={label} located={located} />
           </Suspense>
+          <nav className="d-tiles" aria-label="Browse by category">
+            {NEON_TILES.map((t) => {
+              // Same multi-select toggle behavior as the mobile chips:
+              // clicking adds/removes the category from ?categories=a,b.
+              if (!t.slug) {
+                return (
+                  <Link
+                    key={t.label}
+                    href={chipHref(chipBase, { categories: null })}
+                    className={
+                      'd-tile' +
+                      (selectedCategories.length === 0 ? ' d-tile-active' : '')
+                    }
+                  >
+                    <img src={t.icon} alt="" />
+                    <span>{t.label}</span>
+                  </Link>
+                );
+              }
+              const active = selectedCategories.includes(t.slug);
+              const next = active
+                ? selectedCategories.filter((s) => s !== t.slug)
+                : [...selectedCategories, t.slug];
+              return (
+                <Link
+                  key={t.label}
+                  href={chipHref(chipBase, {
+                    categories:
+                      next.length > 0 ? [...next].sort().join(',') : null,
+                  })}
+                  className={'d-tile' + (active ? ' d-tile-active' : '')}
+                >
+                  <img src={t.icon} alt="" />
+                  <span>{t.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
           {categories.length > 0 && (
             <div className="chips" aria-label="Filter by category">
               <Link
@@ -487,12 +601,13 @@ export default async function Home({
               )}
             </section>
             </div>
-            {trending.length > 0 && (
+            {(trending.length > 0 || liveNow) && (
               <aside className="d-side">
+                {trending.length > 0 && (
                 <div className="d-trend">
                   <div className="d-trend-head">
                     <svg
-                      className="d-trend-flame"
+                      className="d-trend-flame d-trend-flame-svg"
                       width="22"
                       height="22"
                       viewBox="0 0 24 24"
@@ -503,8 +618,17 @@ export default async function Home({
                         fill="#F2600C"
                       />
                     </svg>
+                    {/* Neon flame cut from Angelo's sheet (Nov 4): CSS
+                        swaps it in for the SVG at desktop widths. */}
+                    <img
+                      className="d-trend-flame d-trend-flame-img"
+                      src="/neon/flame.png"
+                      alt=""
+                      width={22}
+                      height={24}
+                    />
                     <div>
-                      <h3 className="d-trend-title">Trending this week</h3>
+                      <h3 className="d-trend-title">Trending This Week</h3>
                       <p className="d-trend-sub">Popular with Joinaroo users</p>
                     </div>
                   </div>
@@ -534,6 +658,55 @@ export default async function Home({
                     ))}
                   </ol>
                 </div>
+                )}
+                {liveNow && (
+                  <div className="d-happening">
+                    <div className="d-happening-head">
+                      <span className="d-happening-dot" aria-hidden="true" />
+                      <div>
+                        <h3 className="d-happening-title">Happening Now</h3>
+                        <p className="d-happening-sub">
+                          Live activity from local events
+                        </p>
+                      </div>
+                    </div>
+                    <Link
+                      href={`/events/${liveNow.slug}#hero`}
+                      className="d-happening-row"
+                    >
+                      {liveNow.live_photo_url && (
+                        <img
+                          className="d-happening-thumb"
+                          src={liveNow.live_photo_url}
+                          alt=""
+                        />
+                      )}
+                      <span className="d-happening-name">{liveNow.title}</span>
+                      <span className="d-happening-live">Live</span>
+                    </Link>
+                    <div className="d-happening-people">
+                      <div className="d-happening-avatars">
+                        {(liveNow.live_people ?? [])
+                          .slice(0, 5)
+                          .map((p, i) =>
+                            p.avatar_url ? (
+                              <img key={i} src={p.avatar_url} alt={p.name} />
+                            ) : (
+                              <span
+                                key={i}
+                                className="d-happening-initials"
+                              >
+                                {initialsOf(p.name)}
+                              </span>
+                            ),
+                          )}
+                      </div>
+                      <span className="d-happening-count">
+                        {liveNow.live_people?.length ?? 0} checked in
+                      </span>
+                    </div>
+                  </div>
+                )}
               </aside>
             )}
           </div>

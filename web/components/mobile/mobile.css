@@ -242,6 +242,30 @@ a.m-rchip-active {
   font-size: 15px;
   cursor: pointer;
 }
+/* Live search states (app parity, Nov 5): centered spinner / error+retry */
+.m-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+}
+.m-center .m-empty {
+  padding: 0 0 12px;
+}
+.m-spinner {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 4px solid #dde3ea;
+  border-top-color: #0b1d3a;
+  animation: m-spin 0.8s linear infinite;
+}
+@keyframes m-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 .m-card {
   background: #fff;
   border-radius: 12px;
@@ -487,6 +511,7 @@ a.m-rchip-active {
   background: none; border: none; color: #9AA3B2; cursor: pointer;
   font-size: 14px; display: block; margin: 8px auto 0;
 }
+.auth-modal-card .auth-forgot { color: #42A5F5; }
 .auth-modal-card .auth-error { color: #FF8A8A; font-size: 13px; margin: 0 0 12px; }
 .auth-modal-card .pw-checks { margin-bottom: 12px; }
 .auth-modal-card .pw-check { color: #9AA3B2; font-size: 13px; }
@@ -499,9 +524,11 @@ a.m-rchip-active {
 .pw-row { position: relative; margin-bottom: 4px; }
 .pw-input { padding-right: 44px; }
 .pw-eye {
-  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
-  background: none; border: none; font-size: 18px; cursor: pointer; padding: 8px;
+  position: absolute; right: 4px; top: 50%; transform: translateY(calc(-50% - 7px));
+  background: none; border: none; cursor: pointer; padding: 0;
+  width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
 }
+.pw-eye img { width: 28px; height: auto; display: block; }
 .pw-checks { margin: 8px 0 12px; }
 .pw-check { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #888; margin-bottom: 4px; }
 .pw-box {

@@ -30,7 +30,44 @@ export default function DesktopHomeHeader({
             alt="Joinaroo Local Events"
             className="brand-logo"
           />
+          {/* Neon lockup cut from Angelo's mockup sheet (Nov 4): shown
+              only at desktop widths by CSS; the standard logo keeps
+              every narrower rendering unchanged. */}
+          <img
+            src="/neon/logo-lockup.png"
+            alt="Joinaroo Local Events"
+            className="brand-logo-neon"
+          />
         </Link>
+        <nav className="d-nav" aria-label="Primary">
+          <Link className="d-nav-link d-nav-active" href="/">
+            Events
+          </Link>
+          <Link className="d-nav-link" href="/towns">
+            Venues
+          </Link>
+          <Link className="d-nav-link" href="/search">
+            Artists
+          </Link>
+          <Link className="d-nav-link" href="/events-in/portland-me">
+            Explore
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M6 9l6 6 6-6"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </Link>
+        </nav>
         <div className="d-header-search">
           <Suspense>
             <SearchBar initial={searchInitial || ''} variant="pill" />

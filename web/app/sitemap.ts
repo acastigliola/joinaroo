@@ -1,5 +1,12 @@
 import type { MetadataRoute } from 'next';
 import { API_BASE_URL } from '../lib/api';
+import {
+  SEGMENTS,
+  cityQualifies,
+  getLandingIndex,
+  segmentQualifies,
+  venueQualifies,
+} from '../lib/landing';
 
 // Regenerate at most hourly so newly synced events (and newly past ones)
 // roll into the sitemap without a redeploy.
@@ -63,10 +70,45 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
   });
 
+  // Landing pages (cities / segments / venues) — only the ones that clear
+  // the thin-page floors, mirroring the pages' own qualification rules.
+  const idx = await getLandingIndex().catch(() => null);
+  const landingEntries: MetadataRoute.Sitemap = [];
+  if (idx) {
+    for (const ci of idx.cities.values()) {
+      if (!cityQualifies(ci)) continue;
+      landingEntries.push({
+        url: `${SITE}/events-in/${ci.slug}`,
+        lastModified: now,
+        changeFrequency: 'daily',
+        priority: 0.8,
+      });
+      for (const seg of SEGMENTS) {
+        if (!segmentQualifies(ci, seg)) continue;
+        landingEntries.push({
+          url: `${SITE}/events-in/${ci.slug}/${seg}`,
+          lastModified: now,
+          changeFrequency: 'daily',
+          priority: 0.7,
+        });
+      }
+    }
+    for (const vi of idx.venues.values()) {
+      if (!venueQualifies(vi)) continue;
+      landingEntries.push({
+        url: `${SITE}/venues/${vi.slug}`,
+        lastModified: now,
+        changeFrequency: 'daily',
+        priority: 0.6,
+      });
+    }
+  }
+
   return [
     { url: `${SITE}/`, lastModified: now, changeFrequency: 'hourly', priority: 1 },
     { url: `${SITE}/towns`, changeFrequency: 'weekly', priority: 0.6 },
     { url: `${SITE}/categories`, changeFrequency: 'weekly', priority: 0.6 },
+    ...landingEntries,
     ...eventEntries,
   ];
 }

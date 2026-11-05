@@ -24,7 +24,7 @@ const db = new Database(DB_PATH);
 db.exec(fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8'));
 
 // Lightweight migrations for pre-existing DBs (POC: no migration runner yet).
-for (const col of ['image_url', 'recurrence', 'series_key']) {
+for (const col of ['image_url', 'recurrence', 'series_key', 'verified_at']) {
   const exists = db.prepare(`SELECT 1 FROM pragma_table_info('events') WHERE name = ?`).get(col);
   if (!exists) db.exec(`ALTER TABLE events ADD COLUMN ${col} TEXT`);
 }
@@ -67,6 +67,14 @@ for (const col of ['image_url', 'recurrence', 'series_key']) {
   if (!hasCardTopRatio) db.exec(`ALTER TABLE events ADD COLUMN card_top_ratio TEXT`);
 }
 {
+  // Desktop-only hero image for the event detail page: a curated wide
+  // crop used at desktop widths when the full hero (e.g. a square or
+  // portrait poster) center-slices badly in the wide desktop hero frame
+  // (1100x420). Mobile keeps image_url (Angelo, Nov 4).
+  const hasHeroDesktop = db.prepare(`SELECT 1 FROM pragma_table_info('events') WHERE name = ?`).get('hero_desktop_url');
+  if (!hasHeroDesktop) db.exec(`ALTER TABLE events ADD COLUMN hero_desktop_url TEXT`);
+}
+{
   // Game-summary module data (Angelo, Oct 28): JSON for the enriched
   // score header on a tracked game's detail page — team mascots/logos,
   // season + conference records, a note panel, and what's-next rows.
@@ -86,6 +94,15 @@ for (const col of ['image_url', 'recurrence', 'series_key']) {
   // r/portlandme watchlist bands; drives the COMMUNITY PICK chip on cards.
   const hasCommunityPick = db.prepare(`SELECT 1 FROM pragma_table_info('events') WHERE name = ?`).get('community_pick');
   if (!hasCommunityPick) db.exec(`ALTER TABLE events ADD COLUMN community_pick INTEGER NOT NULL DEFAULT 0`);
+}
+{
+  // Event status (Angelo, Nov 4): 'scheduled' | 'cancelled' | 'postponed'.
+  // Drives the JSON-LD eventStatus, the visible status banner on the
+  // detail page, and landing-list exclusion for cancelled events. A
+  // cancelled/postponed event keeps its page (with the banner) instead of
+  // being hidden — the URL stays the canonical record of the change.
+  const hasStatus = db.prepare(`SELECT 1 FROM pragma_table_info('events') WHERE name = ?`).get('status');
+  if (!hasStatus) db.exec(`ALTER TABLE events ADD COLUMN status TEXT NOT NULL DEFAULT 'scheduled'`);
 }
 {
   // Community block (Angelo, Oct 29): curated JSON from the r/portlandme
@@ -393,6 +410,8 @@ function eventToJson(row, distanceKm, adminView) {
           city: row.venue_city,
           lat: row.venue_lat,
           lng: row.venue_lng,
+          image_url: venuePhotoUrl(row.venue_id),
+          map_url: venueMapUrl(row),
         }
       : null,
     starts_at: row.starts_at,
@@ -405,6 +424,7 @@ function eventToJson(row, distanceKm, adminView) {
     recurrence: row.recurrence,
     series_key: row.series_key,
     featured: !!row.featured,
+    status: row.status || 'scheduled',
     sold_out: !!row.sold_out,
     community_pick: !!row.community_pick,
     featured_pin: row.featured_pin ?? null,
@@ -413,6 +433,7 @@ function eventToJson(row, distanceKm, adminView) {
     card_image_url: row.card_image_url ?? null,
     card_layout: row.card_layout ?? null,
     card_top_ratio: row.card_top_ratio ?? null,
+    hero_desktop_url: row.hero_desktop_url ?? null,
     game_summary: (() => {
       if (!row.game_summary) return null;
       try { return JSON.parse(row.game_summary); } catch { return null; }
@@ -428,6 +449,7 @@ function eventToJson(row, distanceKm, adminView) {
     distance_km: distanceKm === undefined ? null : distanceKm,
     created_at: row.created_at,
     updated_at: row.updated_at,
+    verified_at: row.verified_at,
   };
   if (adminView) out.hidden = !!row.hidden;
   return out;
@@ -490,8 +512,8 @@ function seedIfEmpty() {
     const catId = {};
     for (const c of db.prepare('SELECT id, slug FROM categories').all()) catId[c.slug] = c.id;
     const ins = db.prepare(
-      `INSERT INTO events (slug, title, description, category_id, venue_id, starts_at, ends_at, cost_free, cost_text, url, source, image_url, recurrence, series_key, featured)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      `INSERT INTO events (slug, title, description, category_id, venue_id, starts_at, ends_at, cost_free, cost_text, url, source, image_url, recurrence, series_key, featured, verified_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`
     );
     for (const e of seed.events) {
       const categoryId = catId[e.category];
@@ -575,8 +597,8 @@ async function initGeo() {
   geoReady = true;
   try {
     const { Reader } = require('@maxmind/geoip2-node');
-    const cityPath = 'geoip/GeoLite2-City.mmdb';
-    const asnPath = 'geoip/GeoLite2-ASN.mmdb';
+    const cityPath = '/opt/smevents/geoip/GeoLite2-City.mmdb';
+    const asnPath = '/opt/smevents/geoip/GeoLite2-ASN.mmdb';
     if (fs.existsSync(cityPath)) geoCity = await Reader.open(cityPath);
     if (fs.existsSync(asnPath)) geoAsn = await Reader.open(asnPath);
     console.log('GeoIP databases loaded:', !!geoCity, !!geoAsn);
@@ -1884,7 +1906,7 @@ app.delete('/api/saves/:eventId', auth, (req, res) => {
 
 const EVENT_SELECT = `
   SELECT e.id, e.slug, e.title, e.description, e.starts_at, e.ends_at,
-         e.cost_free, e.cost_text, e.url, e.source, e.featured, e.sold_out, e.community_pick, e.featured_pin, e.strip_focus, e.photo_focus, e.card_image_url, e.card_layout, e.card_top_ratio, e.game_summary, e.community, e.hidden, e.finder_followed, e.finder_committed, e.room_proof_off,
+         e.cost_free, e.cost_text, e.url, e.source, e.featured, e.sold_out, e.community_pick, e.featured_pin, e.strip_focus, e.photo_focus, e.card_image_url, e.card_layout, e.card_top_ratio, e.hero_desktop_url, e.game_summary, e.community, e.hidden, e.finder_followed, e.finder_committed, e.room_proof_off, e.status,
          e.image_url, e.recurrence, e.series_key,
          e.created_at, e.updated_at,
          c.id AS cat_id, c.slug AS cat_slug, c.name AS cat_name,
@@ -2024,6 +2046,165 @@ function attachScores(events) {
  * still prints only at n >= 7 followed nights, and the commitment panel
  * speaks only about our own checking, never the venue's yield.
  */
+/**
+ * VENUE_PHOTO_PICKS (Angelo, Nov 4): venue_id -> a REAL photograph of the
+ * venue itself, served as venue.image_url for the desktop detail page's
+ * sidebar venue card. Angelo rejected the mockup's AI venue storefront
+ * outright — a pick is only ever a genuine photo of the actual
+ * building/room, sourced (in order) from the venue's Places listing
+ * photos, the venue's own public web presence, or our own uploaded
+ * event photos at that venue. Venues without a pick render the card
+ * with no photo — never a fake, never stock, never AI art.
+ * A pick is either:
+ *   - a string: a direct self-hosted uploads path (or full URL), or
+ *   - a number: an event_photos id, resolved to /api/uploads/<filename>
+ *     by venuePhotoUrl() below.
+ *   435 = Live at Madrid's, Portland: the building's EXTERIOR — the
+ *   huge painted "Live at Madrid's / Portland Maine" mural (Ryan Adams)
+ *   on the 144 Fore St wall. Real photo sourced from the venue's
+ *   Places listing (Instagram @portlandoldport,
+ *   https://www.instagram.com/p/DUq9OfsiVYu/), self-hosted as
+ *   venue-435-building.jpg. (Angelo, Nov 4 late: building photo, not
+ *   the interior stage shot this replaced.)
+ */
+const VENUE_PHOTO_PICKS = {
+  435: '/api/uploads/venue-435-building.jpg',
+};
+
+function venuePhotoUrl(venueId) {
+  const pick = VENUE_PHOTO_PICKS[venueId];
+  if (pick == null) return null;
+  if (typeof pick === 'number') {
+    const p = db
+      .prepare('SELECT filename FROM event_photos WHERE id = ?')
+      .get(pick);
+    return p ? `/api/uploads/${p.filename}` : null;
+  }
+  return pick;
+}
+
+/**
+ * VENUE STATIC MAPS (Angelo, Nov 4 late): the desktop venue card's map
+ * is a self-hosted static image, not the keyless Google embed iframe —
+ * Angelo wanted a wider rectangle (~288x115 display) and a PURPLE pin,
+ * and the embed's red pin cannot be recolored. No Google Maps API key
+ * is available to us (prod.env holds only the OAuth client id/secret),
+ * so the image is stitched from OpenStreetMap tiles by
+ * generate-venue-map.py (PIL on the box): 576x230 PNG, purple teardrop
+ * pin on the exact coordinate, OSM attribution baked in.
+ * Angelo's label rule: the map is centered/geocoded on the venue's
+ * STREET ADDRESS — never the venue name — and the address is drawn
+ * beside the pin as the image's text label, like his mockup.
+ * Generation is lazy: venueMapUrl() serves the uploads path once the
+ * PNG exists and otherwise kicks off a one-time background generation
+ * (per-venue in-flight guard); GET /api/venue-map/:id generates +
+ * serves on demand. A venue with no street address on file simply
+ * gets no map — the card omits the area gracefully.
+ */
+function venueMapFile(venueId) {
+  return path.join(UPLOAD_DIR, `map-${venueId}.png`);
+}
+
+const venueMapInFlight = new Set();
+
+function venueMapUrl(row) {
+  if (!row.venue_id) return null;
+  if (fs.existsSync(venueMapFile(row.venue_id))) {
+    return `/api/uploads/map-${row.venue_id}.png`;
+  }
+  if (row.venue_address) {
+    ensureVenueMap({
+      id: row.venue_id,
+      address: row.venue_address,
+      city: row.venue_city,
+      lat: row.venue_lat,
+      lng: row.venue_lng,
+    });
+  }
+  return null;
+}
+
+function ensureVenueMap(venue) {
+  if (!venue || !venue.id || venueMapInFlight.has(venue.id)) return;
+  if (fs.existsSync(venueMapFile(venue.id))) return;
+  venueMapInFlight.add(venue.id);
+  generateVenueMap(venue)
+    .catch((err) =>
+      console.error(`venue map gen failed for ${venue.id}:`, err.message)
+    )
+    .finally(() => venueMapInFlight.delete(venue.id));
+}
+
+async function generateVenueMap(venue) {
+  const out = venueMapFile(venue.id);
+  if (fs.existsSync(out)) return out;
+  // Center on the STREET ADDRESS (Angelo's rule) — geocode it first;
+  // the venues table's stored coords are only a fallback (some rows
+  // carry rounded values hundreds of meters off).
+  let lat = null;
+  let lng = null;
+  const q = [venue.address, venue.city, 'ME'].filter(Boolean).join(', ');
+  try {
+    const r = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(q)}`,
+      { headers: { 'User-Agent': 'JoinarooVenueMaps/1.0 (https://joinaroo.com)' } }
+    );
+    if (r.ok) {
+      const j = await r.json();
+      if (j && j[0]) {
+        lat = parseFloat(j[0].lat);
+        lng = parseFloat(j[0].lon);
+      }
+    }
+  } catch (_) {
+    /* fall through to stored coords */
+  }
+  if (lat == null && venue.lat != null && venue.lng != null) {
+    lat = venue.lat;
+    lng = venue.lng;
+  }
+  if (lat == null || Number.isNaN(lat) || Number.isNaN(lng)) {
+    throw new Error('no coordinates for venue');
+  }
+  // Persist the precise address geocode back onto the venue row (the
+  // stored point also feeds distance math elsewhere).
+  if (
+    venue.lat == null ||
+    Math.abs(venue.lat - lat) > 0.0005 ||
+    Math.abs(venue.lng - lng) > 0.0005
+  ) {
+    try {
+      db.prepare('UPDATE venues SET lat = ?, lng = ? WHERE id = ?').run(
+        lat,
+        lng,
+        venue.id
+      );
+    } catch (_) {
+      /* non-fatal */
+    }
+  }
+  const line2 = [venue.city, 'ME'].filter(Boolean).join(', ');
+  const tmp = `${out}.tmp.png`;
+  await new Promise((resolve, reject) => {
+    require('child_process').execFile(
+      'python3',
+      [
+        path.join(__dirname, 'generate-venue-map.py'),
+        '--lat', String(lat),
+        '--lng', String(lng),
+        '--line1', venue.address || '',
+        '--line2', line2,
+        '--out', tmp,
+      ],
+      { timeout: 45000 },
+      (err, _stdout, stderr) =>
+        err ? reject(new Error(stderr || err.message)) : resolve()
+    );
+  });
+  fs.renameSync(tmp, out);
+  return out;
+}
+
 const ROOM_PROOF_PICKS = {
   // venue_id -> curated proof night + photo ids (crowd/room shots,
   // hand-picked and verified visually Nov 2, 2026).
@@ -2394,7 +2575,7 @@ function recentPhotosFor(row, ownPhotoCount) {
 }
 
 app.get('/api/events', (req, res) => {
-  const { q, category, city, from, to, lat, lng, radius_km, featured, limit, offset, include_hidden } = req.query;
+  const { q, category, city, venue, free, from, to, lat, lng, radius_km, featured, limit, offset, include_hidden } = req.query;
   const where = [];
   const params = [];
   const adminView = include_hidden === 'true';
@@ -2436,9 +2617,26 @@ app.get('/api/events', (req, res) => {
     where.push('v.city = ?');
     params.push(city);
   }
+  if (venue) {
+    // Venue landing pages: exact venue id.
+    where.push('e.venue_id = ?');
+    params.push(venue);
+  }
+  if (free === 'true') {
+    where.push('e.cost_free = 1');
+  }
   if (from) {
     const fromMs = Date.parse(from);
-    if (featured === 'true' && !Number.isNaN(fromMs)) {
+    if (q) {
+      // Text search must find events that are still running even if
+      // they started before `from` (theater runs, exhibitions,
+      // month-long events). End-aware only when q is present; every
+      // other caller keeps exact starts_at window semantics.
+      where.push(
+        '(e.starts_at >= ? OR (e.ends_at IS NOT NULL AND e.ends_at >= ?))',
+      );
+      params.push(from, from);
+    } else if (featured === 'true' && !Number.isNaN(fromMs)) {
       // Pinned cards ride past the day window until pin_expires_at
       // (clients enforce the expiry); give pins a 72h lookback so a
       // late-night event from the prior evening still comes back.
@@ -2490,6 +2688,55 @@ app.get('/api/events', (req, res) => {
   res.json({ events: eventsOut, total });
 });
 
+// Static venue map image: serves the self-hosted PNG, generating it
+// on first request (see VENUE STATIC MAPS above). 404 when the venue
+// has no street address on file or generation is impossible — the
+// detail page only renders the map area when venue.map_url is set.
+app.get('/api/venue-map/:id', async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (!id) return res.status(400).json({ error: 'bad venue id' });
+  const file = venueMapFile(id);
+  if (fs.existsSync(file)) return res.sendFile(file);
+  const v = db
+    .prepare('SELECT id, address, city, lat, lng FROM venues WHERE id = ?')
+    .get(id);
+  if (!v || !v.address) {
+    return res.status(404).json({ error: 'no map for this venue' });
+  }
+  try {
+    await generateVenueMap(v);
+    return res.sendFile(file);
+  } catch (e) {
+    return res.status(404).json({ error: 'map unavailable' });
+  }
+});
+
+/**
+ * Next still-upcoming occurrence of the same series (Angelo, Nov 5):
+ * matched by series_key when the row carries one, else by exact title +
+ * venue (the oldest rows of some series predate series_key). Soonest
+ * future occurrence wins; hidden and cancelled rows never qualify.
+ * Null when the series has nothing upcoming — the detail page renders
+ * the pointer only once the viewed event is past.
+ */
+function nextOccurrenceFor(row) {
+  const sel = `SELECT slug, title, starts_at FROM events
+               WHERE hidden = 0 AND id != ?
+                 AND COALESCE(status, 'scheduled') != 'cancelled'`;
+  const rows = row.series_key
+    ? db.prepare(`${sel} AND series_key = ?`).all(row.id, row.series_key)
+    : db.prepare(`${sel} AND title = ? AND venue_id IS ?`).all(row.id, row.title, row.venue_id);
+  const now = Date.now();
+  let best = null;
+  for (const r of rows) {
+    const t = Date.parse(r.starts_at);
+    if (Number.isFinite(t) && t > now && (!best || t < best.t)) {
+      best = { slug: r.slug, title: r.title, starts_at: r.starts_at, t };
+    }
+  }
+  return best ? { slug: best.slug, title: best.title, starts_at: best.starts_at } : null;
+}
+
 app.get('/api/events/:slug', (req, res) => {
   const row = db.prepare(`${EVENT_SELECT} WHERE e.slug = ? AND e.hidden = 0`).get(req.params.slug);
   if (!row) return res.status(404).json({ error: 'event not found' });
@@ -2519,6 +2766,7 @@ app.get('/api/events/:slug', (req, res) => {
   // photos of its own.
   out.room_proof = roomProofFor(row, out.photo_count);
   out.peephole = peepholeFor(row.id);
+  out.next_occurrence = nextOccurrenceFor(row);
   res.json(out);
 });
 
@@ -2705,6 +2953,7 @@ const PATCHABLE_EVENT_FIELDS = [
   'featured',
   'community_pick',
   'hidden',
+  'status',
 ];
 
 app.patch('/api/events/:id', auth, adminOnly, (req, res) => {

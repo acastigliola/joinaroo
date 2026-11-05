@@ -423,6 +423,16 @@ a:hover {
   border-radius: 12px;
   margin-bottom: 1rem;
 }
+/* Desktop: show the entire hero photo as-is at natural aspect — no
+   cover crop, no height cap (Angelo, Nov 4). Mobile keeps the rule
+   above untouched. */
+@media (min-width: 901px) {
+  .event-hero {
+    max-height: none;
+    height: auto;
+    object-fit: initial;
+  }
+}
 .photo-header {
   display: flex;
   justify-content: space-between;
@@ -933,6 +943,10 @@ a:hover {
    facts card to a standalone band above the title, so a searcher
    landing on a past listing orients in one second. */
 .ended-banner { background: #eef1f5; border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; }
+.next-occ { display: flex; align-items: baseline; gap: 8px; background: #e8effc; border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; color: #2c5aa0; text-decoration: none; }
+.next-occ .next-occ-label { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #5a6b84; white-space: nowrap; }
+.next-occ .next-occ-date { font-weight: 600; }
+.next-occ .next-occ-arrow { margin-left: auto; font-weight: 700; }
 .ended-banner .ended-head { padding-bottom: 0; border-bottom: none; }
 .ended-clock { width: 46px; height: 46px; border-radius: 50%; background: #dfe4ec; display: inline-flex; align-items: center; justify-content: center; flex: none; }
 .ended-clock img { width: 30px; height: 30px; }
@@ -1044,6 +1058,7 @@ button.live-chat-btn { border: none; font: inherit; cursor: pointer; width: 100%
 .recent-sub { margin: 5px 0 12px; font-size: 0.95rem; color: var(--muted); }
 .recent-strip { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
 .recent-thumb { position: relative; display: block; flex: 0 0 auto; width: 148px; height: 112px; border-radius: 12px; overflow: hidden; }
+button.recent-thumb { padding: 0; border: none; background: none; cursor: pointer; }
 .recent-photo { width: 100%; height: 100%; object-fit: cover; display: block; }
 .recent-badge { position: absolute; left: 8px; bottom: 8px; display: inline-flex; align-items: center; gap: 5px; background: rgba(18, 27, 41, 0.87); color: #fff; font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 999px; }
 .recent-badge-icon { width: 13px; height: 13px; filter: brightness(0) invert(1); }
@@ -1165,16 +1180,16 @@ button.recent-see { background: none; border: none; padding: 0; font: inherit; c
 .gs-next-sub { margin: 1px 0 0; color: #5B7186; font-size: 0.9rem; }
 .gs-next-row { display: flex; align-items: flex-start; gap: 10px; background: #F6F7F9; border-radius: 14px; padding: 12px; margin-top: 10px; }
 .gs-next-row-icon { width: 20px; height: 20px; object-fit: contain; flex: 0 0 auto; margin-top: 2px; }
-.gs-next-row-main { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; }
+.gs-next-row-main { display: flex; flex-direction: column; flex: 0 0 118px; min-width: 0; }
 .gs-next-stage { font-weight: 700; font-size: 0.95rem; }
 .gs-next-when { color: #5B7186; font-size: 0.85rem; margin-top: 1px; }
-.gs-next-row-right { margin-left: auto; flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.gs-next-row-place { display: flex; flex-direction: column; text-align: left; }
-.gs-next-place-line { display: inline-flex; align-items: center; gap: 4px; font-size: 0.9rem; color: #33475C; white-space: nowrap; }
+.gs-next-row-right { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.gs-next-row-place { display: flex; flex-direction: column; text-align: left; min-width: 0; align-self: stretch; }
+.gs-next-place-line { display: inline-flex; align-items: flex-start; gap: 4px; font-size: 0.9rem; color: #33475C; }
 .gs-next-pin { width: 14px; height: 14px; object-fit: contain; }
-.gs-next-place-sub { font-size: 0.9rem; color: #33475C; padding-left: 18px; text-align: center; }
+.gs-next-place-sub { font-size: 0.9rem; color: #33475C; padding-left: 18px; text-align: left; }
 .gs-next-detail { color: #5B7186; font-size: 0.85rem; margin-top: 1px; padding-left: 18px; }
-.gs-next-badge { flex: 0 0 auto; background: #D9E8F8; color: #1D4ED8; border-radius: 8px; padding: 5px 10px; font-weight: 800; font-size: 0.75rem; letter-spacing: 0.05em; }
+.gs-next-badge { flex: 0 0 auto; align-self: center; transform: translateX(-20px); background: #D9E8F8; color: #1D4ED8; border-radius: 8px; padding: 5px 10px; font-weight: 800; font-size: 0.75rem; letter-spacing: 0.05em; }
 .more-games { margin: 6px 0 18px; }
 .more-games-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
 .more-games-head--linkonly { justify-content: flex-end; margin-bottom: 8px; }
@@ -1406,4 +1421,1384 @@ body:has(.d-home) .site-header { display: none; }
 @media (max-width: 480px) {
   .cb-highlights { grid-template-columns: 1fr; }
   .cb-head h2 { font-size: 1.15rem; }
+}
+
+/* Landing pages (location/date/venue) — crawl-first, text-forward. */
+.lp-wrap { max-width: 860px; margin: 0 auto; padding: 20px 16px 48px; }
+.lp-crumbs { font-size: 0.88rem; color: #5b6b82; margin-bottom: 10px; }
+.lp-crumbs a { color: #2c5aa0; text-decoration: none; font-weight: 600; }
+.lp-crumbsep { color: #9aa7ba; }
+.lp-h1 { font-size: 1.7rem; line-height: 1.2; color: #16283f; margin: 0 0 10px; }
+.lp-h2 { font-size: 1.25rem; color: #16283f; margin: 28px 0 10px; }
+.lp-intro { color: #33465e; line-height: 1.55; margin: 0 0 10px; max-width: 65ch; }
+.lp-fact { color: #33465e; font-weight: 600; margin: 2px 0 8px; }
+.lp-segnav { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 18px; }
+.lp-seg { border: 1.5px solid #c8d4e4; border-radius: 999px; padding: 0.35rem 0.85rem; color: #2c5aa0; font-weight: 600; font-size: 0.92rem; text-decoration: none; background: #fff; }
+.lp-seg--on { background: #2c5aa0; border-color: #2c5aa0; color: #fff; }
+.lp-list { list-style: none; margin: 0; padding: 0; }
+.lp-row { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid #e4eaf2; }
+.lp-thumb { width: 112px; height: 84px; object-fit: cover; border-radius: 10px; flex: none; background: #eef2f7; }
+.lp-main { min-width: 0; }
+.lp-title { font-size: 1.08rem; margin: 0 0 3px; line-height: 1.3; }
+.lp-title a { color: #16283f; text-decoration: none; }
+.lp-title a:hover { text-decoration: underline; }
+.lp-when { margin: 0 0 2px; color: #2c5aa0; font-weight: 600; font-size: 0.94rem; }
+.lp-venue { margin: 0 0 4px; color: #5b6b82; font-size: 0.94rem; }
+.lp-venue a { color: #5b6b82; font-weight: 600; }
+.lp-desc { margin: 0 0 4px; color: #33465e; line-height: 1.5; font-size: 0.96rem; }
+.lp-price { margin: 0; color: #16283f; font-weight: 700; font-size: 0.94rem; }
+.lp-venues { margin: 0; padding-left: 1.1rem; color: #33465e; line-height: 1.7; }
+.lp-venues a { color: #2c5aa0; font-weight: 600; text-decoration: none; }
+.lp-foot { margin-top: 26px; color: #33465e; }
+.lp-foot a { color: #2c5aa0; font-weight: 600; }
+@media (max-width: 560px) {
+  .lp-thumb { width: 84px; height: 64px; }
+  .lp-h1 { font-size: 1.45rem; }
+}
+
+/* ===== Desktop homepage NEON redesign (Angelo's mockup, Nov 4) =====
+   Near-black navy + neon pink/purple/blue, art cut from his supplied
+   sheets (public/neon/). Every rule below either targets a neon-only
+   element (display:none by default, so it cannot render anywhere the
+   design does not reach) or lives inside the desktop layer's own
+   breakpoint, min-width: 901px, scoped to .d-home. Below 901px the
+   homepage renders exactly as before; other pages never carry .d-home
+   + these elements together. */
+.d-hero-neon,
+.d-tiles,
+.d-nav,
+.brand-logo-neon,
+.d-happening,
+.d-trend-flame-img {
+  display: none;
+}
+
+@media (min-width: 901px) {
+  body:has(.d-home) { background: #05070d; }
+  /* Design hold (Angelo, Nov 4 pass 2): the desktop layer keeps its
+     ~1280px design width even in a 901-1279px window (e.g. a phone in
+     Chrome desktop-site mode at ~980px), so the browser scales the
+     whole page down instead of reflowing it squeezed. Real narrow
+     desktop windows get a horizontal scrollbar — accepted tradeoff. */
+  .d-home { background: #05070d; color: #e9eef8; min-width: 1280px; }
+  .d-home .d-wrap { max-width: 1372px; }
+
+  /* --- header --- */
+  .d-header {
+    background: #04060b;
+    border-bottom: 1px solid rgba(110, 130, 255, 0.13);
+  }
+  .d-header-in {
+    gap: 2rem; padding-top: 0.35rem; padding-bottom: 0.35rem;
+    max-width: 1372px;
+  }
+  /* Angelo, Nov 4: the classic ticket logo replaces the mockup's
+     kangaroo lockup in the desktop header. */
+  .d-header .brand-logo { display: block; height: 54px; width: auto; }
+  .d-header .brand-logo-neon { display: none; }
+  .d-nav { display: flex; align-items: center; gap: 2rem; }
+  .d-nav-link {
+    position: relative; display: inline-flex; align-items: center; gap: 0.3rem;
+    color: #c6d2e8; font-weight: 600; font-size: 1rem; white-space: nowrap;
+  }
+  .d-nav-link:hover { color: #fff; text-decoration: none; }
+  .d-nav-active { color: #fff; }
+  .d-nav-active::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -7px;
+    height: 3px; border-radius: 2px;
+    background: linear-gradient(90deg, #ff3fd8, #7a5cff);
+    box-shadow: 0 0 10px rgba(217, 70, 239, 0.55);
+  }
+  .d-header .d-loc-pin { filter: brightness(0) invert(1); }
+  .d-header-search { display: none; }
+  .d-loc-pill {
+    margin-left: auto; background: #0c1425; color: #fff;
+    border: 1px solid #263252;
+  }
+  .d-loc-caret { color: #8b96b0; }
+  .d-signin { border-radius: 12px; }
+
+  /* --- hero --- */
+  .d-hero {
+    background:
+      radial-gradient(620px 300px at 80% -50px, rgba(255, 63, 216, 0.20), transparent 62%),
+      radial-gradient(760px 340px at 28% -70px, rgba(64, 120, 255, 0.17), transparent 62%),
+      radial-gradient(560px 280px at 55% 115%, rgba(140, 60, 255, 0.13), transparent 62%),
+      #05070d;
+    padding: 1.1rem 0 1.2rem;
+    overflow: hidden;
+  }
+  .d-hero-legacy { display: none; }
+  .d-hero-neon { display: block; }
+  .d-hero-top {
+    display: grid; align-items: center; gap: 1.4rem;
+    grid-template-columns: 188px minmax(0, 552px) minmax(0, 1fr);
+    position: relative; min-height: 224px;
+  }
+  .d-hero-maine {
+    width: 178px; height: auto; display: block;
+    margin-left: 4px;
+    position: relative; z-index: 1;
+    filter: drop-shadow(0 0 16px rgba(80, 140, 255, 0.45));
+  }
+  .d-hero-copy { position: relative; z-index: 1; }
+  .d-hero-eyebrow {
+    display: block; margin: 0 0 1rem; padding: 0;
+    background: none; border: 0; border-radius: 0;
+    color: #d9e2f5; font-size: 0.8rem; font-weight: 600;
+    letter-spacing: 0.34em; text-transform: uppercase;
+  }
+  .d-home .d-hero-h1 {
+    margin: 0 0 0.9rem; max-width: none;
+    font-size: 3.5rem; line-height: 1.04; font-style: italic;
+    font-weight: 900; letter-spacing: -0.015em; text-transform: uppercase;
+    color: #fff; text-shadow: none;
+  }
+  .d-hero-grad {
+    background: linear-gradient(92deg, #ff3fd8 5%, #a55cff 48%, #2f9bff 95%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .d-hero-genres {
+    display: flex; align-items: center; gap: 0.55rem; margin: 0;
+    padding: 0; background: none; border: 0; border-radius: 0;
+    color: #e6ecf8; font-size: 0.98rem;
+  }
+  .d-hero-genres i { color: #ffffff; font-style: normal; }
+  /* Real concert photo (Angelo's Cannons shot; hero swap, Nov 4): the
+     photo's own near-black stage background is luminance-keyed and
+     edge-feathered inside the asset, so no CSS mask is needed — the
+     figure floats over the hero's right side at mockup scale and the
+     search row paints above its faded lower edge.
+     Round 2 (Nov 4): asset v2 is a tighter crop around the figure,
+     shown at 680px wide so she fills the hero's height and right side
+     and her stage wash spreads under the headline zone, as in the
+     mockup; the hero clips the overflow and the search row (z 2)
+     paints above her waist. */
+  .d-hero-singer {
+    display: block; position: absolute; right: -6px; top: -26px; z-index: 0;
+    width: 680px; height: auto; pointer-events: none;
+  }
+  .search-hero {
+    display: flex; align-items: stretch; gap: 0.55rem;
+    margin: 0.8rem 4.6rem 0 6.4rem;
+    position: relative; z-index: 2;
+  }
+  .search-hero-bar {
+    flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.6rem;
+    background: #fff; border-radius: 999px; padding: 0.44rem 0.7rem 0.44rem 1.25rem;
+    box-shadow: 0 12px 36px rgba(70, 40, 180, 0.35);
+  }
+  .search-hero .search-pill-icon {
+    /* the shared icon asset is white artwork; on the white hero bar it
+       must render dark (mockup: solid dark magnifier) */
+    width: 20px; height: 20px; flex-shrink: 0;
+    filter: brightness(0); opacity: 0.55;
+  }
+  .search-hero-input {
+    flex: 1; min-width: 0; border: 0; outline: none; background: transparent;
+    font-family: var(--font); font-size: 1rem; color: #14213a;
+  }
+  .search-hero-div {
+    width: 1px; align-self: stretch; background: #dbe2ee; margin: 0.15rem 0.2rem;
+  }
+  .search-hero-loc {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    padding: 0.45rem 0.8rem; border-radius: 999px;
+    color: #14213a; font-weight: 600; font-size: 0.95rem; white-space: nowrap;
+  }
+  .search-hero-loc:hover { text-decoration: none; background: #eef2f9; }
+  .search-hero-pin { width: 15px; height: auto; }
+  .search-hero-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    border: 0; border-radius: 999px; padding: 0 2.05rem; cursor: pointer;
+    font-family: var(--font); font-size: 1.05rem; font-weight: 700; color: #fff;
+    background: linear-gradient(92deg, #b04dff, #2f7bff);
+    box-shadow: 0 12px 32px rgba(120, 60, 255, 0.42);
+  }
+  .search-hero-btn:hover { filter: brightness(1.08); }
+
+  /* --- filter row: location controls dark, chips yield to tiles --- */
+  .d-home .chips { display: none; }
+  /* The mockup has no location row under the search (location lives in
+     the header pill + search segment, both of which jump to #d-location),
+     so the controls stay hidden until the filter row is the :target of
+     that jump — then they reveal for town-changing. */
+  .d-home .location-controls { display: none; }
+  .d-home .d-filterrow:target .location-controls { display: flex; }
+  .d-home .location-controls .btn-secondary {
+    background: #131e33; border-color: #2a3a5c; color: #dbe4f5;
+  }
+  .d-home .location-controls .btn-secondary:hover {
+    background: #1a2947; color: #fff;
+  }
+  .d-home .town-input {
+    background: #0c1425; border-color: #2a3a5c; color: #fff;
+  }
+  .d-home .town-input::placeholder { color: #66738c; }
+  .d-home .town-pin { filter: brightness(2.1) saturate(0.5); }
+  .d-tiles {
+    display: grid; grid-template-columns: repeat(10, 1fr); gap: 0.7rem;
+  }
+  .d-tile {
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    padding: 0.88rem 0.3rem 0.7rem; border-radius: 16px; text-align: center;
+    background: linear-gradient(180deg, #0d1526, #0a101f);
+    border: 1px solid #232d49; color: #dbe4f5;
+    font-weight: 600; font-size: 0.86rem; line-height: 1.15;
+    transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+  }
+  .d-tile:hover {
+    text-decoration: none; color: #fff; border-color: #3b4a75;
+    transform: translateY(-2px);
+  }
+  /* Angelo, Nov 4: unselected tiles show a white icon; the selected
+     tile gets the purple/blue neon treatment and its icon in color. */
+  .d-tile img {
+    height: 31px; width: auto; max-width: 46px; object-fit: contain;
+    filter: brightness(0) invert(1);
+  }
+  .d-tile-active {
+    color: #fff; border: 1.5px solid transparent;
+    background:
+      linear-gradient(#131b31, #131b31) padding-box,
+      linear-gradient(135deg, #ff3fd8, #2f7bff) border-box;
+    box-shadow: 0 0 20px rgba(160, 80, 255, 0.35);
+  }
+  .d-tile-active img { filter: none; }
+
+  /* --- section panels + headers --- */
+  .d-main section {
+    background: linear-gradient(180deg, #141c40, #0b1129);
+    border: 1px solid #26305a; border-radius: 18px;
+    padding: 1.25rem 1.3rem 0.4rem; margin-top: 1.4rem;
+  }
+  .d-main section:first-child { margin-top: 0.9rem; }
+  .d-home .d-main .d-section-head { margin-top: 0.15rem; }
+  .d-section-title { color: #fff; font-size: 1.45rem; }
+  .d-section-sub { color: #98a2c0; }
+  /* Featured header carries the mockup's magenta bolt (cut from the
+     mockup itself, public/neon/bolt.png); other sections keep their
+     icons. */
+  .d-home section[aria-label="Featured events"] .d-section-icon {
+    content: url("/neon/bolt.png");
+    width: 20px;
+  }
+  .d-home .section-title { color: #fff; }
+  .d-home .spotlight {
+    background: #0d1430; border-color: #26305a;
+  }
+  .d-section-all { color: #6ea8ff; }
+  .d-section-all img { filter: brightness(1.8); opacity: 0.9; }
+  .d-month-header { color: #fff; }
+  .d-day-header { color: #cdd8ee; }
+  .d-home .grid { gap: 1.15rem; padding-bottom: 1.15rem; }
+  .d-home .empty { color: #8b96b0; }
+
+  /* --- cards --- */
+  .d-home .card--hero {
+    background: linear-gradient(180deg, #16204a, #111736) !important;
+    border: 1px solid #26305a !important;
+    border-radius: 16px; color: #e9eef8;
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.35);
+  }
+  .d-home .card--hero:hover {
+    transform: translateY(-3px);
+    border-color: #35436b !important;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
+  }
+  .d-home .card-hero-img { height: auto; aspect-ratio: 16/9; }
+  .d-home .card-hero-dist,
+  .d-home .card-hero-dist.dist-b1,
+  .d-home .card-hero-dist.dist-b2,
+  .d-home .card-hero-dist.dist-b3,
+  .d-home .card-hero-dist.dist-b4 {
+    display: inline-flex; align-items: center; gap: 0.32rem;
+    background: rgba(6, 9, 16, 0.78); color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  }
+  .d-home .card-hero-dist::before {
+    content: ''; width: 11px; height: 11px; flex: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+  /* Angelo, Nov 4: card chip colors on desktop match the mobile UI —
+     the per-category .tag-* pastels, the standard featured-badge, and
+     the light-blue Free pill all fall through from the base scheme.
+     (The on-photo FEATURED pill on hero cards below stays — it's the
+     mockup's overlay treatment, not the badge.) */
+  .d-home .card--hero:has(.card-hero-wrap) .featured-badge {
+    position: absolute; top: 12px; left: 12px; z-index: 3;
+    background: linear-gradient(180deg, #ffe066, #ffb300); color: #241a00;
+    font-weight: 800; font-size: 0.68rem; text-transform: uppercase;
+    letter-spacing: 0.05em; padding: 0.22rem 0.6rem;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  }
+  .d-home .card--hero:has(.card-hero-wrap) .featured-badge::before {
+    content: '★ ';
+  }
+  .d-home .card-title { color: #fff; }
+  .d-home .card-when {
+    color: #d9e2f4; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 0.42rem;
+  }
+  .d-home .card-when::before {
+    content: ''; width: 13px; height: 13px; flex: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239aa7c7' stroke-width='2' stroke-linecap='round'%3E%3Crect x='3' y='5' width='18' height='16' rx='2'/%3E%3Cpath d='M3 10h18M8 3v4M16 3v4'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+  .d-home .card-meta { color: #98a2c0; }
+  .d-home .card-pin { filter: brightness(2.2) saturate(0.4); }
+  .d-home .card-cost { color: #e9eef8; padding-right: 3.4rem; }
+
+  .d-home .card--hero .card-see-details {
+    position: absolute; right: 14px; bottom: 14px; z-index: 4;
+    width: 38px; height: 38px; margin: 0; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0; gap: 0;
+    background: linear-gradient(135deg, #b04dff, #2f7bff);
+    box-shadow: 0 6px 18px rgba(120, 60, 255, 0.45);
+  }
+  .d-home .card--hero .card-see-arrow {
+    width: 17px; height: auto; filter: brightness(0) invert(1);
+  }
+  .d-home .card--hero .save-star {
+    right: 60px; bottom: 16px; z-index: 4;
+    font-size: 20px; color: #7c8db1;
+  }
+  .d-home .card--hero .save-star-saved { color: #ffb300; }
+  /* live + ended-live card internals on dark */
+  .d-home .card-live-count { color: #fff; }
+  .d-home .card-live-sub { color: #93a0ba; }
+  .d-home .card-live-avatar { border-color: #111736; }
+  .d-home .card-ended-avatar { border-color: #111736; }
+  .d-home .card-ended-count { color: #fff; }
+  .d-home .card-ended-sub { color: #93a0ba; }
+  .d-home .card-ended-view { color: #6ea8ff; }
+
+  /* --- sidebar --- */
+  .d-trend {
+    background: linear-gradient(180deg, #131a38, #0b1128);
+    border-color: #26305a; padding-bottom: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  }
+  .d-trend-flame-svg { display: none; }
+  .d-trend-flame-img {
+    display: block; width: 24px; height: auto;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .d-trend-title { color: #fff; font-size: 1.18rem; }
+  .d-trend-sub { color: #98a2c0; }
+  .d-trend-list li {
+    background: rgba(43, 55, 105, 0.20); border-radius: 12px;
+    margin-top: 0.5rem; padding: 0 0.35rem;
+  }
+  .d-trend-list li + li { border-top: 0; }
+  .d-trend-row { color: #dbe4f5; padding: 0.55rem 0.3rem; }
+  .d-trend-num { color: #fff; font-size: 1.12rem; }
+  .d-trend-name { color: #dbe4f5; }
+  .d-trend-thumb { width: 58px; height: 44px; }
+  .d-trend-chev { filter: brightness(1.15) saturate(0.35); opacity: 0.6; }
+  .d-happening {
+    display: block; margin-top: 1.1rem;
+    background: linear-gradient(180deg, #131a38, #0b1128);
+    border: 1px solid #26305a; border-radius: 16px;
+    padding: 1.05rem 1.1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  }
+  .d-happening-thumb { width: 58px; height: 44px; }
+  .d-happening-head { display: flex; align-items: flex-start; gap: 0.55rem; }
+  .d-happening-dot {
+    width: 11px; height: 11px; border-radius: 50%; flex: none; margin-top: 5px;
+    background: #22e07a; box-shadow: 0 0 10px rgba(34, 224, 122, 0.9);
+  }
+  .d-happening-title { margin: 0; font-size: 1.05rem; font-weight: 800; color: #fff; }
+  .d-happening-sub { margin: 2px 0 0; color: #8b96b0; font-size: 0.83rem; }
+  .d-happening-row {
+    display: flex; align-items: center; gap: 0.7rem; margin-top: 0.85rem;
+    color: #dbe4f5;
+  }
+  .d-happening-row:hover { text-decoration: none; }
+  .d-happening-thumb {
+    width: 54px; height: 40px; object-fit: cover; border-radius: 8px; flex: none;
+  }
+  .d-happening-name { flex: 1; font-weight: 600; font-size: 0.92rem; line-height: 1.25; }
+  .d-happening-live {
+    flex: none; padding: 0.22rem 0.55rem; border-radius: 999px;
+    background: linear-gradient(180deg, #ff4444, #d81f1f); color: #fff;
+    font-size: 0.68rem; font-weight: 800; letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .d-happening-people {
+    display: flex; align-items: center; gap: 0.6rem; margin-top: 0.8rem;
+  }
+  .d-happening-avatars { display: flex; align-items: center; }
+  .d-happening-avatars img,
+  .d-happening-initials {
+    width: 26px; height: 26px; border-radius: 50%; object-fit: cover;
+    border: 2px solid #0b1128; margin-left: -8px; box-sizing: border-box;
+    background: #2c3c63;
+  }
+  .d-happening-avatars img:first-child,
+  .d-happening-initials:first-child { margin-left: 0; }
+  .d-happening-initials {
+    display: inline-flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 0.66rem; font-weight: 700;
+  }
+  .d-happening-count { color: #aebadd; font-size: 0.88rem; font-weight: 600; }
+
+  /* Pass 2 removed the old max-width:1100px shrink block (smaller hero,
+     tiles 5 x 2): with the 1280px design hold above, the layout must
+     keep full-size proportions at every >=901px window — the browser
+     scales, the design does not reflow. */
+}
+
+
+/* ===== Desktop event detail — Spark spec round 2 (Nov 4) =====
+   Rebuilt to Spark's corrective spec (spec-r2.json) after Angelo's
+   review of round 1: a 2-zone main area (344px hero | 536px info,
+   then paired wide panels) + a 288px sticky sidebar, inside the
+   1280px design hold (1216px content + 32px side padding). Every
+   rule is scoped to >=901px + .d-detail; the new elements are
+   display:none below 901px and the wrapper is display:contents
+   there, so the frozen mobile detail page renders exactly as
+   before. Four factual exceptions to the spec, per Angelo's
+   standing rules: hero frame aspect 0.94 (measured from the
+   mockup's poster bbox, not Spark's 344x430); no invented
+   "Doors at 6:00 PM" line; no "All Ages" pill (no data field);
+   the chips-row share icon is a real share control and the
+   bookmark icon is omitted (it duplicates the save controls). */
+.d-detail-headwrap,
+.d-sidebar,
+.d-top { display: none; }
+.d-detail-grid { display: contents; }
+/* Desktop GAME detail variant (Spark game spec, Nov 4): display:none
+   below 901px; the .d-detail-game rules in the media block at the end
+   of this file switch game pages to the 664 + 520 layout. */
+.d-game { display: none; }
+
+@media (min-width: 901px) {
+  body:has(.d-detail) {
+    background-color: #070B1E;
+    background-image:
+      radial-gradient(640px 420px at 0% 0%, rgba(124, 58, 237, 0.20), transparent 62%),
+      radial-gradient(760px 520px at 100% 100%, rgba(46, 124, 255, 0.16), transparent 62%);
+    background-attachment: fixed;
+  }
+  body:has(.d-detail) .site-header { display: none; }
+  .d-detail-headwrap { display: block; }
+
+  /* --- header, scoped to the detail headwrap (the component is
+     shared with the homepage, whose rendering must not change) --- */
+  .d-detail-headwrap .d-header {
+    background: #070B1E; border-bottom: 1px solid #1E2650;
+  }
+  .d-detail-headwrap .d-header-in {
+    max-width: 1280px; height: 64px; padding: 0 32px;
+    gap: 28px; box-sizing: border-box;
+  }
+  .d-detail-headwrap .brand-logo { height: auto; width: 140px; }
+  .d-detail-headwrap .d-nav { gap: 28px; }
+  .d-detail-headwrap .d-nav-link { font-size: 14px; color: #B8C0D8; }
+  .d-detail-headwrap .d-nav-active { color: #fff; }
+  .d-detail-headwrap .d-nav-active::after {
+    background: #E935C1; box-shadow: none;
+  }
+  .d-detail-headwrap .d-loc-pill {
+    height: 36px; padding: 0 14px; box-sizing: border-box;
+    border: 1px solid #3B4670; background: rgba(255, 255, 255, 0.03);
+    color: #fff; font-size: 13px;
+  }
+  .d-detail-headwrap .d-saves { font-size: 14px; }
+  .d-detail-headwrap .d-signin {
+    width: 96px; height: 36px; padding: 0; box-sizing: border-box;
+    justify-content: center; border-radius: 8px;
+    background: #2563EB; font-size: 14px;
+  }
+  .d-detail-headwrap .d-signin:hover { background: #1D4ED8; }
+
+  /* --- page frame: 1280 design hold, 1216 content --- */
+  .container-live.d-detail {
+    max-width: 1280px; min-width: 1280px;
+    background: transparent; padding: 0 32px 3rem;
+    box-sizing: border-box;
+  }
+  .d-detail-grid {
+    display: grid; grid-template-columns: 904px 288px;
+    gap: 24px; align-items: start; margin-top: 24px;
+  }
+
+  /* The standard flow's pieces the top zone mirrors are hidden here;
+     everything after them keeps flowing in the main column. */
+  .d-detail .more-games,
+  .d-detail .live-strip,
+  .d-detail .event-hero,
+  .d-detail .event-hero-wrap,
+  .d-detail .card-tags,
+  .d-detail .detail-community-pick,
+  .d-detail .event-detail > h1,
+  .d-detail .event-facts,
+  .d-detail .event-actions { display: none; }
+
+  /* Main zone: two columns only for the About | Community pair
+     (52% | 48% of 904px); every other child spans the full 904px.
+     grid-auto-flow: dense pairs the description with the community
+     card even in branches where the card precedes it in the DOM. */
+  .d-detail .event-detail.event-detail-live {
+    background: transparent; border: none; border-radius: 0;
+    padding: 0; margin: 0;
+    display: grid; grid-template-columns: 52% 48%;
+    column-gap: 0; row-gap: 24px; grid-auto-flow: dense;
+  }
+  .d-detail .event-detail > * {
+    grid-column: 1 / -1; min-width: 0; margin: 0;
+  }
+
+  /* --- Row 1: hero poster + info column (344 | 536, gap 24) --- */
+  .d-top {
+    display: grid; grid-template-columns: 344px 536px;
+    gap: 24px; position: relative; align-items: stretch;
+  }
+  /* The hero frame stretches to the full height of the .d-top row
+     (bottom aligned with the CTA row); the poster is contained,
+     never cropped or distorted — the frame's cream bg is the same
+     cream as the poster's own margins, so the letterbox reads as
+     margin. */
+  .d-top-hero {
+    position: relative; border-radius: 16px; overflow: hidden;
+    height: 100%; background: #EDE6D3;
+    border: 1px solid #2A335E;
+  }
+  .d-top-img {
+    width: 100%; height: 100%; object-fit: contain;
+    object-position: center; display: block;
+  }
+  .d-top-img-empty { background: linear-gradient(160deg, #1a2447, #0b1129); }
+  .d-top-info { min-width: 0; }
+
+  /* Chips row: 28px pills, 12px/700, spec colors; the real share
+     control sits at the right (spec's bookmark icon omitted — it
+     duplicates the two save controls on this page). */
+  .d-top-chips {
+    display: flex; gap: 8px; flex-wrap: nowrap; align-items: center;
+  }
+  .d-detail .d-top .tag,
+  .d-detail .d-top .featured-badge,
+  .d-detail .d-top .recurrence-badge {
+    height: 28px; padding: 0 12px; box-sizing: border-box;
+    font-size: 12px; font-weight: 700; line-height: 1;
+    display: inline-flex; align-items: center; white-space: nowrap;
+    border-radius: 999px;
+  }
+  .d-detail .d-top .tag { background: #6D28D9; color: #fff; }
+  .d-detail .d-top .tag:hover { text-decoration: none; }
+  .d-detail .d-top .featured-badge { background: #FBBF24; color: #1A1000; }
+  .d-detail .d-top .recurrence-badge { background: #1D3A5F; color: #BCD7FF; }
+  /* Community Pick in the chips row is the event cards' chip —
+     Angelo's supplied Reddit graphic (Angelo, Nov 4) — sized to the
+     row's 28px pill family with its own proportions kept. */
+  .d-detail .d-top .card-community-pick {
+    height: 26px; width: auto; max-width: none; margin: 0;
+    align-self: center; flex: none;
+  }
+  .d-top-chips-right {
+    margin-left: auto; display: flex; align-items: center; gap: 12px;
+  }
+  .d-share-btn {
+    background: none; border: none; padding: 0; cursor: pointer;
+    color: rgba(255, 255, 255, 0.7); display: inline-flex;
+    align-items: center; position: relative; line-height: 0;
+  }
+  .d-share-btn:hover { color: #fff; }
+  .d-share-copied {
+    position: absolute; top: calc(100% + 6px); right: 0; z-index: 5;
+    background: #1A2247; color: #E6EAF7; border: 1px solid #2A335E;
+    border-radius: 8px; padding: 4px 8px;
+    font-size: 12px; font-weight: 600; line-height: 1.2; white-space: nowrap;
+  }
+
+  .d-top-h1 {
+    color: #fff; font-size: 32px; line-height: 38px;
+    font-weight: 800; letter-spacing: -0.3px; margin: 12px 0 16px;
+  }
+
+  /* Fact rows: 15px/22px, 18px icons in a 28px column, #9AA3C0.
+     No doors line and no All Ages pill — the data has neither
+     (spec exceptions 2 and 3); rows render the real data only. */
+  .d-top-facts { display: flex; flex-direction: column; gap: 8px; }
+  .d-top-fact {
+    display: flex; gap: 10px; align-items: flex-start;
+    color: #fff; font-size: 15px; font-weight: 600; line-height: 22px;
+  }
+  .d-top-fact-ic {
+    flex: none; width: 28px; height: 22px;
+    background: none; border: none; color: #9AA3C0;
+    display: inline-flex; align-items: flex-start;
+  }
+  .d-top-fact-ic svg { width: 18px; height: 18px; margin-top: 2px; }
+  .d-top-fact-sub {
+    display: block; color: #9AA3C0; font-weight: 500; font-size: 14px;
+  }
+  .d-top-venue-link { color: #5AA9FF; font-weight: 600; }
+  .d-top-venue-link:hover { text-decoration: none; }
+  .d-top-fact-muted {
+    color: #8A93B2; font-weight: 500; font-size: 13px; line-height: 20px;
+  }
+  .d-top-fact-muted .d-top-fact-ic svg { width: 16px; height: 16px; }
+  .d-top-fact-muted a { color: #5AA9FF; }
+
+  /* CTA row: primary 340x48 spec gradient, saves 180x48 outlined. */
+  .d-top-actions {
+    display: flex; flex-wrap: nowrap; gap: 12px;
+    margin-top: 16px; align-items: center;
+  }
+  .d-detail .d-top-actions .btn {
+    flex: none; width: 340px; height: 48px; padding: 0 20px;
+    box-sizing: border-box;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: linear-gradient(90deg, #B12FFF 0%, #7C3AED 45%, #2E7CFF 100%);
+    color: #fff; border: none; border-radius: 12px;
+    font-size: 15px; font-weight: 700; white-space: nowrap;
+  }
+  .d-detail .d-top-actions .btn:hover { text-decoration: none; }
+  .d-detail .d-top-actions .btn .btn-icon { width: 18px; height: 18px; }
+  .d-detail .d-top-actions .btn .btn-arrow { width: 16px; height: 16px; }
+  .d-detail .d-top-actions .btn-soldout { background: #2a3247; color: #aebadd; }
+  .d-detail .d-top-actions .btn-soldout .btn-icon { width: 26px; height: 24px; }
+  .d-save-btn {
+    flex: none; width: 180px; height: 48px; padding: 0;
+    box-sizing: border-box; white-space: nowrap;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: transparent; border: 1px solid #3B4670; color: #E6EAF7;
+    border-radius: 12px; font-weight: 600; font-size: 14px;
+    cursor: pointer; font-family: inherit;
+  }
+  .d-save-btn svg { width: 18px; height: 18px; }
+  .d-save-btn-saved { border-color: #ff3fd8; color: #ffb3ec; }
+  /* Heart overlay on the poster: 32px circle at the frame's
+     top-right inset (344 - 12 - 32 = 300px from .d-top's left). */
+  .d-save-heart {
+    position: absolute; top: 12px; left: 300px; z-index: 3;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: #fff; padding: 0;
+  }
+  .d-save-heart svg { width: 18px; height: 18px; }
+
+  /* --- Row 2: ONE paired panel — About (52%) | divider |
+     From the Community (48%). The two halves carry the panel
+     background/border jointly; each half is padded 20px 24px. --- */
+  .d-detail .event-description {
+    grid-column: 1; align-self: stretch;
+    background: rgba(20, 27, 56, 0.92);
+    border: 1px solid #2A335E; border-right: none;
+    border-radius: 16px 0 0 16px;
+    padding: 20px 24px; color: #B8C0D8;
+    font-size: 14px; line-height: 21px;
+  }
+  .d-detail .event-description::before {
+    content: 'About This Event'; display: block;
+    color: #fff; font-size: 16px; font-weight: 700;
+    margin-bottom: 8px; padding-left: 26px; min-height: 18px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239AA3C0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 2v6h6'/%3E%3Cpath d='M16 13H8'/%3E%3Cpath d='M16 17H8'/%3E%3Cpath d='M10 9H8'/%3E%3C/svg%3E") left center / 18px 18px no-repeat;
+  }
+  .d-detail .event-description p {
+    color: #B8C0D8; font-size: 14px; line-height: 21px; margin: 0 0 8px;
+  }
+  .d-detail .event-description p:last-child { margin-bottom: 0; }
+  .d-detail .cb-wrap:has(> .cb-panel-blue) {
+    grid-column: 2; align-self: stretch; margin: 0; position: relative;
+    background: rgba(20, 27, 56, 0.92);
+    border: 1px solid #2A335E; border-left: none;
+    border-radius: 0 16px 16px 0;
+    padding: 20px 24px; box-sizing: border-box;
+  }
+  .d-detail .cb-wrap:has(> .cb-panel-blue)::before {
+    content: ''; position: absolute; left: 0; top: 16px; bottom: 16px;
+    width: 1px; background: #2A335E;
+  }
+  .d-detail .cb-wrap:has(> .cb-panel-blue) .cb-panel {
+    background: transparent; border: none; border-radius: 0;
+    padding: 0; flex: 1; position: relative;
+  }
+  /* Solo halves (no description, or no community data) span the
+     full main width as a standalone panel. */
+  .d-detail .event-detail:not(:has(> .cb-wrap > .cb-panel-blue)) .event-description {
+    grid-column: 1 / -1; border-right: 1px solid #2A335E; border-radius: 16px;
+  }
+  .d-detail .event-detail:not(:has(> .event-description)) .cb-wrap:has(> .cb-panel-blue) {
+    grid-column: 1 / -1; border-left: 1px solid #2A335E; border-radius: 16px;
+  }
+  .d-detail .event-detail:not(:has(> .event-description)) .cb-wrap:has(> .cb-panel-blue)::before {
+    display: none;
+  }
+
+  /* Community panel internals. The header reads "From the
+     Community" in this scope (text swap, same pattern as the
+     Photos header); the real subreddit attribution stays in the
+     quote footer meta and the thread link. */
+  .d-detail .cb-panel .cb-head {
+    justify-content: flex-start; gap: 8px; margin-bottom: 12px;
+  }
+  .d-detail .cb-panel h2 { color: #fff; font-weight: 700; margin: 0; }
+  .d-detail .cb-panel-blue h2 { font-size: 0; line-height: 0; }
+  .d-detail .cb-panel-blue h2::after {
+    content: 'From the Community';
+    font-size: 16px; line-height: 1.25; font-weight: 700; color: #fff;
+  }
+  .d-detail .cb-panel-plain h2,
+  .d-detail .cb-panel-mint h2 { font-size: 15px; }
+  .d-detail .cb-head-icon,
+  .d-detail .cb-head-img { width: 18px; height: 18px; }
+  .d-detail .cb-head-svg { width: 18px; height: 18px; color: #9AA3C0; }
+  .d-detail .cb-panel-blue .cb-quote {
+    background: #1A2247; border-radius: 12px;
+    padding: 14px 16px; box-shadow: none;
+  }
+  .d-detail .cb-panel-blue .cb-quote-mark-img { width: 28px; }
+  .d-detail .cb-panel-blue .cb-quote blockquote {
+    font-size: 14px; font-style: italic; font-weight: 500;
+    color: #E6EAF7; line-height: 20px;
+  }
+  .d-detail .cb-panel-blue .cb-avatar { width: 28px; height: 28px; }
+  .d-detail .cb-panel-blue .cb-author {
+    font-size: 13px; font-weight: 700; color: #fff;
+  }
+  .d-detail .cb-panel-blue .cb-meta { font-size: 12px; color: #8A93B2; }
+  /* The thread link rides the quote footer's row, right-aligned,
+     per spec ("View Thread" in the footer) — the component renders
+     it under the quote, so it is pulled up onto that row with a
+     negative margin (anchored to the quote itself, so it stays on
+     the row even when the About half makes the panel taller). */
+  .d-detail .cb-panel-blue .cb-link {
+    position: relative; z-index: 2;
+    width: fit-content; margin: -37px 16px 0 auto;
+    justify-content: flex-end; font-size: 0; line-height: 0;
+  }
+  .d-detail .cb-panel-blue .cb-link img { display: none; }
+  .d-detail .cb-panel-blue .cb-link::after {
+    content: 'View Thread →'; font-size: 13px; line-height: 1.2;
+    font-weight: 600; color: #5AA9FF;
+  }
+
+  /* --- Row 3: paired row — Related Bands (58%) | What People
+     Are Saying (42%, tinted). One wrap, two touching panels. --- */
+  .d-detail .cb-wrap { margin: 0; }
+  .d-detail .cb-wrap:has(> .cb-panel-plain):has(> .cb-panel-mint) {
+    display: grid; grid-template-columns: 58% 42%; gap: 0;
+    align-items: stretch;
+  }
+  .d-detail .cb-panel-plain {
+    background: rgba(20, 27, 56, 0.92);
+    border: 1px solid #2A335E; border-radius: 16px; padding: 20px;
+  }
+  .d-detail .cb-wrap:has(> .cb-panel-mint) .cb-panel-plain {
+    border-radius: 16px 0 0 16px; border-right: none;
+  }
+  .d-detail .cb-panel-mint {
+    background: linear-gradient(180deg, #14352F, #101E2E);
+    border: 1px solid #234E48; border-radius: 16px; padding: 20px;
+  }
+  .d-detail .cb-wrap:has(> .cb-panel-plain) .cb-panel-mint {
+    border-radius: 0 16px 16px 0;
+  }
+  .d-detail .cb-intro {
+    color: #8A93B2; font-size: 13px; line-height: 1.45; margin: 0 0 14px;
+  }
+  /* Bands: six 64px avatars in ONE row, names centered beneath. */
+  .d-detail .cb-bands {
+    display: flex; flex-wrap: nowrap; gap: 12px;
+    grid-template-columns: none; margin: 0;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .d-detail .cb-bands::-webkit-scrollbar { display: none; }
+  .d-detail .cb-band {
+    flex: none; width: 64px;
+    flex-direction: column; align-items: center; gap: 2px;
+    background: transparent; border: none; border-radius: 0; padding: 0;
+    color: #B8C0D8; font-size: 11px; font-weight: 500; text-align: center;
+  }
+  .d-detail .cb-band img {
+    width: 64px; height: 64px; border-radius: 50%;
+    border: 2px solid #2A335E; box-sizing: border-box; object-fit: cover;
+  }
+  .d-detail .cb-band span {
+    white-space: normal; overflow: visible; line-height: 1.3;
+  }
+  /* Saying panel internals: tinted inner quote cards, green dot
+     on the head icon. */
+  .d-detail .cb-panel-mint .cb-head { position: relative; }
+  .d-detail .cb-panel-mint .cb-head::after {
+    content: ''; position: absolute; left: 12px; top: 13px;
+    width: 10px; height: 10px; border-radius: 50%; background: #22C55E;
+  }
+  .d-detail .cb-highlights {
+    display: flex; flex-direction: column; gap: 12px;
+    grid-template-columns: none; margin: 0;
+  }
+  .d-detail .cb-panel-mint .cb-quote {
+    background: rgba(255, 255, 255, 0.06); border-radius: 12px;
+    padding: 14px; box-shadow: none;
+  }
+  .d-detail .cb-panel-mint .cb-quote-mark-img { width: 24px; }
+  .d-detail .cb-panel-mint .cb-quote blockquote {
+    font-size: 13.5px; font-style: italic; color: #E6EAF7; line-height: 19px;
+  }
+  .d-detail .cb-panel-mint .cb-avatar { width: 24px; height: 24px; }
+  .d-detail .cb-panel-mint .cb-author {
+    font-size: 12px; font-weight: 600; color: #fff;
+  }
+  .d-detail .cb-panel-mint .cb-meta { font-size: 12px; color: #8A93B2; }
+
+  /* --- in-flow panels on dark (live/ended/score-adjacent modules,
+     peephole, room proof, recent photos): spec panel shell, full
+     main width, current relative order preserved. --- */
+  .d-detail .ended-banner {
+    background: rgba(20, 27, 56, 0.92);
+    border: 1px solid #2A335E; border-radius: 16px;
+    padding: 20px 24px;
+  }
+  .d-detail .ended-title { color: #fff; }
+  .d-detail .ended-sub { color: #9AA3C0; }
+  .d-detail .soldout-panel {
+    background: #2a1218; border: 1px solid #5c2430; border-radius: 16px;
+  }
+  .d-detail .soldout-panel-sub { color: #d8a7ad; }
+  .d-detail .live-panel {
+    background: linear-gradient(180deg, #0d2b1e, #0a2016);
+    border-color: #1d5c3a; color: #dff5e6; border-radius: 16px;
+  }
+  .d-detail .ended-panel {
+    background: rgba(20, 27, 56, 0.92); color: #B8C0D8;
+    border: 1px solid #2A335E; border-radius: 16px;
+  }
+  .d-detail .ended-name { color: #fff; }
+  .d-detail .photo-gallery,
+  .d-detail .recent-photos,
+  .d-detail .peephole,
+  .d-detail .room-proof {
+    background: rgba(20, 27, 56, 0.92);
+    border: 1px solid #2A335E; border-radius: 16px;
+    padding: 20px 24px; color: #B8C0D8;
+    margin: 0; max-width: none;
+  }
+  .d-detail .photo-header h2,
+  .d-detail .recent-head,
+  .d-detail .rp-heading { color: #fff; }
+
+  /* --- Row 4: Photos, full main width --- */
+  .d-detail .photo-header { margin-bottom: 16px; }
+  .d-detail .photo-header h2 {
+    font-size: 16px; font-weight: 700; color: #fff;
+    display: flex; align-items: center; gap: 8px; margin: 0;
+  }
+  .d-detail .photo-header h2::before {
+    content: ''; width: 18px; height: 18px; flex: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239AA3C0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='2'/%3E%3Ccircle cx='9' cy='9' r='2'/%3E%3Cpath d='m21 15-4.35-4.35L6 21'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+  /* Non-live header text swap (round 1, kept): "Photos from Past
+     Events"; live galleries keep their accurate label. */
+  .d-detail .photo-header:not(.photo-header-live) h2 { font-size: 0; line-height: 0; }
+  .d-detail .photo-header:not(.photo-header-live) h2::after {
+    content: 'Photos from Past Events';
+    font-size: 16px; line-height: 1.25; font-weight: 700; color: #fff;
+  }
+  .d-detail .photo-header .view-all-link { color: #5AA9FF; }
+  .d-detail .photo-header .btn-secondary,
+  .d-detail .photo-add-below .btn-secondary {
+    height: 32px; min-width: 110px; padding: 0 16px; box-sizing: border-box;
+    border-radius: 999px; border: 1px solid #3B4670;
+    background: transparent; color: #CBD5FF;
+    font-size: 12px; font-weight: 600;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .d-detail .photo-empty-box {
+    border: 1px dashed #3B4670; border-radius: 12px;
+    background: transparent; color: #B8C0D8;
+    min-height: 140px; box-sizing: border-box; padding: 28px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 6px;
+  }
+  .d-detail .photo-empty-icon {
+    width: 28px; height: 28px; margin: 0; opacity: 0.75;
+  }
+  .d-detail .photo-empty-box p {
+    margin: 0; font-size: 14px; font-weight: 600; color: #B8C0D8;
+  }
+  .d-detail .photo-empty-box .photo-empty-sub {
+    font-size: 13px; font-weight: 400; color: #8A93B2;
+  }
+  .d-detail .photo-grid {
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 12px; margin: 0;
+  }
+  .d-detail .photo-grid .photo-thumb {
+    width: 100%; height: auto; aspect-ratio: 190 / 120;
+    border-radius: 12px; object-fit: cover;
+  }
+  .d-detail .photo-pending span { color: #B8C0D8 !important; }
+  .d-detail .btn-secondary {
+    background: transparent; border-color: #3B4670; color: #E6EAF7;
+  }
+
+  /* --- sidebar: 288px, sticky; venue card (photo + merged
+     address block), then Related Events. The people panel (real
+     live_people data only) keeps its round-1 slot between them. --- */
+  .d-sidebar {
+    display: flex; flex-direction: column; gap: 24px; min-width: 0;
+    position: sticky; top: 88px;
+  }
+  .d-side-panel {
+    background: rgba(19, 26, 54, 0.95);
+    border: 1px solid #2A335E; border-radius: 16px; overflow: hidden;
+  }
+  .d-side-venue-photo img {
+    width: 100%; height: 170px; object-fit: cover;
+    object-position: center; display: block;
+  }
+  /* Venue name BELOW the photo, as the card's heading (Angelo,
+     Nov 4 late — no text overlaid on the building photo). */
+  .d-side-venue-label {
+    display: flex; align-items: center; gap: 6px;
+    padding: 12px 16px 0; margin: 0;
+    color: #fff; font-weight: 700; font-size: 15px;
+  }
+  .d-side-venue-label img { width: 16px; height: 16px; }
+  /* Static map image (purple pin on the venue's street address,
+     API-generated from OSM tiles) + address row: the card's second
+     half. Angelo wanted a wider rectangle than the old 160px-tall
+     Google embed — ~288x115 at sidebar width — and clicking the map
+     opens the full interactive Google Map, same as View on Map. */
+  .d-side-map {
+    padding: 12px 16px 14px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .d-side-map-linkwrap { display: block; }
+  .d-side-map-img {
+    width: 100%; height: 115px; object-fit: cover; border-radius: 10px;
+    display: block;
+  }
+  .d-side-map-row {
+    display: flex; align-items: flex-end;
+    justify-content: space-between; gap: 12px;
+  }
+  .d-side-map-addr {
+    display: flex; flex-direction: column; gap: 0;
+    color: #fff; font-size: 14px; font-weight: 600;
+    line-height: 19px;
+  }
+  .d-side-map-link {
+    display: inline-flex; align-items: center; flex: none;
+    gap: 4px; color: #5AA9FF; font-weight: 600; font-size: 13px;
+  }
+  .d-side-map-link .inline-icon { width: 14px; height: 14px; }
+  .d-side-people, .d-side-related { padding: 16px; }
+  .d-side-title {
+    color: #fff; font-size: 15px; font-weight: 700; margin: 0 0 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .d-side-people .d-side-title { margin-bottom: 12px; }
+  .d-detail .d-side-related .d-side-title svg {
+    width: 18px; height: 18px; stroke: #9AA3C0; flex: none;
+  }
+  .d-side-avatars { display: flex; align-items: center; }
+  .d-side-avatar {
+    width: 46px; height: 46px; border-radius: 50%; flex: none;
+    margin-left: -10px; border: 2px solid #131A36; overflow: hidden;
+    background: #2c3c63; display: inline-flex;
+    align-items: center; justify-content: center; box-sizing: border-box;
+  }
+  .d-side-avatar:first-child { margin-left: 0; }
+  .d-side-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .d-side-initials { color: #fff; font-weight: 700; font-size: 0.85rem; }
+  .d-side-avatar-more { background: #232f52; color: #c6d2e8; font-weight: 700; font-size: 0.9rem; }
+  .d-side-rel {
+    display: flex; gap: 12px; align-items: center;
+    padding: 12px 0; color: inherit;
+  }
+  .d-side-rel-list .d-side-rel:first-child { padding-top: 4px; }
+  .d-side-rel-list .d-side-rel:last-child { padding-bottom: 2px; }
+  .d-side-rel + .d-side-rel { border-top: 1px solid #232C55; }
+  .d-side-rel:hover { text-decoration: none; }
+  .d-side-rel-img {
+    width: 56px; height: 56px; border-radius: 8px;
+    object-fit: cover; flex: none; display: block;
+  }
+  .d-side-rel-img-empty { background: linear-gradient(140deg, #1c2a52, #0d1530); }
+  .d-side-rel-text {
+    display: flex; flex-direction: column; gap: 2px; min-width: 0;
+  }
+  .d-side-rel-title {
+    color: #fff; font-weight: 700; font-size: 13.5px; line-height: 1.3;
+    display: block; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .d-side-rel-date { color: #8A93B2; font-size: 12px; }
+  .d-side-rel-chev {
+    color: #5A6A9A; font-size: 18px; line-height: 1;
+    margin-left: auto; flex: none;
+  }
+  .d-side-more {
+    display: block; text-align: right; margin-top: 8px;
+    color: #5AA9FF; font-weight: 600; font-size: 13px;
+  }
+}
+
+/* ===== Desktop GAME detail — Spark game spec (Nov 4) =====
+   The sports variant of the desktop detail page. Applies when the
+   page container carries .d-detail-game (event has game_summary or
+   a live/final tracked score): the concert grid (904 + 288) is
+   replaced by 664px main + 520px rail inside the same 1280 design
+   hold, every other article child and the concert sidebar are
+   hidden, and the game panels take the dark-glass rail styling.
+   All rules are >=901px; below that .d-game stays display:none and
+   the frozen mobile flow renders exactly as before. */
+@media (min-width: 901px) {
+  body:has(.d-detail-game) { background-color: #070C2B; }
+  .d-detail-game .d-detail-grid { display: block; }
+  .d-detail-game .event-detail.event-detail-live { display: block; }
+  .d-detail-game .event-detail > *:not(.d-game) { display: none !important; }
+  .d-detail-game .d-sidebar { display: none; }
+
+  .d-game {
+    display: grid; grid-template-columns: 664px 520px;
+    gap: 32px; align-items: start;
+  }
+  .dg-main, .dg-rail {
+    display: flex; flex-direction: column; gap: 20px; min-width: 0;
+  }
+
+  /* --- panels --- */
+  .dg-panel {
+    background: linear-gradient(180deg, #121845, #0F1540);
+    border: 1px solid #2C3E8A; border-radius: 16px;
+    padding: 20px; color: #fff;
+  }
+  .dg-panel-title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 19px; font-weight: 700; color: #fff; margin: 0;
+  }
+  .dg-main .dg-panel-title { font-size: 20px; }
+
+  /* --- hero: full-bleed photo, 664x415 (16:10) --- */
+  .dg-hero {
+    position: relative; height: 415px; border-radius: 16px;
+    overflow: hidden; border: 1px solid #2C3E8A; background: #0D1330;
+  }
+  .dg-hero-img {
+    width: 100%; height: 100%; object-fit: cover;
+    object-position: center 30%; display: block;
+  }
+  .dg-hero-empty { background: linear-gradient(160deg, #1a2447, #0b1129); }
+  .dg-day-pill {
+    position: absolute; top: 14px; left: 14px; z-index: 3;
+    height: 32px; min-width: 110px; padding: 0 14px; box-sizing: border-box;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #C80082, #7B1FA2);
+    color: #fff; font-size: 14px; font-weight: 700;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .dg-day-pill svg { width: 16px; height: 16px; }
+  .dg-hero-btns {
+    position: absolute; top: 12px; right: 12px; z-index: 3;
+    display: flex; gap: 8px;
+  }
+  .dg-glass-btn {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(8, 10, 20, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(6px); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; padding: 0; position: relative;
+  }
+  .dg-glass-btn.dg-saved { border-color: #ff3fd8; }
+
+  /* --- title + facts --- */
+  .dg-h1 {
+    font-size: 40px; line-height: 44px; font-weight: 800;
+    color: #fff; letter-spacing: -0.3px; margin: 0;
+  }
+  .dg-facts { display: flex; flex-direction: column; gap: 8px; }
+  .dg-fact {
+    display: flex; align-items: flex-start; gap: 10px;
+    color: #fff; font-size: 16px; line-height: 24px;
+  }
+  .dg-fact-ic {
+    flex: none; width: 24px; color: #fff; display: inline-flex;
+  }
+  .dg-fact-ic svg { width: 20px; height: 20px; margin-top: 2px; }
+  .dg-fact-ic-gap { margin-left: 18px; }
+  .dg-fact-sub { display: block; color: #A7B0CC; font-size: 14px; }
+  .dg-fact-muted { color: #A7B0CC; font-size: 13px; line-height: 20px; }
+  .dg-fact-muted a, .dg-det-value a { color: #3AAFFF; }
+
+  /* --- action row --- */
+  .dg-actions { display: flex; gap: 12px; align-items: center; flex-wrap: nowrap; }
+  .dg-btn-primary {
+    height: 52px; padding: 0 22px; border: none; border-radius: 12px;
+    background: linear-gradient(90deg, #A12FFF, #2E5CFF);
+    color: #fff; font-size: 16px; font-weight: 700; font-family: inherit;
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 8px; cursor: pointer; white-space: nowrap;
+  }
+  .dg-btn-cal { width: 240px; flex: none; }
+  .dg-btn-dark {
+    height: 52px; border-radius: 12px; background: #151B3D;
+    border: 1px solid #3A4A8A; color: #fff; font-family: inherit;
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 8px; cursor: pointer; font-size: 16px; font-weight: 600;
+    position: relative; white-space: nowrap; flex: none;
+  }
+  .dg-btn-save { width: 180px; }
+  .dg-btn-share { width: 140px; }
+  .dg-btn-cal-dark { width: 200px; font-size: 15px; }
+  .dg-btn-icon { width: 52px; padding: 0; }
+  .dg-btn-dark.dg-saved { border-color: #ff3fd8; color: #ffb3ec; }
+  .dg-btn-tickets-off { width: 240px; color: #aebadd; cursor: default; }
+  .dg-btn-ic-img { width: 26px; height: 24px; }
+  .d-game .dg-actions .btn {
+    flex: none; width: 240px; height: 52px; padding: 0 20px;
+    box-sizing: border-box;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: linear-gradient(90deg, #A12FFF, #2E5CFF);
+    color: #fff; border: none; border-radius: 12px;
+    font-size: 16px; font-weight: 700; white-space: nowrap;
+  }
+  .d-game .dg-actions .btn:hover { text-decoration: none; }
+  .d-game .dg-actions .btn .btn-icon { width: 18px; height: 18px; }
+  .d-game .dg-actions .btn .btn-arrow { width: 16px; height: 16px; }
+
+  /* --- FINAL panel: supplied stadium art, baked pill is THE pill --- */
+  .dg-final {
+    position: relative; height: 284px; border-radius: 16px;
+    overflow: hidden; border: 1px solid #2E7CFF;
+    box-shadow: 0 0 24px rgba(46, 124, 255, 0.35);
+    background: url('/neon/final-panel-bg.png') center top / cover no-repeat #070C2B;
+    color: #fff;
+  }
+  .dg-final-scrim {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to top, rgba(0, 0, 0, 0.40), rgba(0, 0, 0, 0) 55%),
+      rgba(7, 12, 43, 0.25);
+  }
+  .dg-final-in {
+    position: relative; height: 100%; box-sizing: border-box;
+    padding: 100px 16px 16px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .dg-final-date {
+    font-size: 15px; font-weight: 600; color: #fff;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+  }
+  .dg-final-row {
+    margin-top: auto; margin-bottom: 20px; width: 100%;
+    transform: translateY(-20px);
+    display: flex; align-items: center; justify-content: center; gap: 24px;
+  }
+  .dg-final-score {
+    font-size: 68px; font-weight: 800; line-height: 1; white-space: nowrap;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
+  }
+  .dg-team {
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    width: 150px; text-align: center;
+  }
+  .dg-team-logo { object-fit: contain; }
+  .dg-team-name { font-size: 18px; font-weight: 700; color: #fff; line-height: 1.15; }
+  .dg-team-mascot { font-size: 13px; color: #D6DBEC; letter-spacing: 0.03em; }
+  .dg-final .dg-team-name, .dg-final .dg-team-mascot {
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.65);
+  }
+
+  /* --- matchup panel (live + upcoming) --- */
+  .dg-matchup-top {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .dg-matchup-top-center { justify-content: center; }
+  .dg-upnext-pill {
+    background: #1E6CFF; color: #fff; font-size: 12px; font-weight: 700;
+    padding: 4px 12px; border-radius: 999px; letter-spacing: 0.03em;
+  }
+  .dg-live-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(229, 72, 77, 0.16); border: 1px solid #E5484D;
+    color: #fff; font-size: 12px; font-weight: 700;
+    padding: 4px 12px; border-radius: 999px; letter-spacing: 0.03em;
+  }
+  .dg-matchup-date { font-size: 14px; color: #A7B0CC; }
+  .dg-matchup-row {
+    display: flex; align-items: center; justify-content: center; gap: 24px;
+  }
+  .dg-matchup-score {
+    font-size: 56px; font-weight: 800; line-height: 1; white-space: nowrap;
+  }
+  .dg-vs { font-size: 28px; font-weight: 800; color: #A7B0CC; }
+  .dg-matchup-meta {
+    text-align: center; font-size: 15px; color: #D6DBEC; margin: 14px 0 0;
+  }
+  .dg-matchup-meta + .dg-matchup-meta { margin-top: 4px; }
+
+  /* --- records (one-team honest layout: only real records) --- */
+  .dg-records-team { font-size: 14px; color: #A7B0CC; margin: 8px 0 2px; }
+  .dg-rec-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; padding: 11px 0;
+    border-top: 1px solid rgba(167, 176, 204, 0.18);
+  }
+  .dg-rec-row:first-child { border-top: none; padding-top: 6px; }
+  .dg-rec-label { font-size: 15px; color: #fff; }
+  .dg-rec-grid { display: flex; align-items: flex-start; gap: 10px; }
+  .dg-rec-cell { display: flex; align-items: flex-start; gap: 10px; }
+  .dg-rec-part {
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .dg-rec-value { font-size: 18px; font-weight: 700; color: #fff; line-height: 1.2; }
+  .dg-rec-dash { font-size: 18px; color: #A7B0CC; line-height: 1.2; }
+  .dg-rec-sub { font-size: 11px; color: #A7B0CC; }
+  .dg-rec-sub-inline { font-size: 12px; color: #A7B0CC; font-weight: 400; }
+
+  /* --- note banner --- */
+  .dg-note {
+    background: linear-gradient(135deg, #0E5AC8, #0A2A7A);
+    border: 1px solid #3DDCFF; border-radius: 16px;
+    padding: 18px 20px; color: #fff;
+  }
+  .dg-note-title {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 20px; font-weight: 800; color: #fff; margin: 0 0 8px;
+  }
+  .dg-note-icon { display: inline-flex; color: #fff; }
+  .dg-note-icon svg { width: 22px; height: 22px; }
+  .dg-note-body { font-size: 15px; line-height: 22px; color: #fff; margin: 0; }
+
+  /* --- What's Next timeline --- */
+  .dg-next-sub { font-size: 14px; color: #A7B0CC; margin: 6px 0 0; }
+  .dg-next-rows {
+    position: relative; margin-top: 16px;
+    display: flex; flex-direction: column; gap: 18px;
+  }
+  .dg-next-rows::before {
+    content: ''; position: absolute; left: 6px; top: 10px; bottom: 10px;
+    width: 2px; background: #2C3E8A;
+  }
+  .dg-next-row {
+    position: relative; padding-left: 28px;
+    display: flex; justify-content: space-between; gap: 12px;
+  }
+  .dg-next-dot {
+    position: absolute; left: 0; top: 3px; width: 14px; height: 14px;
+    border-radius: 50%; border: 2px solid #fff; box-sizing: border-box;
+    background: #121845;
+  }
+  .dg-next-main { display: flex; flex-direction: column; gap: 2px; }
+  .dg-next-stage { font-size: 15px; font-weight: 700; color: #fff; }
+  .dg-next-when { font-size: 13px; color: #A7B0CC; }
+  .dg-next-right {
+    display: flex; flex-direction: column; align-items: flex-end;
+    gap: 4px; text-align: right;
+  }
+  .dg-next-badge {
+    background: #1E6CFF; color: #fff; font-size: 12px; font-weight: 700;
+    padding: 3px 10px; border-radius: 999px;
+  }
+  .dg-next-place { font-size: 13px; color: #D6DBEC; }
+  .dg-next-place-line svg {
+    width: 13px; height: 13px; vertical-align: -2px;
+    margin-right: 4px; color: #A7B0CC;
+  }
+  .dg-next-place-sub { display: block; font-size: 12px; color: #A7B0CC; }
+  .dg-next-detail { font-size: 12px; color: #A7B0CC; }
+
+  /* --- About + Event Details --- */
+  .dg-about-body {
+    font-size: 15px; line-height: 23px; color: #D6DBEC; margin: 12px 0 0;
+  }
+  .dg-det-rows { margin-top: 6px; }
+  .dg-det-row {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 13px 0; border-top: 1px solid rgba(167, 176, 204, 0.15);
+  }
+  .dg-det-row:first-child { border-top: none; padding-top: 6px; }
+  .dg-det-ic {
+    width: 32px; flex: none; color: #A7B0CC;
+    display: flex; justify-content: center;
+  }
+  .dg-det-ic svg { width: 20px; height: 20px; margin-top: 1px; }
+  .dg-det-label {
+    width: 104px; flex: none; font-size: 14px; color: #A7B0CC; padding-top: 2px;
+  }
+  .dg-det-value { font-size: 15px; color: #fff; line-height: 22px; }
+  .dg-map-link { color: #3AAFFF; font-size: 14px; font-weight: 600; }
+
+  /* --- Game Photos rail panel --- */
+  .dg-photos-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .dg-viewall {
+    background: none; border: none; padding: 0; cursor: pointer;
+    color: #3AAFFF; font-size: 14px; font-weight: 600; font-family: inherit;
+  }
+  .dg-photo-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  }
+  .dg-photo-thumb {
+    padding: 0; border: none; background: none; cursor: pointer;
+    border-radius: 12px; overflow: hidden; aspect-ratio: 160 / 120;
+  }
+  .dg-photo-thumb img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+
+  /* --- Fans Are Saying --- */
+  .dg-fans-quote { margin: 14px 0 0; }
+  .dg-fans-mark {
+    display: block; height: 22px;
+    font-family: Georgia, serif; font-size: 44px; line-height: 0.6;
+    color: #3DDCFF;
+  }
+  .dg-fans-quote blockquote {
+    font-size: 15px; font-style: italic; color: #E6EAF7;
+    line-height: 22px; margin: 6px 0 12px;
+  }
+  .dg-fans-meta { display: flex; align-items: center; gap: 8px; }
+  .dg-fans-avatar {
+    width: 28px; height: 28px; border-radius: 50%; object-fit: cover;
+  }
+  .dg-fans-avatar-fallback {
+    background: #2c3c63; color: #fff; font-size: 12px; font-weight: 700;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .dg-fans-author { font-size: 13px; font-weight: 700; color: #fff; }
+  .dg-fans-ago { font-size: 12px; color: #A7B0CC; }
+  .dg-fans-link {
+    margin-left: auto; color: #3AAFFF; font-size: 13px; font-weight: 600;
+  }
+
+  /* --- preserved in-flow modules inside the game columns --- */
+  .d-detail .d-game .recent-photos {
+    background: linear-gradient(180deg, #121845, #0F1540);
+    border-color: #2C3E8A;
+  }
+  /* Zero-photo empty state (real PhotoGallery, restyled to the
+     spec's honest dashed panel; header title hidden, the real
+     Add-a-photo control stays). */
+  .d-detail .d-game .photo-gallery {
+    background: transparent; border: 1px dashed rgba(167, 176, 204, 0.35);
+    border-radius: 16px; padding: 20px 24px;
+  }
+  .d-detail .d-game .photo-header {
+    justify-content: flex-end; margin-bottom: 0; min-height: 32px;
+  }
+  .d-detail .d-game .photo-header h2 { display: none; }
+  .d-detail .d-game .photo-empty-box {
+    border: none; background: transparent; min-height: 96px; padding: 8px;
+  }
+  .d-detail .d-game .photo-empty-box p {
+    font-size: 15px; font-weight: 600; color: #fff;
+  }
+  .d-detail .d-game .photo-empty-box .photo-empty-sub {
+    font-size: 13px; font-weight: 400; color: #A7B0CC;
+  }
 }

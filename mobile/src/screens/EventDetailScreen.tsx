@@ -480,6 +480,27 @@ function CommunityQuoteCard({ quote, meta, stackMeta }: { quote: CommunityQuote;
   );
 }
 
+// Relative age computed at render from the comment's real post time
+// (posted_at, epoch seconds). The stored `ago` string is a fossil from
+// harvest day — it never advanced — kept only as a fallback for any
+// quote that predates the timestamp backfill (Nov 3, 2026). Mirrors web.
+function quoteAgo(q: CommunityQuote): string | undefined {
+  if (q.posted_at) {
+    const s = Math.max(0, Math.floor(Date.now() / 1000) - q.posted_at);
+    if (s < 60) return 'just now';
+    const m = Math.floor(s / 60);
+    if (m < 60) return `${m}m ago`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h ago`;
+    const d = Math.floor(h / 24);
+    if (d < 30) return `${d}d ago`;
+    const mo = Math.floor(d / 30);
+    if (mo < 12) return `${mo}mo ago`;
+    return `${Math.floor(mo / 12)}y ago`;
+  }
+  return q.ago ?? undefined;
+}
+
 function CommunityBlockView({ data }: { data: CommunityBlockData }) {
   const sub = data.subreddit;
   return (
@@ -492,7 +513,7 @@ function CommunityBlockView({ data }: { data: CommunityBlockData }) {
         <Text style={styles.cbIntro}>{data.intro}</Text>
         <CommunityQuoteCard
           quote={data.feature_quote}
-          meta={data.feature_quote.ago ? `${sub} · ${data.feature_quote.ago}` : sub}
+          meta={quoteAgo(data.feature_quote) ? `${sub} · ${quoteAgo(data.feature_quote)}` : sub}
           stackMeta
         />
         <TouchableOpacity
@@ -547,7 +568,7 @@ function CommunityBlockView({ data }: { data: CommunityBlockData }) {
           </Text>
           <View style={styles.cbHighlights}>
             {data.highlights.map((q, i) => (
-              <CommunityQuoteCard key={i} quote={q} meta={q.ago ?? undefined} />
+              <CommunityQuoteCard key={i} quote={q} meta={quoteAgo(q)} />
             ))}
           </View>
           <TouchableOpacity style={{ alignItems: 'flex-end' }} onPress={() => Linking.openURL(data.thread_url)}>

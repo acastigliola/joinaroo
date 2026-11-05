@@ -34,6 +34,7 @@ Two features built on that layer:
 | **API** (Express + SQLite) | Events, venues, categories, auth (email / phone / Google / Facebook), saves, photo credits, live-people computation, live score polling (ESPN / ECHL / SIDEARM), first-party analytics (pageviews, gallery and details beacons, GeoIP) |
 | **Mobile** (Expo / React Native) | Auth-first native app mirroring the web experience — events, saves, search, settings — heading to the Play Store as a private beta |
 | **Admin** (Vite + React) | Event management, analytics dashboard (visitor lifecycle: single-page → details click → returners → explorers), SMS inbox |
+| **AI pipeline** (Python, `tools/`) | The production tooling that runs the catalog: structured-feed event ingest, the photo finder's screening chain, image gating and curation, price backfill, game-summary drafting and enrichment. Every judgment-shaped step — matching, extraction, screening, second opinions — is routed to **Muse Spark** on the Meta Model API; mechanical steps stay in code. Every model call is logged in `tools/META-SPEND-LEDGER.md` |
 
 ## Architecture
 
@@ -63,6 +64,7 @@ api/     Express API, schema, seed data, live-score poller
 web/     Next.js public site (App Router, TypeScript)
 mobile/  Expo / React Native app
 admin/   Vite + React admin console
+tools/   Python production pipeline — ingest, photo finder, curation, enrichment (Meta Model API)
 ```
 
 Each package has its own README with details.

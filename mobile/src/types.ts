@@ -105,6 +105,7 @@ export interface CommunityQuote {
   text: string;
   author: string;
   ago?: string | null;
+  posted_at?: number | null;
   avatar_url?: string | null;
   permalink?: string | null;
 }

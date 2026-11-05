@@ -11,15 +11,11 @@ dist/
 .env
 .env.*
 !.env.example
-prod.env
-*.pem
-*.key
 
 # Data
 *.db
-*.sqlite
-uploads/
+*.sqlite*
 
-# OS / editor
-.DS_Store
+# Logs & OS
 *.log
+.DS_Store

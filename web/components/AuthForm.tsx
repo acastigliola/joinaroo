@@ -454,7 +454,7 @@ export default function AuthForm({
               onClick={() => setShowPassword((v) => !v)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
-              {showPassword ? '👁' : '👁‍🗨'}
+              <img src={showPassword ? '/icons/eye-hide.png' : '/icons/eye-show.png'} alt="" />
             </button>
           </div>
           {mode === 'signup' && <PasswordChecks password={password} />}
@@ -557,7 +557,7 @@ export default function AuthForm({
               onClick={() => setShowNewPassword((v) => !v)}
               aria-label={showNewPassword ? 'Hide password' : 'Show password'}
             >
-              {showNewPassword ? '👁' : '👁‍🗨'}
+              <img src={showNewPassword ? '/icons/eye-hide.png' : '/icons/eye-show.png'} alt="" />
             </button>
           </div>
           <PasswordChecks password={newPassword} />

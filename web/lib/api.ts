@@ -19,6 +19,14 @@ export interface Venue {
   city: string;
   lat?: number | null;
   lng?: number | null;
+  /** Real photo of the venue itself (API VENUE_PHOTO_PICKS); null when
+   * no genuine photo has been curated for the venue yet. */
+  image_url?: string | null;
+  /** Self-hosted static map image (OSM tiles, purple pin on the venue's
+   * street address; API generates it lazily per venue). Null when the
+   * venue has no street address on file or no map has been generated
+   * yet — the desktop venue card omits the map area entirely then. */
+  map_url?: string | null;
 }
 
 export interface EventItem {
@@ -38,6 +46,7 @@ export interface EventItem {
   recurrence?: string | null;
   series_key?: string | null;
   featured: boolean;
+  status?: string;
   sold_out?: boolean;
   community_pick?: boolean;
   featured_pin?: number | null;
@@ -46,6 +55,7 @@ export interface EventItem {
   card_image_url?: string | null;
   card_layout?: string | null;
   card_top_ratio?: string | null;
+  hero_desktop_url?: string | null;
   pin_expires_at?: string | null;
   live_people?: LivePerson[];
   live_score?: LiveScore | null;
@@ -56,9 +66,11 @@ export interface EventItem {
   recent_photos?: RecentPhotos | null;
   room_proof?: RoomProofData | null;
   peephole?: PeepholeData | null;
+  next_occurrence?: { slug: string; title: string; starts_at: string } | null;
   distance_km?: number | null;
   created_at: string;
   updated_at: string;
+  verified_at?: string | null;
 }
 
 /** Room Proof (Angelo, Nov 2): venue photo-history module data. Present
@@ -186,6 +198,7 @@ export interface CommunityQuote {
   text: string;
   author: string;
   ago?: string | null;
+  posted_at?: number | null;
   avatar_url?: string | null;
   permalink?: string | null;
 }
@@ -231,6 +244,7 @@ async function apiFetch<T>(path: string): Promise<T> {
 export interface EventQuery {
   q?: string;
   category?: string;
+  venue?: string;
   lat?: string;
   lng?: string;
   radius_km?: string;

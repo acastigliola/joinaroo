@@ -15,6 +15,27 @@ import PersonMenu from './PersonMenu';
 // Driven entirely by events.community JSON; pages without the data
 // render nothing.
 
+// Relative age computed at render from the comment's real post time
+// (posted_at, epoch seconds). The stored `ago` string is a fossil from
+// harvest day — it never advanced — kept only as a fallback for any
+// quote that predates the timestamp backfill (Nov 3, 2026).
+function quoteAgo(q: CommunityQuote): string | undefined {
+  if (q.posted_at) {
+    const s = Math.max(0, Math.floor(Date.now() / 1000) - q.posted_at);
+    if (s < 60) return 'just now';
+    const m = Math.floor(s / 60);
+    if (m < 60) return `${m}m ago`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h ago`;
+    const d = Math.floor(h / 24);
+    if (d < 30) return `${d}d ago`;
+    const mo = Math.floor(d / 30);
+    if (mo < 12) return `${mo}mo ago`;
+    return `${Math.floor(mo / 12)}y ago`;
+  }
+  return q.ago ?? undefined;
+}
+
 function QuoteCard({
   q,
   meta,
@@ -107,6 +128,7 @@ function extraQuotes(data: CommunityBlockData): CommunityQuote[] {
 
 export function CommunityPickCard({ data }: { data: CommunityBlockData }) {
   const sub = data.subreddit;
+  const fa = quoteAgo(data.feature_quote);
   return (
     <div className="cb-wrap">
       <section className="cb-panel cb-panel-blue">
@@ -116,7 +138,7 @@ export function CommunityPickCard({ data }: { data: CommunityBlockData }) {
         </div>
         <QuoteCard
           q={data.feature_quote}
-          meta={data.feature_quote.ago ? `${sub} · ${data.feature_quote.ago}` : sub}
+          meta={fa ? `${sub} · ${fa}` : sub}
           stacked
         />
         <a
@@ -173,7 +195,7 @@ export function CommunityBelow({ data }: { data: CommunityBlockData }) {
           </div>
           <div className="cb-highlights">
             {quotes.map((q, i) => (
-              <QuoteCard key={i} q={q} meta={q.ago ?? undefined} />
+              <QuoteCard key={i} q={q} meta={quoteAgo(q)} />
             ))}
           </div>
         </section>

@@ -1,38 +1,48 @@
-# Joinaroo API
+# SME API (Southern Maine Events) — backend POC
 
-Express + better-sqlite3 backend for Joinaroo. Plain JavaScript, single-file
-core (`server.js`) with boot-time migrations, plus a standalone live-score
-poller (`score-poller.js`).
+Express + better-sqlite3. Plain JavaScript. Implements `../CONTRACT.md` exactly.
 
-## What it serves
+## Run
 
-- **Catalog** — events, venues, categories, towns; list/detail payloads with
-  distance, featured pinning, and date windows.
-- **The people layer** — credited event photos (`event_photos` +
-  `photo_sources`), per-event `live_people` / `live_photo_url` /
-  `photo_count` on every payload, the Room Proof block and the Peephole
-  strip on single-event reads.
-- **Auth** — email and phone (verification codes via SMTP / Telnyx SMS),
-  Google and Facebook OAuth with one-account-per-verified-email linking,
-  JWT sessions, password reset.
-- **Live scores** — `event_scores` kept fresh by `score-poller.js`
-  (ESPN, ECHL, and SIDEARM adapters; finals and in-progress state).
-- **Analytics** — first-party pageview / gallery / details / listed-by
-  beacons with GeoIP enrichment and an admin reporting endpoint.
-
-## Layout
-
-```
-server.js        the API (routes, serializers, live/peephole/room-proof logic)
-score-poller.js  3-minute live-score poller
-schema.sql       base schema (boot migrations in server.js extend it)
-seed-data.json   categories, towns, venues, sample events
-Dockerfile       node:20-slim image
+```bash
+npm install
+npm start        # or: node server.js
 ```
 
-## Configuration
+Boots on `PORT` (default `4000`). On first boot it executes `schema.sql`,
+seeds categories/venues/events from `seed-data.json`, and creates the seed admin.
 
-Everything sensitive comes from environment variables (`JWT_SECRET`,
-`ADMIN_PASSWORD`, SMTP, Telnyx, OAuth client secrets, …) and the server
-**fails closed** in production when a required secret is unset. There are
-no credentials in this repository.
+## Env vars
+
+| var | default | notes |
+|---|---|---|
+| `PORT` | `4000` | listen port |
+| `JWT_SECRET` | `dev-secret-change-me` | sign JWTs (7d expiry); set a real secret in prod |
+| `DB_PATH` | `./smevents.db` | SQLite file location |
+| `RESEND_API_KEY` | (unset) | when set, verification email goes through the Resend HTTP API; otherwise it goes to Mailpit (dev) |
+| `RESEND_FROM` | `Joinaroo <noreply@joinaroo.com>` | sender identity for Resend (domain must be verified in the Resend dashboard) |
+
+## Seed admin
+
+- Email: `admin@example.com`
+- Password: `changeme01`
+- Role: `admin` (bcrypt-hashed). Change immediately in production.
+
+## Quick checks
+
+```bash
+curl localhost:4000/api/health
+curl localhost:4000/api/events | head -c 300
+curl "localhost:4000/api/events?lat=43.6615&lng=-70.2553" | head -c 300
+TOKEN=$(curl -s -X POST localhost:4000/api/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"admin@example.com","password":"changeme01"}' | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>console.log(JSON.parse(d).token))")
+curl -X POST localhost:4000/api/events -H "Authorization: Bearer $TOKEN" \
+  -H 'Content-Type: application/json' \
+  -d '{"title":"Test","category_slug":"learn","starts_at":"2026-11-01T18:00:00-05:00"}'
+```
+
+## Deploy
+
+- **Docker:** `docker build -t smevents-api . && docker run -p 4000:4000 -e JWT_SECRET=... smevents-api`
+- **Render:** `render.yaml` included — one-click deploy from this directory.

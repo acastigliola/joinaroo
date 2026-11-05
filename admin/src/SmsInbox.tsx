@@ -4,7 +4,6 @@ import { api } from './api';
 // SMS inbox (moved to its own tab Oct 28, 2026 — Angelo's ask; previously a
 // section on the Analytics page). Shows texts received on the Joinaroo
 // Telnyx number, delivered by the Telnyx webhook into
-// inbound_sms — where SMS verification codes sent to the number land.
 
 interface SmsMessage { id: number; ts: number; from_number: string | null; to_number: string | null; text: string | null }
 
