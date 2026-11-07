@@ -19,6 +19,17 @@ import argparse, html, json, os, re, sys
 sys.path.insert(0, os.path.expanduser("~/workspace/custom-connectors/custom.meta-model-api/bin"))
 import meta_api  # noqa: E402
 
+
+def atomic_json_dump(obj, path, **kw):
+    """Write JSON via temp file + os.replace so a killed run never
+    leaves a truncated file behind."""
+    tmp = path + ".tmp"
+    with open(tmp, "w") as fh:
+        json.dump(obj, fh, **kw)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
+
 SYSTEM = """You read raw page captures saved by a sports score poller that could not parse a score from them. For each capture, report what a scoreboard in the page says and how it is represented.
 
 For each capture return:
@@ -54,6 +65,8 @@ def main():
     context = json.load(open(args.context)) if args.context else {}
     files = sorted(f for f in os.listdir(args.dir) if f.lower().endswith((".html", ".htm", ".txt", ".json")))
     results, tokens = [], {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
+    errors = {}
+    halted = False
     for s in range(0, len(files), 4):
         batch = files[s:s + 4]
         parts = []
@@ -68,9 +81,14 @@ def main():
         status, payload = meta_api.call("POST", "/chat/completions", body)
         if status == 429:
             print("HALTED on 429", flush=True)
+            halted = True
+            for f in batch:
+                errors[f] = "halted on 429"
             break
         if status != 200:
             print(f"batch at {s}: api {status}", flush=True)
+            for f in batch:
+                errors[f] = f"api {status}"
             continue
         usage = payload.get("usage") or {}
         for k in tokens:
@@ -80,10 +98,26 @@ def main():
             results.extend(json.loads(content[content.index("{"):content.rindex("}") + 1])["results"])
         except Exception as exc:
             print(f"batch at {s}: unparseable ({exc})", flush=True)
-    with open(os.path.join(args.out, "reads.json"), "w") as fh:
-        json.dump({"results": results, "token_totals": tokens}, fh, indent=1)
+            for f in batch:
+                errors[f] = f"unparseable response ({exc})"
+    # Never drop a capture silently: every file with no result gets an
+    # explicit error entry, and the run reports itself incomplete.
+    done_files = {r.get("file") for r in results}
+    incomplete = halted or bool(errors) or len(done_files) < len(files)
+    for f in files:
+        if f not in done_files:
+            results.append({"file": f,
+                            "error": errors.get(f, "not processed — run incomplete")})
+    atomic_json_dump({"results": results, "token_totals": tokens,
+                      "incomplete": incomplete, "halted_on_429": halted,
+                      "errors": [{"file": f, "error": e} for f, e in errors.items()]},
+                     os.path.join(args.out, "reads.json"), indent=1)
     print(f"done: {len(results)} captures read of {len(files)} | tokens: {tokens}")
+    if incomplete:
+        print("INCOMPLETE: some captures have error entries — reads.json marked incomplete")
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

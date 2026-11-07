@@ -21,7 +21,7 @@ the reference image for the page.
 import argparse, json, os, re, sys, time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from sweep_extract import fetch, clean_html, wix_events_input  # noqa: E402
+from sweep_extract import fetch, clean_html, wix_events_input, atomic_json_dump  # noqa: E402
 sys.path.insert(0, os.path.expanduser("~/workspace/custom-connectors/custom.meta-model-api/bin"))
 from meta_api import call  # noqa: E402
 
@@ -55,7 +55,7 @@ def build_input(url, raw):
     meta = meta_block(raw)
     head = ("PAGE META (mechanical):\n" + json.dumps(meta, indent=1) + "\n\n")
     slug = url.rstrip("/").split("/")[-1]
-    wix = wix_events_input(raw)
+    wix = wix_events_input(raw, url)
     if wix:
         try:
             arr = json.loads(wix)
@@ -118,7 +118,7 @@ def main():
         res = extract(model, args.title, args.starts_at, page_input)
         run = {"model": model, "secs": res.get("secs"), "usage": res.get("usage")}
         if "detail" in res:
-            json.dump(res["detail"], open(f"{args.out}/detail-{model}.json", "w"), indent=1)
+            atomic_json_dump(res["detail"], f"{args.out}/detail-{model}.json", indent=1)
             run["validation"] = validate(res["detail"], page_input, raw)
             print(f"{model}: cost={res['detail'].get('cost_text')!r} show_start={res['detail'].get('show_start')} "
                   f"validation={run['validation']} usage={res.get('usage')}")
@@ -126,7 +126,7 @@ def main():
             run["error"] = res.get("error")
             print(f"{model}: ERROR {res.get('error')}")
         report["runs"].append(run)
-    json.dump(report, open(f"{args.out}/report.json", "w"), indent=1)
+    atomic_json_dump(report, f"{args.out}/report.json", indent=1)
 
 
 if __name__ == "__main__":

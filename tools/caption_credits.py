@@ -20,6 +20,17 @@ import argparse, json, os, sys
 sys.path.insert(0, os.path.expanduser("~/workspace/custom-connectors/custom.meta-model-api/bin"))
 import meta_api  # noqa: E402
 
+
+def atomic_json_dump(obj, path, **kw):
+    """Write JSON via temp file + os.replace so a killed run never
+    leaves a truncated file behind."""
+    tmp = path + ".tmp"
+    with open(tmp, "w") as fh:
+        json.dump(obj, fh, **kw)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
+
 SYSTEM = """You extract candidate photo credits from social-media post captions for an event-photo finder. For each caption, identify who is credited with TAKING the photos.
 
 RULES:
@@ -44,6 +55,8 @@ def main():
     os.makedirs(args.out, exist_ok=True)
     caps = json.load(open(args.captions))
     results, tokens = [], {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
+    errors = {}
+    halted = False
     for s in range(0, len(caps), args.batch):
         batch = caps[s:s + args.batch]
         lines = [f"[{c['ref']}] platform={c.get('platform','')} poster={c.get('poster','')}\ncaption: {c.get('caption','')}" for c in batch]
@@ -53,9 +66,14 @@ def main():
         status, payload = meta_api.call("POST", "/chat/completions", body)
         if status == 429:
             print("HALTED on 429 — partial results saved", flush=True)
+            halted = True
+            for c in batch:
+                errors[c["ref"]] = "halted on 429"
             break
         if status != 200:
             print(f"batch at {s}: api {status}", flush=True)
+            for c in batch:
+                errors[c["ref"]] = f"api {status}"
             continue
         usage = payload.get("usage") or {}
         for k in tokens:
@@ -66,10 +84,26 @@ def main():
             results.extend(parsed["results"])
         except Exception as exc:
             print(f"batch at {s}: unparseable ({exc})", flush=True)
-    with open(os.path.join(args.out, "credits.json"), "w") as fh:
-        json.dump({"results": results, "token_totals": tokens}, fh, indent=1)
+            for c in batch:
+                errors[c["ref"]] = f"unparseable response ({exc})"
+    # Never drop a caption silently: every caption with no result gets
+    # an explicit error entry, and the run reports itself incomplete.
+    done_refs = {r.get("ref") for r in results}
+    incomplete = halted or bool(errors) or len(done_refs) < len(caps)
+    for c in caps:
+        if c["ref"] not in done_refs:
+            results.append({"ref": c["ref"],
+                            "error": errors.get(c["ref"], "not processed — run incomplete")})
+    atomic_json_dump({"results": results, "token_totals": tokens,
+                      "incomplete": incomplete, "halted_on_429": halted,
+                      "errors": [{"ref": r, "error": e} for r, e in errors.items()]},
+                     os.path.join(args.out, "credits.json"), indent=1)
     print(f"done: {len(results)} captions | tokens: {tokens}")
+    if incomplete:
+        print("INCOMPLETE: some captions have error entries — credits.json marked incomplete")
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

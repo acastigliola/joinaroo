@@ -20,6 +20,17 @@ import meta_api  # noqa: E402
 STOP = {"the", "at", "a", "an", "of", "and", "with", "in", "on", "for", "to"}
 
 
+def atomic_json_dump(obj, path, **kw):
+    """Write JSON via temp file + os.replace so a killed run never
+    leaves a truncated file behind."""
+    tmp = path + ".tmp"
+    with open(tmp, "w") as fh:
+        json.dump(obj, fh, **kw)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
+
+
 def toks(s):
     return {t for t in re.split(r"[^a-z0-9]+", (s or "").lower()) if t and t not in STOP}
 
@@ -53,14 +64,14 @@ def call_batch(model, items):
                          {"role": "user", "content": "\n\n".join(lines)}]}
     status, payload = meta_api.call("POST", "/chat/completions", body)
     if status != 200:
-        return None, payload
+        return None, payload, status
     content = (payload["choices"][0]["message"].get("content") or "").strip()
     if not content or "[" not in content:
-        return None, {"empty_content": True}
+        return None, {"empty_content": True}, status
     try:
-        return json.loads(content[content.find("["):content.rfind("]") + 1]), payload.get("usage", {})
+        return json.loads(content[content.find("["):content.rfind("]") + 1]), payload.get("usage", {}), status
     except Exception:
-        return None, {"unparseable_content": True}
+        return None, {"unparseable_content": True}, status
 
 
 def main():
@@ -141,11 +152,19 @@ def main():
 
     totals = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
     verdicts = []
+    failed_batches = 0
     for s in range(0, len(items), 8):
         batch = items[s:s + 8]
-        out, usage = call_batch(args.model, batch)
+        out, usage, status = call_batch(args.model, batch)
         if out is None:
-            print(f"batch at {s} FAILED: {json.dumps(usage)[:160]}")
+            # Never drop a batch silently: every item in it gets an
+            # explicit error verdict and the run reports incomplete.
+            failed_batches += 1
+            err = f"batch failed (HTTP {status}): {json.dumps(usage)[:160]}"
+            print(f"batch at {s} FAILED: {err}")
+            for it in batch:
+                verdicts.append({**it, "verdict": None, "evidence": None,
+                                 "error": err})
             continue
         if isinstance(usage, dict):
             for k in totals:
@@ -157,13 +176,18 @@ def main():
 
     report = {"matched": matched, "changed_deterministic": changed, "appeared": appeared,
               "vanished_candidates": [v["id"] for v in vanished],
-              "verdicts": verdicts, "token_totals": totals}
-    json.dump(report, open(os.path.join(args.out, "drift.json"), "w"), indent=1)
+              "verdicts": verdicts, "token_totals": totals,
+              "incomplete": failed_batches > 0, "failed_batches": failed_batches}
+    atomic_json_dump(report, os.path.join(args.out, "drift.json"), indent=1)
     print(f"matched {len(matched)} | changed {len(changed)} | appeared {len(appeared)} | "
           f"vanished candidates {len(vanished)} | model items {len(items)}")
     for v in verdicts:
         print(f"  [{v['type']}] {v['verdict']}: {v['evidence']}")
     print("tokens:", totals)
+    if failed_batches:
+        print(f"INCOMPLETE: {failed_batches} batch(es) failed — drift.json marked incomplete")
+        return 1
+    return 0
 
 
 if __name__ == "__main__":

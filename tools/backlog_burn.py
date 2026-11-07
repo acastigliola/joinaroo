@@ -20,6 +20,17 @@ UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/1
 ALLOWED_TYPES = {"event promo or flyer", "event-related photo", "performer photo", "venue photo"}
 
 
+def atomic_json_dump(obj, path, **kw):
+    """Write JSON via temp file + os.replace so a killed run never
+    leaves a truncated file behind."""
+    tmp = path + ".tmp"
+    with open(tmp, "w") as fh:
+        json.dump(obj, fh, **kw)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
+
+
 def fetch(url, timeout=20):
     req = urllib.request.Request(url, headers=UA)
     with urllib.request.urlopen(req, timeout=timeout) as resp:
@@ -80,7 +91,7 @@ def process(t, work):
             pass
     if not kept:
         return {"id": eid, "outcome": "no usable candidates on page"}
-    json.dump(manifest, open(os.path.join(edir, "manifest.json"), "w"), indent=1)
+    atomic_json_dump(manifest, os.path.join(edir, "manifest.json"), indent=1)
     out_dir = os.path.join(edir, "gate")
     r = subprocess.run([sys.executable, os.path.expanduser("~/workspace/smevents/tools/image_pick.py"),
                         "--event", f"{t['title']} ({t['starts_at'][:10]})", "--dir", edir, "--out", out_dir],
@@ -91,6 +102,12 @@ def process(t, work):
     pick_data = json.load(open(pick_path))
     pick = pick_data.get("pick") or {}
     tokens = pick_data.get("token_totals", {}).get("total_tokens", 0)
+    if pick.get("file") not in manifest:
+        # A pick whose file is not in this run's manifest (hallucinated
+        # or stale-resumed filename) can never apply — its URL would
+        # resolve to None and wipe/crash the image field downstream.
+        return {"id": eid, "outcome": f"below bar (pick file {pick.get('file')!r} not in manifest)",
+                "tokens": tokens}
     if pick.get("suitability", 0) >= 5 and pick.get("image_type") in ALLOWED_TYPES:
         return {"id": eid, "outcome": "apply", "image_url": manifest.get(pick["file"]),
                 "suitability": pick["suitability"], "type": pick["image_type"],
@@ -116,9 +133,9 @@ def main():
             results.append(res)
             print(f"  {res['id']}: {res['outcome']}", flush=True)
     plan = [r for r in results if r["outcome"] == "apply"]
-    json.dump({"plan": plan, "results": results,
-               "gate_tokens": sum(r.get("tokens", 0) for r in results)},
-              open(os.path.join(args.work, "apply-plan.json"), "w"), indent=1)
+    atomic_json_dump({"plan": plan, "results": results,
+                      "gate_tokens": sum(r.get("tokens", 0) for r in results)},
+                     os.path.join(args.work, "apply-plan.json"), indent=1)
     print(f"plan: {len(plan)} applies of {len(results)} | gate tokens: {sum(r.get('tokens', 0) for r in results)}")
 
 

@@ -10,9 +10,11 @@ The hand-built blocks for events 918 / 460 / 2591 / 2675 (Oct 2026) are
 the shape reference; this tool drafts that shape mechanically so the
 per-game hand work stops. Logos are NEVER invented: the model may only
 pick basenames from the operator-supplied library list (--logos), else
-null. Numbers are validated: every number in records values and the
-note body must literally appear in the source text or the supplied
-score — a field that fails validation is dropped, never the draft.
+null. Numbers are validated: a records W-L mark counts only when the
+source states it as a post-game record ("moved to / improved to / now
+stands at / falls to"), and note-body numbers must literally appear
+in the source text or the supplied score — a field that fails
+validation is dropped, never the draft.
 
 Usage:
   game_summary_draft.py --url <source page> --home "Southern Maine" \
@@ -50,18 +52,46 @@ def numbers_in(text):
     return set(re.findall(r"\d+(?:\.\d+)?", text or ""))
 
 
+def atomic_json_dump(obj, path, **kw):
+    """Write JSON via temp file + os.replace so a killed run never
+    leaves a truncated file behind."""
+    tmp = path + ".tmp"
+    with open(tmp, "w") as fh:
+        json.dump(obj, fh, **kw)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
+
+
+RECORD_CONTEXT = re.compile(
+    r"(?:(?:moved|moves|improved|improves|falls|fell) to|now stands at)\s+"
+    r"(\d+)\s*-\s*(\d+)(?:\s*-\s*(\d+))?", re.I)
+
+
+def context_record_marks(source_text):
+    """W-L(-T) marks the source states as a POST-GAME record ('moved
+    to 10-2'). Only these validate a drafted record — a mark appearing
+    anywhere else in the text (pre-game matchup lines, dates, stat
+    lines) proves nothing."""
+    marks = set()
+    for m in RECORD_CONTEXT.finditer(source_text or ""):
+        marks.add("-".join(g for g in m.groups() if g is not None))
+    return marks
+
+
 def validate(draft, source_text, score, logos_allowed):
     """Drop fields whose numbers are not in the source/score; null bad logos."""
     allowed_numbers = numbers_in(source_text) | numbers_in(score or "")
     issues = []
     if draft.get("records"):
+        ctx_marks = context_record_marks(source_text)
         kept = []
         for r in draft["records"]:
-            bad = numbers_in(r.get("value", "")) - allowed_numbers
-            if bad:
-                issues.append(f"records '{r.get('label')}' value has unsourced numbers {sorted(bad)} — dropped")
-            else:
+            mark = re.sub(r"\s+", "", r.get("value", ""))
+            if mark and mark in ctx_marks:
                 kept.append(r)
+            else:
+                issues.append(f"records '{r.get('label')}' value '{r.get('value')}' not stated in a post-game context (moved to / improved to / now stands at / falls to) — dropped, human check")
         draft["records"] = kept or None
     if draft.get("note"):
         bad = numbers_in(draft["note"].get("body", "")) - allowed_numbers
@@ -187,12 +217,10 @@ def main():
         draft, issues = validate(draft, text, args.score, logos_allowed)
         summary = assemble(draft, args.home, args.away, args.home_mascot, args.away_mascot)
         name = f"summary-{model}.json"
-        with open(os.path.join(args.out, name), "w") as f:
-            json.dump(summary, f, indent=1)
+        atomic_json_dump(summary, os.path.join(args.out, name), indent=1)
         report["models"][model] = {"file": name, "issues": issues}
         print(f"{model}: wrote {name}; issues: {issues or 'none'}")
-    with open(os.path.join(args.out, "report.json"), "w") as f:
-        json.dump(report, f, indent=1)
+    atomic_json_dump(report, os.path.join(args.out, "report.json"), indent=1)
     print("usage:", totals)
     return 0
 

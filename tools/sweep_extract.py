@@ -19,9 +19,11 @@ in the page payload (invented-URL check); starts_at must parse.
 import argparse
 import html as html_mod
 import json
+import os
 import re
 import sys
 import time
+import urllib.parse
 import urllib.request
 from datetime import datetime
 
@@ -29,6 +31,17 @@ sys.path.insert(0, "/home/hatch/workspace/custom-connectors/custom.meta-model-ap
 from meta_api import call  # noqa: E402
 
 UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126 Safari/537.36"
+
+
+def atomic_json_dump(obj, path, **kw):
+    """Write JSON via temp file + os.replace so a killed run never
+    leaves a truncated file behind."""
+    tmp = path + ".tmp"
+    with open(tmp, "w") as fh:
+        json.dump(obj, fh, **kw)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
 CATEGORIES = ["after-dark", "bar-brain", "on-stage", "hack-build", "game-on",
               "taste-maine", "town-square", "family-fun", "game-day",
               "seasonal", "learn", "gallery"]
@@ -46,7 +59,7 @@ Rules:
 - "image_url": only an image URL the input attaches to that specific event; otherwise null. Never invent one.
 - "cost_text": pricing exactly as printed, all tiers (e.g. "$15 advance / $20 day of show"). cost_free is true only when the page says free. When no price is printed, cost_text is null and cost_free is false.
 - "description": ONLY details not already captured in the other fields — what the event is, who performs, special notes. Never restate the date, time, venue, or price. null when nothing additional is stated.
-- "category_slug": one of after-dark, bar-brain, on-stage, hack-build, game-on, taste-maine, town-square, family-fun, game-day, seasonal, learn, gallery. Categorize by what the event IS: a concert is on-stage even in the afternoon; a film/talk is learn or on-stage by its nature; gallery openings are gallery.
+- "category_slug": one of after-dark, bar-brain, on-stage, hack-build, game-on, taste-maine, town-square, family-fun, game-day, seasonal, learn, gallery. Categorize by what the event IS, never by start time: a concert is on-stage even in the afternoon; a talk/lecture/class is learn; a film/screening is learn unless aimed at kids/families (then family-fun); trivia/quiz is bar-brain wherever it is held; holiday-themed events are seasonal even when they are also markets or parties (a Christmas market is seasonal, not town-square); other markets are town-square unless art-only (gallery); gallery openings are gallery. (Mapping aligned with feed_extract.py and category_audit.py, Nov 6 2026.)
 - "venue": the venue the event is AT. If the listing names a different venue for an event (e.g. "at First Parish Church"), use that one; otherwise the source venue given in the task. lat/lng only when the input states them, else null.
 - "recurrence"/"series_key": only when the page clearly states the event repeats; otherwise both null.
 - "source": exactly the source name given in the task.
@@ -71,7 +84,7 @@ def clean_html(raw):
     return "\n".join(l for l in lines if l)
 
 
-def wix_events_input(raw):
+def wix_events_input(raw, page_url):
     """If the page embeds a Wix events array, slim it to the useful keys."""
     if '"scheduling"' not in raw or '"startDate"' not in raw:
         return None
@@ -121,10 +134,16 @@ def wix_events_input(raw):
                 "price": ev.get("price") or ev.get("lowestPrice"),
                 "image": (ev.get("mainImage") or {}).get("url") if isinstance(ev.get("mainImage"), dict) else None,
             })
-        base = "https://www.genosrockclub.com/event-details/"
+        # Detail-URL base derives from THIS page's origin — never a
+        # hardcoded venue. A slug that does not literally appear in
+        # the raw payload gets url=null rather than an invented URL.
+        origin = urllib.parse.urlsplit(page_url)
+        base = f"{origin.scheme}://{origin.netloc}/event-details/"
         for s in slim:
-            if s.get("slug"):
+            if s.get("slug") and s["slug"] in raw:
                 s["url"] = base + s["slug"]
+            else:
+                s["url"] = None
         return json.dumps(slim, indent=1)
     return None
 
@@ -183,7 +202,7 @@ def main():
     os.makedirs(args.out, exist_ok=True)
     raw = fetch(args.url)
     open(f"{args.out}/raw.html", "w").write(raw)
-    wix = wix_events_input(raw)
+    wix = wix_events_input(raw, args.url)
     if wix:
         page_input, route = wix, "embedded-json"
     else:
@@ -198,7 +217,7 @@ def main():
         run = {"model": model, "secs": res.get("secs"), "usage": res.get("usage")}
         if "events" in res:
             evs = res["events"]
-            json.dump(evs, open(f"{args.out}/events-{model}.json", "w"), indent=1)
+            atomic_json_dump(evs, f"{args.out}/events-{model}.json", indent=1)
             run["count"] = len(evs)
             run["validation"] = validate(evs, raw)
             print(f"{model}: {len(evs)} events, usage={res.get('usage')}, validation={run['validation']}")
@@ -206,7 +225,7 @@ def main():
             run["error"] = res.get("error")
             print(f"{model}: ERROR {res.get('error')}")
         report["runs"].append(run)
-    json.dump(report, open(f"{args.out}/report.json", "w"), indent=1)
+    atomic_json_dump(report, f"{args.out}/report.json", indent=1)
 
 
 if __name__ == "__main__":

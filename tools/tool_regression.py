@@ -31,6 +31,17 @@ H = os.path.expanduser("~/workspace/goals/southern-maine-events-app-build/hidden
 TOOLS = os.path.expanduser("~/workspace/smevents/tools")
 
 
+def atomic_json_dump(obj, path, **kw):
+    """Write JSON via temp file + os.replace so a killed run never
+    leaves a truncated file behind."""
+    tmp = path + ".tmp"
+    with open(tmp, "w") as fh:
+        json.dump(obj, fh, **kw)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
+
+
 def run_tool(argv, cwd=TOOLS):
     r = subprocess.run([sys.executable] + argv, capture_output=True, text=True, cwd=cwd, timeout=1800)
     return r
@@ -132,7 +143,7 @@ def main():
         for d in drifts:
             print(f"   - {d}")
     summary["total_tokens"] = total_tokens
-    json.dump(summary, open(os.path.join(args.out, "summary.json"), "w"), indent=1)
+    atomic_json_dump(summary, os.path.join(args.out, "summary.json"), indent=1)
     print(f"total: {total_tokens} tokens | drifted checks: {failed}")
     sys.exit(min(failed, 125))
 

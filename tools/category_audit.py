@@ -33,7 +33,7 @@ THE 12 CATEGORIES:
 - family-fun: aimed at kids/families — storytimes, children's activities, family movies, trunk-or-treat, touch-a-truck.
 - game-day: organized sports — school/college/pro games and matches, road races, fishing tournaments. Playing or watching AS SPORT.
 - seasonal: holiday/season-tied — Halloween parties and haunted attractions, Christmas/holiday events, seasonal festivals.
-- learn: lectures, talks, classes, workshops, author readings, panels, educational programs.
+- learn: lectures, talks, classes, workshops, author readings, panels, educational programs, films/screenings (unless aimed at kids/families — then family-fun), planetarium shows. (Category mapping aligned with feed_extract.py and sweep_extract.py, Nov 6 2026.)
 - gallery: visual art — exhibitions, gallery openings, museum exhibits, art shows and receptions.
 
 DECISION RULES:
@@ -51,6 +51,17 @@ Return one result per event in the batch, ids exactly as given."""
 
 class Halt(Exception):
     pass
+
+
+def atomic_json_dump(obj, path, **kw):
+    """Write JSON via temp file + os.replace so a killed run never
+    leaves a truncated file behind."""
+    tmp = path + ".tmp"
+    with open(tmp, "w") as fh:
+        json.dump(obj, fh, **kw)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
 
 
 def read_tsv(path, ncols):
@@ -148,8 +159,7 @@ def main():
     changes = [r for r in done.values() if r["verdict"] == "change"]
     flags = {"changes": sorted(changes, key=lambda r: (r["current"], r["suggested"] or "", r["id"])),
              "checked": len(done), "total_events": len(events), "token_totals": state["tokens"]}
-    with open(os.path.join(args.out, "flags.json"), "w") as fh:
-        json.dump(flags, fh, indent=1)
+    atomic_json_dump(flags, os.path.join(args.out, "flags.json"), indent=1)
     print(f"changes: {len(changes)} | checked: {len(done)}/{len(events)} | tokens: {state['tokens']}")
 
 

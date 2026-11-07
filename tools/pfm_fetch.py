@@ -37,6 +37,17 @@ BASE = os.path.expanduser(
     "~/workspace/goals/southern-maine-events-watch/hidden_files")
 
 
+def atomic_json_dump(obj, path, **kw):
+    """Write JSON via temp file + os.replace (with fsync) so a killed
+    run never leaves a truncated state/candidates file behind."""
+    tmp = path + ".tmp"
+    with open(tmp, "w") as fh:
+        json.dump(obj, fh, **kw)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
+
+
 def fetch(url, timeout=60):
     req = urllib.request.Request(url, headers={"User-Agent": UA})
     with urllib.request.urlopen(req, timeout=timeout) as r:
@@ -87,10 +98,10 @@ def main():
         seen[pid] = p["modified"]
 
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
-    json.dump({"fetched_at": datetime.now(timezone.utc).isoformat(),
-               "new_post_ids": new_ids, "posts": out_posts},
-              open(args.out, "w"), indent=1)
-    json.dump(seen, open(args.state, "w"), indent=1)
+    atomic_json_dump({"fetched_at": datetime.now(timezone.utc).isoformat(),
+                      "new_post_ids": new_ids, "posts": out_posts},
+                     args.out, indent=1)
+    atomic_json_dump(seen, args.state, indent=1)
     print(f"pfm: {len(out_posts)} posts in {args.days}d window, "
           f"{len(new_ids)} new/updated (ids {new_ids}) -> {args.out}")
     return 0

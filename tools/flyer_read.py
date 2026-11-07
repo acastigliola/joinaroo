@@ -66,6 +66,17 @@ _stop = threading.Event()
 _lock = threading.Lock()
 
 
+def atomic_json_dump(obj, path, **kw):
+    """Write JSON via temp file + os.replace so a killed run never
+    leaves a truncated file behind."""
+    tmp = path + ".tmp"
+    with open(tmp, "w") as fh:
+        json.dump(obj, fh, **kw)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
+
+
 def sha256_of(path):
     h = hashlib.sha256()
     with open(path, "rb") as f:
@@ -83,6 +94,15 @@ def datauri_for(path):
 
 
 def read_one(model, path):
+    # A corrupt/unreadable image becomes an error record (the
+    # image_pick.py pattern) — it must never abort the whole run.
+    try:
+        return _read_one(model, path)
+    except Exception as e:  # noqa: BLE001
+        return {"status": None, "error": "UNREADABLE_IMAGE", "raw": str(e)[:300]}
+
+
+def _read_one(model, path):
     body = {
         "model": model,
         "messages": [{"role": "user", "content": [
@@ -192,8 +212,7 @@ def main():
         "halted_on_rate_limit": _stop.is_set(),
         "records": sorted(recs.values(), key=lambda r: r["file"]),
     }
-    with open(os.path.join(args.out, "report.json"), "w") as f:
-        json.dump(report, f, indent=2)
+    atomic_json_dump(report, os.path.join(args.out, "report.json"), indent=2)
     print(json.dumps({k: report[k] for k in ("files", "unique_files", "read", "parsed",
                                               "unresolved", "halted_on_rate_limit")}, indent=2))
     print("run token totals:", json.dumps(totals))

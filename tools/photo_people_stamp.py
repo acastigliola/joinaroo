@@ -12,11 +12,13 @@ potent — stamped rows are never re-checked. Prints one summary line.
 Ledger the spend in META-SPEND-LEDGER.md after manual runs (the
 evening cron's runs are batched into the daily note by its own body).
 """
+import argparse
 import base64
 import json
 import subprocess
 import sys
 import urllib.request
+from datetime import datetime
 
 sys.path.insert(0, "/home/hatch/workspace/custom-connectors/custom.meta-model-api/bin")
 import meta_api
@@ -37,15 +39,31 @@ PROMPT = (
 
 
 def sql(query, stdin_mode=False):
+    """Run sqlite3 on prod; raise on any failure (non-zero exit or
+    stderr output) so a write that didn't land is never counted."""
     if stdin_mode:
-        return subprocess.run(
+        proc = subprocess.run(
             [SSH, "sqlite3 /opt/smevents/api/smevents.db"],
             input=query, capture_output=True, text=True, timeout=120,
-        ).stdout
-    return subprocess.run(
-        [SSH, f"sqlite3 /opt/smevents/api/smevents.db \"{query}\""],
-        capture_output=True, text=True, timeout=120,
-    ).stdout
+        )
+    else:
+        proc = subprocess.run(
+            [SSH, f"sqlite3 /opt/smevents/api/smevents.db \"{query}\""],
+            capture_output=True, text=True, timeout=120,
+        )
+    if proc.returncode != 0 or proc.stderr.strip():
+        raise RuntimeError(
+            f"sqlite3 failed (rc={proc.returncode}): {proc.stderr.strip()[:300]}")
+    return proc.stdout
+
+
+def backup_db():
+    """Snapshot the prod DB before any write, house backup style."""
+    name = (f"/opt/smevents/backups/smevents-pre-peoplestamp-"
+            f"{datetime.now():%Y%m%d-%H%M%S}.db")
+    sql(f".backup {name}")
+    print(f"backup: {name}", flush=True)
+    return name
 
 
 def fetch_candidates():
@@ -106,9 +124,16 @@ def check_photo(filename):
 
 
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--dry-run", action="store_true",
+                    help="print planned UPDATEs without writing (no backup taken)")
+    args = ap.parse_args()
     rows = fetch_candidates()
     print(f"candidates: {len(rows)}", flush=True)
+    if rows and not args.dry_run:
+        backup_db()
     stamped = 0
+    planned = 0
     yes = 0
     total_tokens = 0
     failed = 0
@@ -122,20 +147,34 @@ def main():
         if verdict is None:
             failed += 1
             continue
+        stmt = f"UPDATE event_photos SET has_people={verdict} WHERE id={pid};"
+        if args.dry_run:
+            planned += 1
+            yes += verdict
+            print(f"  id {pid}: WOULD STAMP {stmt}", flush=True)
+            continue
         # Commit each verdict immediately — the peephole reads the DB
         # live, and a long run must not hold the gate shut until the end.
-        sql(
-            f".timeout 60000\nUPDATE event_photos SET has_people={verdict} WHERE id={pid};\n",
-            stdin_mode=True,
-        )
+        # sql() raises on failure: abort loudly rather than count a
+        # write that never landed.
+        try:
+            sql(f".timeout 60000\n{stmt}\n", stdin_mode=True)
+        except Exception as e:  # noqa: BLE001
+            print(f"  id {pid}: WRITE FAILED — ABORTING: {e}", flush=True)
+            sys.exit(1)
         stamped += 1
         yes += verdict
         print(f"  id {pid}: {'PEOPLE' if verdict else 'no-people'}", flush=True)
-    updates = [(0, 1)] * stamped  # summary counters below use stamped/yes
-    print(
-        f"SUMMARY stamped={len(updates)} people={yes} no_people={len(updates) - yes} "
-        f"failed={failed} tokens={total_tokens}"
-    )
+    if args.dry_run:
+        print(
+            f"SUMMARY dry_run planned={planned} people={yes} "
+            f"no_people={planned - yes} failed={failed} tokens={total_tokens}"
+        )
+    else:
+        print(
+            f"SUMMARY stamped={stamped} people={yes} no_people={stamped - yes} "
+            f"failed={failed} tokens={total_tokens}"
+        )
 
 
 if __name__ == "__main__":

@@ -349,18 +349,36 @@ def iso_with_offset(dt):
     return dt.replace(tzinfo=NY).isoformat()
 
 
+def atomic_json_dump(obj, path, **kw):
+    """Write JSON via temp file + os.replace so a killed run never
+    leaves a truncated file behind."""
+    tmp = path + ".tmp"
+    with open(tmp, "w") as fh:
+        json.dump(obj, fh, **kw)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
+
+
 def parse_local(s):
     return datetime.strptime(s.strip(), "%Y-%m-%d %H:%M:%S")
 
 
+# Category mapping aligned across feed_extract / sweep_extract /
+# category_audit (Nov 6, 2026): categorize by what the event IS —
+# film/screening is learn unless aimed at kids (family-fun, handled by
+# the storytime/family patterns of the source cfg); trivia is bar-brain
+# wherever held; holiday-themed markets are seasonal, other markets
+# town-square; planetarium/astronomy is learn.
 CATEGORY_RULES = [
     (r"storytime|story time|baby|toddler|preschool", "family-fun"),
     (r"trivia", "bar-brain"),
+    (r"halloween|haunted|christmas|holiday market|holiday fair", "seasonal"),
     (r"concert|live music|open mic|jam session|irish session|circle singing", "on-stage"),
-    (r"film|movie|screening", "on-stage"),
+    (r"film|movie|screening", "learn"),
     (r"exhibit|gallery|art show|reception", "gallery"),
-    (r"\bmarket\b|craft fair|holiday fair", "town-square"),
-    (r"planetarium|astronomy|night sky", "on-stage"),
+    (r"\bmarket\b|craft fair", "town-square"),
+    (r"planetarium|astronomy|night sky", "learn"),
 ]
 
 
@@ -797,9 +815,14 @@ def pull_sidearm(cfg, start, end):
             year = season_year if month >= 7 else season_year + 1
             t = _sidearm_time(fields[0])
             if t is None:
+                # Time TBA: never fabricate a midnight start. The row
+                # is kept with starts_at=None + a time_tba marker when
+                # its DATE falls in the window (start/end are midnight-
+                # aligned, so the date-only comparison is exact).
                 d["tba_time"] += 1
-                t = datetime.min.time()
-            s = datetime(year, month, int(rm.group(2)), t.hour, t.minute)
+                s = datetime(year, month, int(rm.group(2)))
+            else:
+                s = datetime(year, month, int(rm.group(2)), t.hour, t.minute)
             if not (start <= s < end):
                 continue
             opponent = re.sub(r"\s*\*+\s*$", "", fields[2]).strip()
@@ -810,7 +833,10 @@ def pull_sidearm(cfg, start, end):
             if location and len(fields) > 4 and fields[4].startswith("("):
                 location = f"{location} {fields[4]}"
             it = base_item(cfg, f"{cfg['team_name']} {label} vs {opponent}")
-            it["starts_at"] = iso_with_offset(s)
+            if t is None:
+                it["time_tba"] = True  # starts_at stays None — never midnight
+            else:
+                it["starts_at"] = iso_with_offset(s)
             it["url"] = page_url
             it["venue"] = _sidearm_venue(cfg, location)
             it["category_slug"] = "game-day"
@@ -832,20 +858,24 @@ PULLERS = {"tribe": pull_tribe, "librarycalendar": pull_librarycalendar,
 
 
 def validate(items):
-    bad_dates, missing_url, long_events = [], [], []
+    bad_dates, missing_url, long_events, tba = [], [], [], []
     for it in items:
-        try:
-            s = datetime.fromisoformat(it["starts_at"])
-            if it.get("ends_at"):
-                hrs = (datetime.fromisoformat(it["ends_at"]) - s).total_seconds() / 3600
-                if hrs > 8:
-                    long_events.append(f"{it['title']} ({hrs:.1f}h)")
-        except Exception:
-            bad_dates.append(it.get("title"))
+        if not it.get("starts_at"):
+            # No start time: a marked TBA row is expected, not a bad date.
+            (tba if it.get("time_tba") else bad_dates).append(it.get("title"))
+        else:
+            try:
+                s = datetime.fromisoformat(it["starts_at"])
+                if it.get("ends_at"):
+                    hrs = (datetime.fromisoformat(it["ends_at"]) - s).total_seconds() / 3600
+                    if hrs > 8:
+                        long_events.append(f"{it['title']} ({hrs:.1f}h)")
+            except Exception:
+                bad_dates.append(it.get("title"))
         if not it.get("url"):
             missing_url.append(it.get("title"))
         it.pop("_bad_date", None)
-    return {"bad_dates": bad_dates, "missing_url": missing_url,
+    return {"bad_dates": bad_dates, "missing_url": missing_url, "tba_time": tba,
             "duration_over_8h_flagged_not_fixed": long_events}
 
 
@@ -864,7 +894,7 @@ def run_source(key, horizon_days, outdir):
         seen.add(k)
         deduped.append(it)
     os.makedirs(outdir, exist_ok=True)
-    json.dump(deduped, open(os.path.join(outdir, "events.json"), "w"), indent=1)
+    atomic_json_dump(deduped, os.path.join(outdir, "events.json"), indent=1)
     starts = [it["starts_at"] for it in deduped if it["starts_at"]]
     report = {"source": key, "source_name": cfg["source_name"], "kind": cfg["kind"],
               "feed_urls": feed_urls, "horizon_days": horizon_days,
@@ -872,7 +902,7 @@ def run_source(key, horizon_days, outdir):
               "covered_range": [min(starts), max(starts)] if starts else None,
               "validation": validate(deduped),
               "notes": cfg.get("notes")}
-    json.dump(report, open(os.path.join(outdir, "report.json"), "w"), indent=1)
+    atomic_json_dump(report, os.path.join(outdir, "report.json"), indent=1)
     print(f"{key}: {len(deduped)} items in {horizon_days}d window, "
           f"range {report['covered_range']}, validation={report['validation']}")
     return report

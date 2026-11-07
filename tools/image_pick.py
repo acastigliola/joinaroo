@@ -37,6 +37,17 @@ PROMPT_TMPL = (
 _stop = threading.Event()
 
 
+def atomic_json_dump(obj, path, **kw):
+    """Write JSON via temp file + os.replace so a killed run never
+    leaves a truncated file behind."""
+    tmp = path + ".tmp"
+    with open(tmp, "w") as fh:
+        json.dump(obj, fh, **kw)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
+
+
 def sha256_of(path):
     h = hashlib.sha256()
     with open(path, "rb") as f:
@@ -81,7 +92,11 @@ def main():
     for n in names:
         p = os.path.join(args.dir, n)
         h = sha256_of(p)
-        if h in done:
+        # A resumed record is reused only when its filename is one of
+        # the current candidates; a stale record (same bytes, filename
+        # no longer present) falls through and is re-scored under the
+        # current name, so downstream manifest lookups can never miss.
+        if h in done and done[h].get("file") in names:
             rec = done[h]
         else:
             try:
@@ -125,7 +140,7 @@ def main():
     out = {"event": args.event, "model": args.model, "candidates": results,
            "pick": ({"file": pick["file"], **pick["score"]} if pick else None),
            "token_totals": totals}
-    json.dump(out, open(os.path.join(args.out, "pick.json"), "w"), indent=1)
+    atomic_json_dump(out, os.path.join(args.out, "pick.json"), indent=1)
     print("PICK:", out["pick"])
     print("tokens:", totals)
     return 0

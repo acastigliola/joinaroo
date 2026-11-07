@@ -52,6 +52,17 @@ def norm(s):
     return re.sub(r"\s+", " ", (s or "")).strip().lower()
 
 
+def atomic_json_dump(obj, path, **kw):
+    """Write JSON via temp file + os.replace so a killed run never
+    leaves a truncated file behind."""
+    tmp = path + ".tmp"
+    with open(tmp, "w") as fh:
+        json.dump(obj, fh, **kw)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
+
+
 def load_comments(path):
     data = json.load(open(path))
     comments = []
@@ -80,12 +91,35 @@ def load_comments(path):
     return comments
 
 
+MIN_QUOTE_LEN = 25  # normalized chars; shorter quotes are too generic to attribute
+
+
 def find_comment(comments, author, text):
     nt = norm(text)
+    if not nt:
+        return None
     for c in comments:
-        if c["author"] == author and nt and nt in norm(c["body"]):
+        if c["author"] != author:
+            continue
+        nb = norm(c["body"])
+        if nt == nb:
+            return c  # the whole comment quoted verbatim — unambiguous at any length
+        if len(nt) < MIN_QUOTE_LEN:
+            continue  # short generic phrases ("great show") match too easily
+        # Word-boundary match: the quote must appear as whole words,
+        # not as a bare substring inside other words.
+        if re.search(r"(?<!\w)" + re.escape(nt) + r"(?!\w)", nb):
             return c
     return None
+
+
+def token_seq_present(tokens, seq):
+    """True when seq appears as consecutive whole tokens — so band
+    'Oso' cannot match inside the token 'also'."""
+    if not seq:
+        return False
+    n = len(seq)
+    return any(tokens[i:i + n] == seq for i in range(len(tokens) - n + 1))
 
 
 def ago_str(created_utc, now_utc):
@@ -188,9 +222,10 @@ def main():
         if fq:
             block["feature_quote"] = fq
         bands_out = []
-        thread_blob = norm(thread_text)
+        thread_tokens = re.findall(r"[a-z0-9]+", norm(thread_text))
         for b in (draft.get("related_bands") or []):
-            if b in candidates and b != args.target and norm(b) in thread_blob:
+            band_tokens = re.findall(r"[a-z0-9]+", norm(b))
+            if b in candidates and b != args.target and token_seq_present(thread_tokens, band_tokens):
                 bands_out.append({"name": b, "photo": None, "query": b})
             else:
                 issues.append(f"related band '{b}' not on candidate list or not in thread — dropped")
@@ -205,14 +240,12 @@ def main():
             block["highlights"] = hl
 
         name = f"block-{model}.json"
-        with open(os.path.join(args.out, name), "w") as f:
-            json.dump(block, f, indent=1)
+        atomic_json_dump(block, os.path.join(args.out, name), indent=1)
         report["models"][model] = {"file": name, "issues": issues,
                                    "avatar_followup_authors": sorted(set(authors)),
                                    "band_photo_followup": [b["name"] for b in bands_out]}
         print(f"{model}: wrote {name}; issues: {issues or 'none'}")
-    with open(os.path.join(args.out, "report.json"), "w") as f:
-        json.dump(report, f, indent=1)
+    atomic_json_dump(report, os.path.join(args.out, "report.json"), indent=1)
     print("usage:", totals)
     return 0
 

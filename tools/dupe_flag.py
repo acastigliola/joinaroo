@@ -20,6 +20,17 @@ import meta_api  # noqa: E402
 STOP = {"the", "at", "a", "an", "of", "and", "with", "in", "on", "for", "to"}
 
 
+def atomic_json_dump(obj, path, **kw):
+    """Write JSON via temp file + os.replace so a killed run never
+    leaves a truncated file behind."""
+    tmp = path + ".tmp"
+    with open(tmp, "w") as fh:
+        json.dump(obj, fh, **kw)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
+
+
 ABBREV = {"oob": ("old", "orchard", "beach"), "umaine": ("university", "maine")}
 
 
@@ -102,18 +113,18 @@ def verdict_batch(model, batch):
             "messages": [{"role": "system", "content": SYSTEM},
                          {"role": "user", "content": "\n\n".join(lines)}]}
     status, payload = meta_api.call("POST", "/chat/completions", body)
-    if status == 429:
-        return None, payload
     if status != 200:
-        return None, payload
+        # Carry the real HTTP status back: the caller must be able to
+        # see a 429 (the error payload has no rate_limit_error shape).
+        return None, payload, status
     content = (payload["choices"][0]["message"].get("content") or "").strip()
     if not content or "[" not in content:
-        return None, {"empty_content": True}
+        return None, {"empty_content": True}, status
     content = content[content.find("["):content.rfind("]") + 1]
     try:
-        return (json.loads(content), payload.get("usage", {}))
+        return (json.loads(content), payload.get("usage", {}), status)
     except Exception:
-        return None, {"unparseable_content": True}
+        return None, {"unparseable_content": True}, status
 
 
 def main():
@@ -136,7 +147,7 @@ def main():
     pairs = block_events(events) + block_venues(venues) + block_sources(sources)
     for i, p in enumerate(pairs):
         p["pair_id"] = f"{p['kind']}-{p['a']['id']}-{p['b']['id']}"
-    json.dump(pairs, open(os.path.join(args.out, "candidates.json"), "w"), indent=1)
+    atomic_json_dump(pairs, os.path.join(args.out, "candidates.json"), indent=1)
     kinds = {}
     for p in pairs:
         kinds[p["kind"]] = kinds.get(p["kind"], 0) + 1
@@ -154,13 +165,29 @@ def main():
     todo = [p for p in pairs if p["pair_id"] not in done]
     print(f"to verdict: {len(todo)}")
     totals = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
+    failed_batches = 0
+
+    def write_flags(incomplete, halted_on_429=False):
+        flags = [r for r in done.values() if r.get("verdict") == "same"]
+        unsure = [r for r in done.values() if r.get("verdict") == "unsure"]
+        atomic_json_dump({"flags_same": flags, "unsure": unsure,
+                          "token_totals": totals, "incomplete": incomplete,
+                          "halted_on_429": halted_on_429},
+                         os.path.join(args.out, "flags.json"), indent=1)
+        return flags, unsure
+
     for s in range(0, len(todo), args.batch):
         batch = todo[s:s + args.batch]
-        out, usage = verdict_batch(args.model, batch)
+        out, usage, status = verdict_batch(args.model, batch)
         if out is None:
-            print(f"batch at {s}: FAILED {json.dumps(usage)[:200]}")
-            if isinstance(usage, dict) and usage.get("error", {}).get("type") == "rate_limit_error":
-                print("RATE LIMIT — HALTING"); return 2
+            print(f"batch at {s}: FAILED (HTTP {status}) {json.dumps(usage)[:200]}")
+            if status == 429:
+                # Provider rate-limit rule: stop calling immediately,
+                # mark the output incomplete, exit non-zero.
+                print("RATE LIMIT — HALTING")
+                write_flags(incomplete=True, halted_on_429=True)
+                return 2
+            failed_batches += 1
             continue
         if isinstance(usage, dict):
             for k in totals:
@@ -177,11 +204,11 @@ def main():
                 done[p["pair_id"]] = rec
         print(f"  batch {s // args.batch + 1}: {len(batch)} pairs verdicted")
 
-    flags = [r for r in done.values() if r.get("verdict") == "same"]
-    unsure = [r for r in done.values() if r.get("verdict") == "unsure"]
-    json.dump({"flags_same": flags, "unsure": unsure, "token_totals": totals},
-              open(os.path.join(args.out, "flags.json"), "w"), indent=1)
+    flags, unsure = write_flags(incomplete=failed_batches > 0)
     print(f"same: {len(flags)} | unsure: {len(unsure)} | tokens: {totals}")
+    if failed_batches:
+        print(f"INCOMPLETE: {failed_batches} batch(es) failed — flags.json marked incomplete")
+        return 1
     return 0
 
 

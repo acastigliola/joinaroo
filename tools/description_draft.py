@@ -24,6 +24,17 @@ import argparse, html, json, os, re, sys, urllib.request
 sys.path.insert(0, os.path.expanduser("~/workspace/custom-connectors/custom.meta-model-api/bin"))
 import meta_api  # noqa: E402
 
+
+def atomic_json_dump(obj, path, **kw):
+    """Write JSON via temp file + os.replace so a killed run never
+    leaves a truncated file behind."""
+    tmp = path + ".tmp"
+    with open(tmp, "w") as fh:
+        json.dump(obj, fh, **kw)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
+
 SYSTEM = """You draft event descriptions for Joinaroo, a Maine events guide. You get one event's structured facts (title, venue, city, category, cost) plus text from the event's own page.
 
 Write a description of 1-3 sentences that tells a reader what this event IS — the act, the format, the experience — using ONLY facts present in the page text.
@@ -81,6 +92,8 @@ def main():
     if args.only_null:
         events = [e for e in events if not (e.get("description") or "").strip()]
     results, tokens = [], {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
+    errors = {}
+    halted = False
     for e in events:
         try:
             text = page_text(e["url"])[: args.max_page_chars] if e.get("url") else ""
@@ -95,9 +108,12 @@ def main():
         status, payload = meta_api.call("POST", "/chat/completions", body)
         if status == 429:
             print("HALTED on 429", flush=True)
+            halted = True
+            errors[e["id"]] = "halted on 429"
             break
         if status != 200:
             print(f"  {e['id']}: api {status}", flush=True)
+            errors[e["id"]] = f"api {status}"
             continue
         usage = payload.get("usage") or {}
         for k in tokens:
@@ -115,10 +131,24 @@ def main():
                         "gate_reason": reason,
                         "facts_used": parsed.get("facts_used", [])})
         print(f"  {e['id']}: {'drafted' if ok else 'rejected: ' + reason} ({len(text)} page chars)", flush=True)
-    with open(os.path.join(args.out, "drafts.json"), "w") as fh:
-        json.dump({"results": results, "token_totals": tokens}, fh, indent=1)
-    print(f"done: {sum(1 for r in results if r['draft'])} drafts of {len(results)} | tokens: {tokens}")
+    # Never drop an event silently: every event with no result gets an
+    # explicit error entry, and the run reports itself incomplete.
+    done_ids = {r["id"] for r in results}
+    incomplete = halted or bool(errors) or len(done_ids) < len(events)
+    for e in events:
+        if e["id"] not in done_ids:
+            results.append({"id": e["id"], "title": e["title"], "draft": None,
+                            "error": errors.get(e["id"], "not processed — run incomplete")})
+    atomic_json_dump({"results": results, "token_totals": tokens,
+                      "incomplete": incomplete, "halted_on_429": halted,
+                      "errors": [{"id": i, "error": e} for i, e in errors.items()]},
+                     os.path.join(args.out, "drafts.json"), indent=1)
+    print(f"done: {sum(1 for r in results if r.get('draft'))} drafts of {len(results)} | tokens: {tokens}")
+    if incomplete:
+        print("INCOMPLETE: some events have error entries — drafts.json marked incomplete")
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
