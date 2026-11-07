@@ -455,3 +455,10 @@ round. Inputs are the public mockup + our own public homepage renders.
 2026-11-05 | internal strategy consult — hackathon finalist odds for Team Joinaroo (Angelo's question, Spark's estimate) | meta_api.py chat | muse-spark-1.3 | 4776
 2026-11-05 | internal strategy consult — follow-up: do Angelo's 2013 regional hackathon win + 2009 national cyber competition win change the finalist odds? (Spark: no) | meta_api.py chat | muse-spark-1.3 | 2486
 2026-11-05 | internal strategy consult — follow-up 2: does AI-first screening of submissions (Angelo's read of the judging protocol) change the finalist odds? (Spark: 8 -> 12) | meta_api.py chat | muse-spark-1.3 | 4548
+2026-11-05 | finder 1529 UMaine WBB vs Siena photo screening — 27 files (26 belongs, 1 rejected; siena-ig-4 rejection overturned on parent visual check) | finder_screen.py | muse-spark-1.3-contributor | 56304
+2026-11-05 | finder 1529 UMaine WBB vs Siena caption credit extraction — 7 captions, no photographer credits found (org/fan credits stand) | caption_credits.py | muse-spark-1.3-contributor | 3543
+| 2026-11-05 | peephole people-gate stamping (15-min cron) | photo_people_stamp.py | muse-spark-1.3 | 76952 |
+2026-11-06 | daily sweep 2026-11-06 description drafts (2 null-desc UMaine items, 1 kept) | description_draft.py | muse-spark-1.3-contributor | 6814
+2026-11-06 | daily sweep 2026-11-06 image gate MIHC West End Celebration og candidate (pick suitability 10) | image_pick.py | muse-spark-1.3-contributor | 1555
+2026-11-06 | daily sweep 2026-11-06 Geno's listing extraction (both models, validation clean) | sweep_extract.py | muse-wonder-1.0 | 7072
+2026-11-06 | daily sweep 2026-11-06 Geno's listing extraction (both models, validation clean) | sweep_extract.py | muse-spark-1.3-contributor | 6580
